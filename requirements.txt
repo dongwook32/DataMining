@@ -1,0 +1,31 @@
+# pandas / 수치
+pandas>=2.0
+numpy>=1.24
+scipy>=1.11
+
+# 설정
+PyYAML>=6.0
+python-dotenv>=1.0
+
+# HTTP
+requests>=2.31
+
+# 토픽모델링·전처리
+scikit-learn>=1.3
+
+# 변화점 탐지 (국면 전환)
+ruptures>=1.1
+
+# 시각화
+matplotlib>=3.8
+seaborn>=0.13
+
+# 빅카인즈 엑셀 투입 시
+openpyxl>=3.1
+
+# 선택: 한국어 형태소 (Java 필요) — 필요 시 주석 해제
+# konlpy>=0.6
+
+# 실행 예시
+#   python -m analysis.pilot.run_feasibility_regime
+#   python -m analysis.pilot.run_datamining_test

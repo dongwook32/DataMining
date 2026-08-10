@@ -1,0 +1,37 @@
+# 연구 공통 설정 (본연구 Step 2~)
+project:
+  name: korea_economic_issue_regime
+  study_period_start: "2016-01-01"
+  study_period_end: null  # null = 최신 가능 월
+
+paths:
+  raw_bigkinds: data/raw/bigkinds
+  raw_ecos: data/raw/ecos
+  raw_datalab: data/raw/datalab
+  processed_regimes: data/processed/regimes
+  processed_reactions: data/processed/reactions
+
+# 기대 입력 스키마 (컬럼명 기준)
+schemas:
+  news:
+    required: [date, title, content]
+    optional: [source, link, media]
+  ecos:
+    required: [date, indicator, value]
+    indicators: [CCSI, KOSPI, USD_KRW, BASE_RATE]
+  datalab:
+    required: [date, keyword_group, score]
+    optional: [period_start, period_end]
+
+regimes:
+  labels: [물가, 금리, 부동산, 대외, 성장]
+  freq: M  # 월 단위
+
+topic_model:
+  method: lda  # lda | bertopic(추후)
+  n_topics: 8
+  random_state: 42
+
+analysis:
+  event_window_months: 3
+  min_articles_per_month: 30

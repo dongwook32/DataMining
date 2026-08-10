@@ -1,0 +1,16 @@
+﻿metric,value
+news_rows,81
+news_date_min,2026-07-31
+news_date_max,2026-08-01
+news_months,2
+indicator_rows,50
+indicator_date_min,2024-07-31
+indicator_date_max,2026-08-01
+indicators,"KOSPI,USD_KRW"
+result_rows,2
+datamining_ok,1
+collection_ok,1
+news_csv,C:\Users\CDW\1_Project\DataMining\data\raw\test_news.csv
+indicators_csv,C:\Users\CDW\1_Project\DataMining\data\raw\test_indicators.csv
+result_csv,C:\Users\CDW\1_Project\DataMining\data\processed\datamining_test_result.csv
+ran_at,2026-08-01 22:48:54

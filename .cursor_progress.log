@@ -1,0 +1,31 @@
+[2026-08-01] Feasibility verification complete
+- Verdict: Conditional Go
+- Report: docs/feasibility_report.md
+
+[2026-08-01] Datamining test pack
+- Script: python -m analysis.pilot.run_datamining_test
+- PASS: RSS news + Yahoo indicators + regime mining
+- Archived under data/**/_archive_pilot/
+
+[2026-08-08] Pre-main cleanup & scaffolding
+- Archived synthetic/RSS pilot data & outputs to _archive_pilot
+- Moved pilot scripts to analysis/pilot/
+- Archived docs/RESEARCH_FEASIBILITY_PROMPT.md
+- Added README, .gitignore, .env.example, config/config.yaml
+- Created data/raw/{bigkinds,ecos,datalab}, data/processed/{regimes,reactions}
+- Updated docs/research_plan.md §10 to match repo reality
+- Installed: scikit-learn, scipy, ruptures, matplotlib, seaborn (+ existing pandas/numpy/...)
+- Next: Step 2 — put BigKinds + ECOS (+ optional DataLab) into raw folders
+
+[2026-08-08] Environment ready
+- .env present; ECOS_API_KEY / NAVER_CLIENT_ID / NAVER_CLIENT_SECRET load OK
+- .env.example restored with placeholders only
+- Created .venv (Python 3.13.14) + pip install -r requirements.txt (imports_ok)
+- Next: Step 2 — ECOS/DataLab API clients + BigKinds raw dump
+
+[2026-08-08] Notion research documentation
+- Updated existing page under 교수 학생간 프로젝트
+- Full research doc: purpose, significance, progress, architecture, methods,
+  data strategy, file structure, libraries/functions, expected outcomes
+- Local mirror: docs/notion_research_doc.md
+- Next: Step 2 — ECOS/DataLab API clients + BigKinds raw dump
