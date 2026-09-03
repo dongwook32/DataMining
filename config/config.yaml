@@ -1,13 +1,17 @@
 # 연구 공통 설정 (본연구 Step 2~)
 project:
   name: korea_economic_issue_regime
-  study_period_start: "2016-01-01"
-  study_period_end: null  # null = 최신 가능 월
+  # 분석 창: 빅카인즈 코퍼스 보유 기간에 맞춤 (2021-01 ~ 2026-07)
+  study_period_start: "2021-01-01"
+  study_period_end: "2026-07-31"
+  # 지표·검색 데이터는 더 길게 받아 둔다 (차분·시차·강건성용 lead-in)
+  data_buffer_start: "2016-01-01"
 
 paths:
   raw_bigkinds: data/raw/bigkinds
   raw_ecos: data/raw/ecos
   raw_datalab: data/raw/datalab
+  processed_corpus: data/processed/corpus
   processed_regimes: data/processed/regimes
   processed_reactions: data/processed/reactions
 
@@ -17,19 +21,23 @@ schemas:
     required: [date, title, content]
     optional: [source, link, media]
   ecos:
-    required: [date, indicator, value]
-    indicators: [CCSI, KOSPI, USD_KRW, BASE_RATE]
+    required: [date, CCSI, KOSPI, USD_KRW, BASE_RATE, CPI]
+    optional: [collected_at]
+    indicators: [CCSI, KOSPI, USD_KRW, BASE_RATE, CPI]
+  # datalab_regime_* (대분류) · datalab_sub_* (세부) 공통 스키마
+  # score는 요청 내 상대값, score_rel = score / anchor_score 가 요청 간 비교용
   datalab:
-    required: [date, keyword_group, score]
-    optional: [period_start, period_end]
+    required: [date, regime, group, score, anchor_score, score_rel]
+    optional: [keywords, period_start, period_end, time_unit, collected_at]
 
+# 빅카인즈 코퍼스 토픽 마이닝으로 재설정 (preprocess.mine_keywords 참고)
 regimes:
-  labels: [물가, 금리, 부동산, 대외, 성장]
+  labels: [물가, 금리, 부동산, 가계대출, 대외통상, AI반도체, 증시실적]
   freq: M  # 월 단위
 
 topic_model:
-  method: lda  # lda | bertopic(추후)
-  n_topics: 8
+  method: nmf  # nmf | lda | bertopic(추후)
+  n_topics: 14
   random_state: 42
 
 analysis:

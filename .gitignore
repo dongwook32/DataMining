@@ -40,6 +40,8 @@ data/processed/regimes/*
 !data/processed/regimes/.gitkeep
 data/processed/reactions/*
 !data/processed/reactions/.gitkeep
+data/processed/corpus/*
+!data/processed/corpus/.gitkeep
 
 # Optional local caches
 .cache/

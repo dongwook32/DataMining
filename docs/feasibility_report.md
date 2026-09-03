@@ -3,7 +3,9 @@
 작성 기준일: 2026-08-01  
 검증 환경: `c:\Users\CDW\1_Project\DataMining` (Windows, Python 3.13.14)
 
-> **2026-08-08 정리**: 파일럿·합성 산출물은 `data/**/_archive_pilot/`, 스크립트는 `analysis/pilot/`로 이동. 본연구 실데이터는 `data/raw/{bigkinds,ecos,datalab}/`에 새로 적재한다.
+> **2026-09-03 정리**: Step 1 파일럿·합성 산출물(`data/**/_archive_pilot/`, `analysis/pilot/`)은
+> 본데이터 전환에 맞춰 삭제했다. 아래는 당시 판정 기록이다. 본연구 실데이터는
+> `data/raw/{bigkinds,ecos,datalab}/`, 통합 코퍼스는 `data/processed/corpus/`에 있다.
 
 ---
 

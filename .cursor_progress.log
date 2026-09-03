@@ -1,31 +1,118 @@
-[2026-08-01] Feasibility verification complete
-- Verdict: Conditional Go
-- Report: docs/feasibility_report.md
+# Progress — 2026-09-03 (c): drop Step 1 archive
 
-[2026-08-01] Datamining test pack
-- Script: python -m analysis.pilot.run_datamining_test
-- PASS: RSS news + Yahoo indicators + regime mining
-- Archived under data/**/_archive_pilot/
+## Done
+- Deleted `data/raw/_archive_pilot/`, `data/processed/_archive_pilot/`,
+  `analysis/pilot/`, `api/collect_naver.py` (pilot-only paths)
+- Docs/README/api README/research_plan/feasibility_report/.env.example updated
 
-[2026-08-08] Pre-main cleanup & scaffolding
-- Archived synthetic/RSS pilot data & outputs to _archive_pilot
-- Moved pilot scripts to analysis/pilot/
-- Archived docs/RESEARCH_FEASIBILITY_PROMPT.md
-- Added README, .gitignore, .env.example, config/config.yaml
-- Created data/raw/{bigkinds,ecos,datalab}, data/processed/{regimes,reactions}
-- Updated docs/research_plan.md §10 to match repo reality
-- Installed: scikit-learn, scipy, ruptures, matplotlib, seaborn (+ existing pandas/numpy/...)
-- Next: Step 2 — put BigKinds + ECOS (+ optional DataLab) into raw folders
+---
 
-[2026-08-08] Environment ready
-- .env present; ECOS_API_KEY / NAVER_CLIENT_ID / NAVER_CLIENT_SECRET load OK
-- .env.example restored with placeholders only
-- Created .venv (Python 3.13.14) + pip install -r requirements.txt (imports_ok)
-- Next: Step 2 — ECOS/DataLab API clients + BigKinds raw dump
+# Progress — 2026-09-03 (b): Step 2 done — corpus + datalab rebuilt
 
-[2026-08-08] Notion research documentation
-- Updated existing page under 교수 학생간 프로젝트
-- Full research doc: purpose, significance, progress, architecture, methods,
-  data strategy, file structure, libraries/functions, expected outcomes
-- Local mirror: docs/notion_research_doc.md
-- Next: Step 2 — ECOS/DataLab API clients + BigKinds raw dump
+## Corpus (new `preprocess/` package)
+- `preprocess/build_corpus.py` — 61 xlsx (998,020) -> `news_corpus.parquet` **931,709 rows**
+  2021-01 ~ 2026-07, 67 months, no gaps. Dropped: 53,194 bigkinds exclude flags,
+  12,976 file-boundary dupes, 141 empty keyword rows. Dedup key = URL, fallback 일자|언론사|제목.
+- `--audit` confirms NO file hits the 20,000 export cap. The 2023 2-month blocks
+  (25,856~29,055 rows) are fine; the README cap warning is resolved.
+- FINDING: `본문` is truncated to 200 chars in 92~97% of rows. Topic input must be the
+  `키워드` column (bigkinds morpheme analysis of the FULL article), not 본문.
+- LIMITATION (unresolved): only 3 outlets — 매일경제, 서울경제, 한국경제. All business dailies.
+  Media-bias control from research_plan §6 is not achievable. Either add general dailies
+  or narrow the claim to "경제지 기준 이슈 국면". Documented in plan §6 and README.
+
+## Keyword mining (`preprocess/mine_keywords.py`)
+- stages: df -> monthly -> topics (NMF 14 on 201,000 doc sample) / cluster (co-movement)
+- Filters out calendar/number tokens; without that filter clusters were pure '3일/1월/1분기'.
+- Topic shares: T6 규제 10.5, T7 수출제조 9.9, T3 소비유통 9.2, T1 거시 8.4,
+  T10 AI반도체 7.9, T11 자본거래 7.8, T2 부동산 6.9, T13 대출은행 6.0 ...
+- T10 (AI·반도체) is the biggest mover: 2022-09 trough -> 2026-06 peak 16.2%.
+
+## Datalab rebuilt on corpus evidence
+- Regimes 5 -> 7: 물가·금리·부동산·**가계대출**·**대외통상**·**AI반도체**·**증시실적**
+  (dropped `성장` — no matching topic; split 가계대출 out of 금리 — different peaks)
+- Request design changed: 1 target group + 1 anchor group (`은행`) per request.
+  `score_rel = score / anchor_score` is comparable ACROSS requests.
+  Anchor CV 0.185 was lowest of 8 candidates (경제 0.307, 주식 0.640).
+  Verified: anchor shape identical across all 7 requests (max sd 1.2e-05 after mean-norm).
+  Resolution fixed: 25 of 28 sub groups now peak at 100 (was: 근원물가 peaked at 0.09).
+- Period pinned to config (2016-01-01 ~ 2026-07-31). Was `date.today()` = irreproducible.
+- Daily: datalab omits below-threshold days entirely -> filled 0 (식료품물가 24d, 공급망 208d).
+- Sanity: 금리 peaks 2022-11, 물가 spikes 2022-07, AI반도체 7 -> 102 by 2025-07,
+  증시실적 490 by 2026-07 (matches the KOSPI run in ECOS). Level corr with corpus topics:
+  AI반도체~T10 0.75, 대외통상~T10 0.72, 증시실적~T5 0.52, 금리~T1 0.45.
+  MoM log-diff corr is weak (0.11~0.40) — search and news co-move in level, not month to month.
+  That is an RQ4 finding, not a defect.
+
+## Also done
+- ECOS USD_KRW 0000100 (월평균) -> 0000200 (월말), matches KOSPI month-end close. Re-collected.
+- config.yaml: CPI added to ecos indicators, datalab schema rewritten, regimes relabelled,
+  duplicate `regimes` key removed, `processed_corpus` path added, topic_model -> nmf/14.
+- Deleted `api/collect_datalab_detail.py` and old datalab_{detail,trends}_* outputs (superseded).
+- `api/collect_naver.py` trimmed to the pilot news path; datalab moved to `api/collect_datalab.py`.
+- Removed stale `__pycache__`.
+
+## Next
+1. Step 3: LDA/NMF on corpus -> monthly regime labels (`data/processed/regimes`)
+2. Changepoint detection (ruptures) -> regime transitions
+3. Reaction tables vs ECOS (`data/processed/reactions`)
+
+## Still open
+- 3-outlet media bias — decide: add general dailies, or narrow the paper's claim.
+- `data/**/_archive_pilot/`, empty `crawler/`, `docs/notion_research_doc.md` (stale) kept on purpose.
+
+---
+
+# Progress — 2026-08-31 (b): ECOS done
+
+## Done
+- `api/ecos_client.py` — StatisticSearch/ItemList/TableList, pagination, INFO-200 = empty
+- `api/ecos_indicators.py` — codes verified against live ECOS item lists:
+  - CCSI 511Y002 / FME+99988 | KOSPI 901Y014 / 1070000 (월말종가)
+  - USD_KRW 731Y004 / 0000001+0000100 (평균) | BASE_RATE 722Y001 / 0101000
+  - CPI 901Y009 / 0 (2020=100)
+- `python -m api.collect_ecos` -> `ecos_monthly.csv` (635 rows) + `ecos_monthly_wide.csv`
+  - 2016-01 ~ 2026-07, 127 months, ZERO nulls on all 5 indicators
+  - spot-checked: 2020-03 CCSI 79.0, 2022-10 USD/KRW 1426.66 & base 3.0
+- Period fixed: study 2021-01~2026-07, data_buffer_start 2016-01 (config.yaml)
+- Docs synced: README, research_plan §8/§10, api/README, ecos/README, bigkinds/README
+
+## Next
+1. bigkinds ingest: 58 xlsx -> unified corpus (date/title/content/source, dedup, monthly)
+2. Step 3 topic model -> monthly regime labels
+3. User re-downloading 9 capped files (2024 x8, 2022-11-17~12-31 x1) monthly
+
+---
+
+# Progress — 2026-08-31 (status audit)
+
+## Step 2 data status
+- bigkinds: 58 xlsx in `data/raw/bigkinds/<YYYY년>/`, 2021-01-01~2026-07-31, ~990k rows, ~1.05GB
+  - schema = BigKinds standard (일자/언론사/제목/본문/키워드/특성추출/URL ...)
+  - CAP WARNING: 2024 blocks and 2022-11-17~12-31 are exactly 20,000 rows = export limit -> partial coverage
+  - missing vs plan: 2016-01~2020-12
+- datalab: complete, 2016-01~2026-08 (5 regimes + 25 sub groups, monthly/daily)
+- ecos: EMPTY. no collector module in `api/` (ECOS_API_KEY is set in .env)
+
+## Not started
+- bigkinds -> unified corpus preprocessing (date/title/content/source, dedup, monthly)
+- Step 3 topic/regime detection, Step 4 reaction, Step 5 robustness
+- only `analysis/pilot/*` exists
+
+## Next
+1. ECOS collector -> `data/raw/ecos/ecos_monthly.csv` (CCSI, KOSPI, USD_KRW, BASE_RATE)
+2. bigkinds ingest + preprocessing script
+3. decide study period (2021-01~ vs backfill 2016~) and 2024 cap handling
+
+---
+
+# Progress — 2026-08-12
+
+## Done
+- Detail keyword sets: `api/datalab_keyword_sets.py` (5 regimes × 5 subgroups)
+- Collector: `python -m api.collect_datalab_detail`
+- Outputs:
+  - `datalab_detail_monthly.xlsx` (3,200 data rows + summary sheets)
+  - `datalab_detail_daily.xlsx` (~96k rows)
+  - `datalab_detail_keywords.md`
+- Note: score comparable only within each regime sheet

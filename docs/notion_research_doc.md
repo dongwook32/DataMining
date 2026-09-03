@@ -1,7 +1,7 @@
 <callout icon="📌" color="blue_bg">
 	**한 줄 정의**: 경제 뉴스·검색 데이터를 마이닝해 시기별 이슈 국면(물가·금리·부동산·대외 등)을 탐지하고, 국면별 코스피·환율·CCSI 반응 패턴 차이를 검증한다.
-	<br>**현재 단계**: Step 2 직전 (본데이터 구축) · 파일럿 판정 **Conditional Go** (2026-08-01)
-	<br>**저장소**: `DataMining` · 공통 기간 권장 **2016-01 ~ 최신 가능 월**
+	<br>**현재 단계**: Step 2 완료 · 파일럿 산출물(`_archive_pilot`, `analysis/pilot`)은 2026-09-03 삭제. 최신 구조는 저장소 `README.md` / `docs/research_plan.md`를 본다.
+	<br>**저장소**: `DataMining` · 분석 기간 **2021-01 ~ 2026-07**
 </callout>
 <table_of_contents color="gray"/>
 ---
