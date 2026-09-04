@@ -1,3 +1,62 @@
+# Progress — 2026-09-04: preprocessing done — doc-term matrix + monthly panel
+
+## Doc-term matrix (`preprocess/build_doc_matrix.py`, new)
+- Full corpus, no sampling: 931,709 x 28,343 binary CSR, 79,470,510 nnz (density 0.301%).
+  Vocab = keyword_df filtered at df>=200, df_ratio<=0.15. Build time ~96s.
+- Outputs `doc_term.npz` + `doc_term_vocab.csv` (col/term/df) + `doc_term_docs.parquet`
+  (article_id/month/n_terms). Row order identical to `news_corpus.parquet`.
+- WHY: `mine_keywords --stage topics` takes the FIRST 3,000 docs per month, not a random
+  sample. parquet rows are ordered by date then outlet, so that 201,000-doc sample skews to
+  early-in-month articles and specific outlets. Fine for picking the 7 regimes, NOT usable
+  as the input that fixes the regime time series. Step 3 must use doc_term.npz.
+- Round-trip verified: reconstructed token sets match `_tokens()` on the raw parquet exactly.
+- 6 docs have n_terms==0 -> drop before fitting (undefined topic share).
+
+## Monthly panel (`preprocess/build_panel.py`, new)
+- `data/processed/panel/monthly_panel.csv` — 127 months x 54 cols, 2016-01~2026-07,
+  `in_study` marks the 67-month window. ZERO missing inside the study window.
+  ECOS 5 levels + 9 derived + 7 regimes x 5 search cols + news_n/news_sources.
+- `monthly_panel_search_sub.csv` — 28 sub groups. `panel_qc.md` — regenerated every run.
+- Transform choice: log-diff for prices (KOSPI/USD_KRW/CPI), plain diff for index/rate
+  (CCSI/BASE_RATE), cpi_yoy alongside cpi_mom for base effects.
+- config.yaml: added `paths.processed_panel` and `regimes.slugs` (ASCII column names).
+- Installed statsmodels (was missing; needed for ADF here and Step 4 regressions).
+
+## Findings that change Step 4 design
+- KOSPI 2026 is REAL, not a collection error. Verified against news: 2026-03 US/Israel-Iran
+  war -> oil >$100, USD/KRW >1,500, KOSPI -19.1%; 2026-07 crash -22.19% (8476.48 -> 6595.45,
+  with a record +17.91% single day on 07-31). ECOS matches published month-end closes.
+- CONSEQUENCE: kospi_ret sd by sub-period = 6.02 / 4.58 / 6.44 / 22.03 (2026H1).
+  usdkrw_ret and ccsi_diff do NOT show the same jump -> KOSPI-specific variance break.
+  Raw kospi_ret in a regime regression would be driven by the last 7 months.
+  Added `kospi_ret_std` = kospi_ret / kospi_vol12.shift(1) as the robustness dependent var.
+  Also run a 2026-excluded subsample.
+- ADF on kospi_ret: p=0.695 with AIC (picks lag 3) but p=0.0000 at lag 0. Small-sample lag
+  over-selection off spurious acf(3)=0.22, acf(4)=0.38 — not a unit root. QC now reports both.
+- Search spikes are real too. |z|>=3 hits 12 months; anchor z is within +-2 on every one,
+  so `score_rel` blowups are genuine search surges, not anchor collapse. Biggest:
+  물가 2026-03 z=+8.5 (score hits 100 = period max), 대외통상 2026-03 z=+4.8,
+  증시실적 2026-07 z=+5.4. Same war/crash events as the index moves.
+- Search-indicator corr (study window, diffs) is sane: 대외통상~usdkrw_ret +0.39 and
+  ~ccsi_diff -0.24; 물가~kospi_ret -0.36. Directions match the narrative.
+- .gitignore: `data/**/*.md` was being ignored, so the schema docs from commit f23bdec could
+  never be committed. Added a re-include for .md only; data files stay ignored.
+
+## Next
+1. Step 3: TF-IDF + NMF/LDA on `doc_term.npz` -> monthly topic shares -> regime labels
+   (`data/processed/regimes`). Compare against the 14-topic exploratory run.
+2. Changepoint detection (ruptures) on the topic-share vector -> transitions.
+   Expect 2026-03 and 2026-07 to show up; that is a validity check, not a finding.
+3. Join regime labels onto `monthly_panel.csv` by `month` -> reaction tables
+   (`data/processed/reactions`). Use kospi_ret and kospi_ret_std side by side.
+
+## Still open
+- 3-outlet media bias — unchanged, still needs a decision.
+- 67 monthly observations vs 7 regime dummies + controls. Degrees of freedom are tight;
+  prefer pooled/grouped comparisons over a saturated regression.
+
+---
+
 # Progress — 2026-09-03 (c): drop Step 1 archive
 
 ## Done

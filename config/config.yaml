@@ -12,6 +12,7 @@ paths:
   raw_ecos: data/raw/ecos
   raw_datalab: data/raw/datalab
   processed_corpus: data/processed/corpus
+  processed_panel: data/processed/panel
   processed_regimes: data/processed/regimes
   processed_reactions: data/processed/reactions
 
@@ -33,6 +34,15 @@ schemas:
 # 빅카인즈 코퍼스 토픽 마이닝으로 재설정 (preprocess.mine_keywords 참고)
 regimes:
   labels: [물가, 금리, 부동산, 가계대출, 대외통상, AI반도체, 증시실적]
+  # 패널 컬럼명·회귀식에 쓰는 ASCII 약칭. 라벨과 1:1로 유지할 것.
+  slugs:
+    물가: prices
+    금리: rates
+    부동산: realestate
+    가계대출: hhdebt
+    대외통상: trade
+    AI반도체: aichip
+    증시실적: equity
   freq: M  # 월 단위
 
 topic_model:

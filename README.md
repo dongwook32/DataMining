@@ -8,12 +8,14 @@
 
 ## 현재 단계
 
-**Step 2 완료** — 뉴스 코퍼스 931,709건 구축, 지표·검색 데이터 정합. 다음은 국면 탐지 모델.
+**전처리 완료** — 코퍼스 931,709건이 문서×어휘 행렬(931,709 × 28,343)로, 지표·검색·뉴스량이
+월 패널(127개월 × 54열)로 정리됐습니다. Step 3의 입력이 모두 준비된 상태입니다.
 
 | 단계 | 상태 |
 |------|------|
 | 1. 설계·파일럿 | 완료 (산출물 정리 완료, 본데이터로 전환) |
 | 2. 본데이터 (빅카인즈·ECOS·데이터랩) | 완료 |
+| 2.5 전처리 (문서-어휘 행렬 · 월 패널) | 완료 |
 | 3. 국면 탐지 모델 | 진행 예정 |
 | 4. 반응 분석 | 대기 |
 | 5. 강건성·논문화 | 대기 |
@@ -38,7 +40,8 @@ data/
     ecos/          # ECOS 지표
     datalab/       # 네이버 데이터랩
   processed/
-    corpus/        # 통합 뉴스 코퍼스 + 키워드 마이닝 산출
+    corpus/        # 통합 뉴스 코퍼스 + 키워드 마이닝 + 문서-어휘 행렬
+    panel/         # 지표·검색·뉴스량 월 패널 (분석 입력)
     regimes/       # 월별 국면 시계열
     reactions/     # 국면별 반응표
 docs/
@@ -67,7 +70,22 @@ python -m api.collect_ecos
 python -m api.collect_datalab
 ```
 
-코퍼스에서 국면 후보 어휘를 다시 뽑으려면:
+## 전처리
+
+수집이 끝난 뒤 분석 입력을 만드는 단계입니다. 둘 다 결정적이라 같은 입력이면 같은 결과가 나옵니다.
+
+```powershell
+python -m preprocess.build_doc_matrix   # 코퍼스 전량 → 문서×어휘 행렬 (약 1분 30초)
+python -m preprocess.build_panel        # 지표·검색·뉴스량 → 월 패널 + QC 리포트
+```
+
+| 산출 | 형태 | 쓰는 곳 |
+|------|------|---------|
+| `data/processed/corpus/doc_term.npz` | 931,709 × 28,343 희소행렬 | Step 3 토픽모델 |
+| `data/processed/panel/monthly_panel.csv` | 127개월 × 54열 | Step 4 반응 분석 |
+| `data/processed/panel/panel_qc.md` | 품질 점검 리포트 | 매 실행마다 갱신 |
+
+코퍼스에서 국면 후보 어휘를 다시 뽑으려면 (탐색용):
 
 ```powershell
 python -m preprocess.mine_keywords --stage df
@@ -82,3 +100,8 @@ python -m preprocess.mine_keywords --stage cluster   # 월별 동조성 군집
   원문 전체를 형태소 분석한 `키워드` 컬럼을 씁니다.
 - 코퍼스 언론사가 **매일경제·서울경제·한국경제 3개 경제지**뿐입니다. 매체 편향 통제가
   불가능하므로 논문 한계에 명시하거나 종합지를 추가 투입해야 합니다.
+- `mine_keywords --stage topics`의 `topic_monthly_share.csv`는 월별 앞 3,000건 표본이라
+  **탐색용입니다**. 국면 시계열은 표본 없는 `doc_term.npz`로 다시 추정해야 합니다.
+- 분석 창 끝(2026-03 중동전쟁, 2026-07 대폭락)에 극단적 사건이 몰려 코스피 월수익률
+  변동성이 앞 구간의 네 배가 넘습니다. 반응 분석은 `kospi_ret_std`와 2026년 제외 표본으로
+  강건성을 함께 봐야 합니다. 상세는 `data/processed/panel/panel_qc.md`.

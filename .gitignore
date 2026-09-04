@@ -42,6 +42,11 @@ data/processed/reactions/*
 !data/processed/reactions/.gitkeep
 data/processed/corpus/*
 !data/processed/corpus/.gitkeep
+data/processed/panel/*
+!data/processed/panel/.gitkeep
+
+# README·스키마 설명은 데이터가 아니라 문서다. 데이터 파일만 빼고 추적한다.
+!data/**/*.md
 
 # Optional local caches
 .cache/
