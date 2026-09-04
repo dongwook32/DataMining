@@ -13,6 +13,8 @@
 
 `collected_at` 컬럼에도 같은 시각이 들어 있습니다. 재수집하면 수집기가 자동으로 갱신합니다.
 
+컬럼 한 줄 설명: 각 CSV 옆의 `*.columns.md` (예: [`datalab_regime_monthly.columns.md`](datalab_regime_monthly.columns.md))
+
 ## 파일
 | 파일 | 내용 |
 |------|------|
