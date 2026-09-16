@@ -8,15 +8,15 @@
 
 ## 현재 단계
 
-**전처리 완료** — 코퍼스 931,709건이 문서×어휘 행렬(931,709 × 28,343)로, 지표·검색·뉴스량이
-월 패널(127개월 × 54열)로 정리됐습니다. Step 3의 입력이 모두 준비된 상태입니다.
+**Step 3 완료** — 전량 변환 NMF로 월별 국면 시계열과 전환 시점을 만들었습니다.
+다음 단계는 국면 라벨을 월 패널에 붙여 반응표를 만드는 일입니다.
 
 | 단계 | 상태 |
 |------|------|
 | 1. 설계·파일럿 | 완료 (산출물 정리 완료, 본데이터로 전환) |
 | 2. 본데이터 (빅카인즈·ECOS·데이터랩) | 완료 |
 | 2.5 전처리 (문서-어휘 행렬 · 월 패널) | 완료 |
-| 3. 국면 탐지 모델 | 진행 예정 |
+| 3. 국면 탐지 모델 | 완료 |
 | 4. 반응 분석 | 대기 |
 | 5. 강건성·논문화 | 대기 |
 
@@ -79,11 +79,21 @@ python -m preprocess.build_doc_matrix   # 코퍼스 전량 → 문서×어휘 �
 python -m preprocess.build_panel        # 지표·검색·뉴스량 → 월 패널 + QC 리포트
 ```
 
+## 국면 탐지
+
+```powershell
+python -m analysis.detect_regimes              # TF-IDF + NMF → 월별 국면 + 변화점
+python -m analysis.detect_regimes --remap-only # 매핑·변화점만 다시
+```
+
 | 산출 | 형태 | 쓰는 곳 |
 |------|------|---------|
 | `data/processed/corpus/doc_term.npz` | 931,709 × 28,343 희소행렬 | Step 3 토픽모델 |
 | `data/processed/panel/monthly_panel.csv` | 127개월 × 54열 | Step 4 반응 분석 |
 | `data/processed/panel/panel_qc.md` | 품질 점검 리포트 | 매 실행마다 갱신 |
+| `data/processed/regimes/regime_monthly.csv` | 67개월 국면 라벨·비중 | Step 4 조인 |
+| `data/processed/regimes/changepoints.csv` | PELT 전환 시점 | Step 4 이벤트 창 |
+| `data/processed/regimes/regimes_qc.md` | 매핑·피크·전환 점검 | 매 실행마다 갱신 |
 
 코퍼스에서 국면 후보 어휘를 다시 뽑으려면 (탐색용):
 
@@ -98,10 +108,10 @@ python -m preprocess.mine_keywords --stage cluster   # 월별 동조성 군집
 
 - 빅카인즈 `본문`은 내보내기에서 **200자로 잘립니다**(기사 95%). 토픽 입력은 본문이 아니라
   원문 전체를 형태소 분석한 `키워드` 컬럼을 씁니다.
-- 코퍼스 언론사가 **매일경제·서울경제·한국경제 3개 경제지**뿐입니다. 매체 편향 통제가
-  불가능하므로 논문 한계에 명시하거나 종합지를 추가 투입해야 합니다.
+- 코퍼스 언론사가 **매일경제·서울경제·한국경제 3개 경제지**뿐입니다. 종합지를 추가하지
+  않기로 했으므로 결과는 **경제지 기준 이슈 국면**으로 읽습니다. 매체 편향은 한계로 남습니다.
 - `mine_keywords --stage topics`의 `topic_monthly_share.csv`는 월별 앞 3,000건 표본이라
-  **탐색용입니다**. 국면 시계열은 표본 없는 `doc_term.npz`로 다시 추정해야 합니다.
+  **탐색용입니다**. 국면 시계열은 `data/processed/regimes`의 전량 변환 적합입니다.
 - 분석 창 끝(2026-03 중동전쟁, 2026-07 대폭락)에 극단적 사건이 몰려 코스피 월수익률
   변동성이 앞 구간의 네 배가 넘습니다. 반응 분석은 `kospi_ret_std`와 2026년 제외 표본으로
   강건성을 함께 봐야 합니다. 상세는 `data/processed/panel/panel_qc.md`.

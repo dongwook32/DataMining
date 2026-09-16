@@ -1,3 +1,59 @@
+# Progress — 2026-09-15: BigKinds xlsx → JSON mirrors
+
+- Added `preprocess/bigkinds_to_json.py` (`python -m preprocess.bigkinds_to_json`):
+  all 61 `data/raw/bigkinds/**/*.xlsx` → records-array `.json` beside each. Originals kept.
+- All 19 original columns, original Korean names. No `bigkinds_schema.COLUMN_MAP`
+  renaming — that belongs to `build_corpus.py`, this is a format-only mirror.
+- `dtype=str` for every column, per the `bigkinds_schema` note that `뉴스 식별자`
+  (`02100311.20210131095312001`) becomes a float without it.
+- 998,020 rows total; 1,071.7 MB → 2,830.7 MB (2.764 GB on disk, 61 files).
+- Verified twice: in-script reload, then an independent openpyxl `read_only` cell-by-cell
+  diff that bypasses pandas. 61/61 OK.
+- Found: 55 of 61 exports declare `<dimension ref="A1"/>` in `xl/worksheets/sheet1.xml`
+  (2021:12, 2022:12, 2024:12, 2025:12, 2026:7); only the 6 2023 files are correct. openpyxl
+  `read_only` trusts it and yields 1 row × 1 col; needs `ws.reset_dimensions()`.
+  `build_corpus.py` uses plain `pd.read_excel` (not read_only) so it is unaffected.
+- `data/raw/bigkinds/*` is gitignored; nothing new is tracked.
+
+# Progress — 2026-09-14: raw CSV → JSON mirrors
+
+- Added `preprocess/csv_to_json.py` (`python -m preprocess.csv_to_json`): scans
+  `data/raw/**/*.csv`, writes a records-array `.json` next to each CSV. Originals kept.
+- Reads with `float_precision="round_trip"` and writes with `json.dumps`, not
+  `DataFrame.to_json` — pandas' default C float parser was off by 1 ULP on 262
+  `score_rel` values, and `to_json`'s `double_precision=10` truncates 16-digit floats.
+- Converted 5 files (27,055 / 889 / 108,220 / 3,556 / 127 rows); 9.204+0.299+18.186+
+  0.605+0.008 MB → 13.435+0.438+35.113+1.161+0.019 MB.
+- Verified twice: in-script reload, then an independent stdlib `csv`/`json` diff of
+  every cell. 0 mismatches on the second run.
+- `data/raw/datalab/*` and `data/raw/ecos/*` are gitignored, so nothing new is tracked.
+- Not converted: `data/processed/**` CSVs and the BigKinds `.xlsx` — the request was
+  scoped to raw CSVs.
+
+# Progress — 2026-09-07: Step 3 regime detection
+
+- Added `analysis/detect_regimes.py`: TF-IDF on full `doc_term.npz`, NMF fit on
+  month-stratified random 3,000/month (201,000 docs), transform all 931,703.
+- Dropped MiniBatchNMF (stopped at 3 epochs; generic topics). Same sklearn NMF as
+  the exploratory run, but sample is random not first-N.
+- Labels = z-score argmax of 7 regime shares, not raw argmax (raw is 증시실적 every month).
+- Manual override topic 3 (Hyundai/Kia EV) → 기타. 물가 has no exclusive topic.
+- Changepoints: PELT L2 on column-z scores, penalty dim*ln(n). Raw-share BIC found 0.
+- Outputs in `data/processed/regimes/` + QC. README/research_plan/RESEARCH_LOG updated.
+- Media scope: keep 3 business dailies ("경제지 기준").
+
+# Progress — 2026-09-06: merge Cursor rules into one file
+
+- Combined honesty, consult/verify, and research-log into `.cursor/rules/project.mdc` (alwaysApply).
+- Deleted `.cursor/rules/honesty-and-evidence.mdc`, `consult-and-verify.mdc`, `research-log.mdc`.
+- Content unchanged except file layout. Confirmed `.cursor/rules/` contains only `project.mdc`.
+
+# Progress — 2026-09-06: always-apply integrity rules
+
+- Added `.cursor/rules/honesty-and-evidence.mdc` (alwaysApply): no fabricated claims; cite file/command/paper/user only.
+- Added `.cursor/rules/consult-and-verify.mdc` (alwaysApply): stop and ask if blocked/impossible; verify form then truth at least twice before declaring done.
+- Existing `.cursor/rules/research-log.mdc` unchanged.
+
 # Progress — 2026-09-04: preprocessing done — doc-term matrix + monthly panel
 
 ## Doc-term matrix (`preprocess/build_doc_matrix.py`, new)
