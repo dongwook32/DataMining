@@ -40,6 +40,14 @@ data/processed/regimes/*
 !data/processed/regimes/.gitkeep
 data/processed/reactions/*
 !data/processed/reactions/.gitkeep
+data/processed/regimes_lda/*
+!data/processed/regimes_lda/.gitkeep
+data/processed/reactions_lda/*
+!data/processed/reactions_lda/.gitkeep
+data/processed/regimes_bertopic/*
+!data/processed/regimes_bertopic/.gitkeep
+data/processed/reactions_bertopic/*
+!data/processed/reactions_bertopic/.gitkeep
 data/processed/corpus/*
 !data/processed/corpus/.gitkeep
 data/processed/panel/*

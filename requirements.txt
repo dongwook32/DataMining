@@ -32,6 +32,10 @@ pyarrow>=15.0
 # 선택: 한국어 형태소 (Java 필요) — 필요 시 주석 해제
 # konlpy>=0.6
 
+# 선택: 폴백 BERTopic (본분석 NMF에는 필요 없음)
+# bertopic>=0.16
+# sentence-transformers>=3.0
+
 # 실행 예시
 #   python -m api.collect_ecos
 #   python -m api.collect_datalab

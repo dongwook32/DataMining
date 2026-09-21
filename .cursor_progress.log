@@ -1,3 +1,49 @@
+# Progress — 2026-09-21: docs consolidate
+
+- Added docs/연구_쉬운_요약.md, docs/기술_참고.md, docs/README.md; stub docs/research_plan.md.
+- Archived git HEAD research_plan to docs/_archive/research_plan_초안.md; moved feasibility to _archive/.
+- Removed docs/pipeline.md, functions.md, glossary.md, notion_research_doc.md.
+- README + build_results_report source paths updated.
+- Notion replace_content blocked (free block limit); page title already "한눈에 보기".
+
+# Progress — 2026-09-20: docs status sync (no code)
+
+- Updated README, pipeline, functions, glossary, results, research_plan,
+  feasibility_report banner, notion_research_doc status/architecture/config
+  so they match Step 4–5 complete (NMF canonical, LDA/BERTopic fallback).
+- Pointed to `docs/results.md` and the briefing PDF. Did not rerun analysis.
+- RESEARCH_LOG unchanged (docs-only).
+
+# Progress — 2026-09-19: research results PDF briefing
+
+- Added `analysis/build_results_report.py`: reads processed CSV/QC, draws
+  16 figures, writes `docs/한국형_경제이슈국면_연구결과보고서.pdf` (15 pages).
+- Figures in `docs/report_figures/`. Command: `python -m analysis.build_results_report`.
+- Numbers taken from CSV; NMF remains canonical. No new analysis.
+
+# Progress — 2026-09-19: BERTopic fallback comparison
+
+- Added `analysis/fallback_bertopic.py`: keyword-bag texts from `doc_term`,
+  MiniLM embeddings, stratified 1000/month (67k), no full transform.
+- Installed bertopic 0.17.4 + sentence-transformers 6.1.0 (optional in requirements).
+- HDBSCAN yielded 6 topics (not 14); mapping collapsed to 증시실적 all 67 months.
+- `group_tests` now skips KW/ANOVA/Levene when k<2 (nan rows).
+- Outputs: `data/processed/regimes_bertopic/`, `reactions_bertopic/`.
+- gitignore + .gitkeep for those dirs. NMF labels unchanged.
+
+# Progress — 2026-09-19: Step 4–5 pipeline + LDA fallback
+
+- Added `analysis/measure_reactions.py` (`analyze`, `join_regime_panel`) if not already
+  the sole RQ3 module; `robustness.py`, `rq4_search.py`, `fallback_topics.py`,
+  `run_pipeline.py`.
+- Entry: `python -m analysis.run_pipeline` (processed cache only; no raw re-collect).
+- Fallback trigger: all 3 primary KW p>=0.05 OR 2026-exclude significance flip.
+  Triggered on the first; LDA online 14 topics, 201k fit / full transform, 490.6s.
+- BERTopic skipped (not installed). NMF remains canonical.
+- Docs: `docs/pipeline.md`, `docs/functions.md`, `docs/glossary.md`, `docs/results.md`.
+- gitignore: `regimes_lda/*`, `reactions_lda/*` (keep .md / .gitkeep).
+- README step table now 4–5 complete.
+
 # Progress — 2026-09-15: BigKinds xlsx → JSON mirrors
 
 - Added `preprocess/bigkinds_to_json.py` (`python -m preprocess.bigkinds_to_json`):

@@ -3,22 +3,25 @@
 뉴스·검색 데이터로 경제 이슈 국면(물가·금리·부동산·대외 등)을 탐지하고,
 국면별 코스피·환율·CCSI 반응 패턴을 분석하는 연구 저장소입니다.
 
-자세한 설계: [`docs/research_plan.md`](docs/research_plan.md)  
-파일럿 판정: [`docs/feasibility_report.md`](docs/feasibility_report.md) (Conditional Go)
+**쉬운 설명 (비전공자·발표):** [`docs/연구_쉬운_요약.md`](docs/연구_쉬운_요약.md)  
+**재실행·코드·용어:** [`docs/기술_참고.md`](docs/기술_참고.md) · **문서 목록:** [`docs/README.md`](docs/README.md)  
+수치 색인: [`docs/results.md`](docs/results.md) · 브리핑 PDF: [`docs/한국형_경제이슈국면_연구결과보고서.pdf`](docs/한국형_경제이슈국면_연구결과보고서.pdf)  
+진행 일지: [`RESEARCH_LOG.md`](RESEARCH_LOG.md) · PDF용 차별점·RQ 요약: [`docs/research_plan.md`](docs/research_plan.md)
 
 ## 현재 단계
 
-**Step 3 완료** — 전량 변환 NMF로 월별 국면 시계열과 전환 시점을 만들었습니다.
-다음 단계는 국면 라벨을 월 패널에 붙여 반응표를 만드는 일입니다.
+**Step 4~5 완료** — NMF 국면으로 반응·강건성·RQ4를 돌리고, 그룹 차이가 약하면 LDA 폴백만 켭니다.
+BERTopic은 같은 날 표본 비교로 돌렸고, 본국면은 NMF입니다.
+논문 본문은 쓰지 않습니다. 표·수치·재현 코드가 산출입니다.
 
 | 단계 | 상태 |
 |------|------|
-| 1. 설계·파일럿 | 완료 (산출물 정리 완료, 본데이터로 전환) |
+| 1. 설계·파일럿 | 완료 |
 | 2. 본데이터 (빅카인즈·ECOS·데이터랩) | 완료 |
 | 2.5 전처리 (문서-어휘 행렬 · 월 패널) | 완료 |
-| 3. 국면 탐지 모델 | 완료 |
-| 4. 반응 분석 | 대기 |
-| 5. 강건성·논문화 | 대기 |
+| 3. 국면 탐지 모델 (NMF) | 완료 |
+| 4. 반응 분석 | 완료 |
+| 5. 강건성 · RQ4 · (조건부) LDA 폴백 · BERTopic 비교 | 완료 |
 
 **분석 기간: 2021-01 ~ 2026-07** (빅카인즈 코퍼스 보유 기간, 67개월).
 ECOS·데이터랩은 차분·시차용 lead-in을 위해 2016-01부터 받아 둡니다.
@@ -42,9 +45,13 @@ data/
   processed/
     corpus/        # 통합 뉴스 코퍼스 + 키워드 마이닝 + 문서-어휘 행렬
     panel/         # 지표·검색·뉴스량 월 패널 (분석 입력)
-    regimes/       # 월별 국면 시계열
-    reactions/     # 국면별 반응표
-docs/
+    regimes/       # 월별 국면 시계열 (NMF 본분석)
+    reactions/     # 국면별 반응표 · RQ4 · 강건성 · pipeline_qc
+    regimes_lda/   # 폴백 LDA 국면 (트리거 시에만)
+    reactions_lda/ # 폴백 반응 재추정
+    regimes_bertopic/   # BERTopic 비교 국면 (표본, NMF 유지)
+    reactions_bertopic/ # BERTopic 비교 반응
+docs/              # 계획서 · 용어 · 함수 · 파이프라인 · 결과 색인 · 브리핑 PDF
 ```
 
 ## 환경 설정
@@ -94,6 +101,29 @@ python -m analysis.detect_regimes --remap-only # 매핑·변화점만 다시
 | `data/processed/regimes/regime_monthly.csv` | 67개월 국면 라벨·비중 | Step 4 조인 |
 | `data/processed/regimes/changepoints.csv` | PELT 전환 시점 | Step 4 이벤트 창 |
 | `data/processed/regimes/regimes_qc.md` | 매핑·피크·전환 점검 | 매 실행마다 갱신 |
+
+## 반응 · 강건성 · 검색 · 통합 실행
+
+`processed` 캐시가 있으면 raw를 다시 받지 않습니다.
+
+```powershell
+python -m analysis.run_pipeline              # 반응 → 강건성 → RQ4 → (조건부) LDA
+python -m analysis.measure_reactions         # RQ3만
+python -m analysis.robustness                # 2026 제외
+python -m analysis.rq4_search                # 뉴스 vs 검색
+python -m analysis.fallback_topics           # LDA 폴백만 강제
+python -m analysis.fallback_bertopic         # BERTopic 비교 (표본, NMF 유지)
+python -m analysis.build_results_report      # docs/ 브리핑 PDF (새 분석 아님)
+```
+
+| 산출 | 내용 |
+|------|------|
+| `data/processed/reactions/regime_reaction.csv` | 국면별 지표 평균·분산 |
+| `data/processed/reactions/regime_tests.csv` | KW / ANOVA / Levene |
+| `data/processed/reactions/event_study_summary.csv` | 전환 ±3개월 + 플라시보 분위 |
+| `data/processed/reactions/robustness_compare.csv` | 전체 vs 2026 제외 KW |
+| `data/processed/reactions/rq4_corr.csv` | 뉴스 비중 ↔ 검색 상관 |
+| `data/processed/reactions/pipeline_qc.md` | 한 줄 실행 점검·폴백 판정 |
 
 코퍼스에서 국면 후보 어휘를 다시 뽑으려면 (탐색용):
 

@@ -204,13 +204,16 @@ def map_topics(
     H: np.ndarray,
     vocab: list[str],
     labels: list[str],
+    overrides: dict[int, str] | None = None,
 ) -> pd.DataFrame:
     """토픽 k의 H 질량이 어느 국면 키워드에 실렸는지로 배정한다.
 
     여러 토픽이 한 국면에 붙을 수 있다(탐색에서 증시실적이 그랬다).
-    키워드 질량이 전부 0이면 기타. MANUAL_OVERRIDE가 있으면 그걸 이긴다.
+    키워드 질량이 전부 0이면 기타. overrides 가 None 이면 NMF 용 MANUAL_OVERRIDE.
+    LDA 폴백은 빈 dict 를 넘겨 토픽 번호가 다른 수동 덮어쓰기를 쓰지 않는다.
     """
     by_regime = keyword_index(vocab)
+    ov = MANUAL_OVERRIDE if overrides is None else overrides
     rows = []
     for k in range(H.shape[0]):
         scores = {r: float(H[k, idx].sum()) if idx else 0.0 for r, idx in by_regime.items()}
@@ -223,8 +226,8 @@ def map_topics(
         else:
             regime = best_r
         source = "auto"
-        if k in MANUAL_OVERRIDE:
-            regime = MANUAL_OVERRIDE[k]
+        if k in ov:
+            regime = ov[k]
             source = "manual"
         top_idx = np.argsort(H[k])[::-1][:TOP_TERMS]
         top_terms = ", ".join(vocab[j] for j in top_idx)
