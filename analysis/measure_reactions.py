@@ -584,7 +584,6 @@ def analyze(
     dest: Path,
     qc_title: str = "국면별 반응 분석 점검",
 ) -> dict:
-    """조인된 패널에서 반응표·검정·회귀·이벤트를 dest 에 쓴다."""
     dest = Path(dest)
     dest.mkdir(parents=True, exist_ok=True)
     regimes = present_regimes(df, labels)

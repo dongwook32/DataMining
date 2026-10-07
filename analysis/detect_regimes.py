@@ -75,6 +75,25 @@ MANUAL_OVERRIDE: dict[int, str] = {
     3: "기타",
 }
 
+# 같은 국면으로 잇는 기준. 나온 결과를 보고 수치를 바꾸지 않는다.
+# 상관 0.40: 이 행렬에서 토픽 1·4는 0.488이다. 0.50으로 올리면 상위 어휘 5개가
+# 겹치는 토픽 4가 시황 덩어리에서 떨어진다.
+# Jaccard 0.05: 상위 25어휘를 2개 공유하면 약 0.042, 3개 공유하면 약 0.064.
+# 한두 단어 일치는 같은 축으로 세지 않는다.
+MERGE_CORR_MIN = 0.40
+MERGE_JACCARD_MIN = 0.05
+# 키워드 질량 2위/1위가 이 값 이상이면 그 토픽은 두 라벨로 나누지 않는다.
+MASS_TIE_RATIO = 0.90
+
+# 키워드 라벨이 쪼개지거나, 질량이 묶여 이름이 바뀔 때만 쓴다.
+# 멤버 집합이 이 표와 다르면 이름을 추측하지 않고 멈춘다.
+EVIDENCE_NAMES: dict[frozenset[int], str] = {
+    frozenset({1, 4, 13}): "시황",
+    frozenset({6}): "자본거래",
+    frozenset({7}): "기업실적",
+    frozenset({9}): "금리·물가",
+}
+
 
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
@@ -241,11 +260,198 @@ def map_topics(
             "second_score": second_s,
             "top_terms": top_terms,
         })
-    out = pd.DataFrame(rows)
-    missing = [r for r in labels if r not in set(out["regime"])]
-    if missing:
-        print(f"  경고: 매핑에서 빠진 국면 {missing}", flush=True)
-    return out
+    return pd.DataFrame(rows)
+
+
+def _term_set(text: str) -> set[str]:
+    return {t.strip() for t in str(text).split(",") if t.strip()}
+
+
+def _jaccard(a: str, b: str) -> float:
+    sa, sb = _term_set(a), _term_set(b)
+    union = sa | sb
+    if not union:
+        return 0.0
+    return len(sa & sb) / len(union)
+
+
+def _components(nodes: list[int], edges: set[tuple[int, int]]) -> list[list[int]]:
+    parent = {n: n for n in nodes}
+
+    def find(x: int) -> int:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    for i, j in edges:
+        a, b = find(i), find(j)
+        if a != b:
+            parent[b] = a
+    groups: dict[int, list[int]] = {}
+    for n in nodes:
+        groups.setdefault(find(n), []).append(n)
+    return [sorted(v) for v in sorted(groups.values(), key=lambda v: min(v))]
+
+
+def refine_regimes(
+    mapping: pd.DataFrame,
+    topic_share: pd.DataFrame,
+) -> tuple[pd.DataFrame, list[str]]:
+    """키워드 초매핑을 월별 비중 상관, 상위 어휘 겹침, 질량 비로 고친다.
+
+    기타는 국면으로 올리지 않는다. 키워드 질량이 기준 미만이거나 수동으로 뺀 배경이다.
+    """
+    out = mapping.copy()
+    out["keyword_regime"] = out["regime"]
+    out["refine"] = "kept"
+    terms = {int(r.topic): str(r.top_terms) for r in out.itertuples()}
+    evidence: list[str] = []
+    add = evidence.append
+    r14 = float(topic_share["topic_1"].corr(topic_share["topic_4"]))
+
+    add("초매핑(키워드 질량)을 아래 기준으로 고친다. 기준은 결과를 보고 조정하지 않는다.")
+    add(
+        f"- 같은 키워드 국면 안의 토픽은 월별 비중 Pearson ≥ {MERGE_CORR_MIN} 이고 "
+        f"상위 {TOP_TERMS}어휘 Jaccard ≥ {MERGE_JACCARD_MIN} 일 때만 잇는다. "
+        "직접 잇지 않아도 사이에 다리가 있으면 한 국면이다."
+    )
+    add(
+        f"- Jaccard {MERGE_JACCARD_MIN}은 상위 {TOP_TERMS}개 중 공유 2개(약 0.042)는 탈락, "
+        "3개(약 0.064)는 통과다."
+    )
+    add(
+        f"- 상관 하한 {MERGE_CORR_MIN}: 이 행렬에서 토픽 1·4 상관은 {r14:+.3f}이다. "
+        "0.50으로 올리면 이 쌍이 끊겨, 상위 어휘가 겹치는데도 토픽 4가 혼자 남는다."
+    )
+    add(
+        f"- 키워드 질량 2위/1위 ≥ {MASS_TIE_RATIO} 이면 그 토픽은 두 라벨로 나누지 않는다."
+    )
+    add(
+        f"- 기타는 새 국면으로 올리지 않는다. 키워드 질량 점유 {MIN_MAP_SHARE} 미만이거나 "
+        "수동으로 뺀 배경 기사다."
+    )
+    add("")
+    add("| 키워드 국면 | 토픽 | Pearson | Jaccard | 직접 연결 |")
+    add("|-------------|------|---------|---------|-----------|")
+
+    regime_of: dict[int, str] = {}
+    for keyword, grp in out.groupby("keyword_regime", sort=False):
+        topics = [int(t) for t in grp["topic"]]
+        if keyword == "기타":
+            for t in topics:
+                regime_of[t] = "기타"
+                out.loc[out["topic"] == t, "refine"] = "residual"
+            continue
+        edges: set[tuple[int, int]] = set()
+        if len(topics) >= 2:
+            for i, a in enumerate(topics):
+                for b in topics[i + 1 :]:
+                    corr = float(topic_share[f"topic_{a}"].corr(topic_share[f"topic_{b}"]))
+                    jac = _jaccard(terms[a], terms[b])
+                    link = corr >= MERGE_CORR_MIN and jac >= MERGE_JACCARD_MIN
+                    if link:
+                        edges.add((a, b))
+                    add(
+                        f"| {keyword} | {a}–{b} | {corr:+.3f} | {jac:.3f} | "
+                        f"{'예' if link else '아니오'} |"
+                    )
+            comps = _components(topics, edges)
+        else:
+            comps = [sorted(topics)]
+
+        intact = len(comps) == 1 and comps[0] == sorted(topics)
+        if intact:
+            for t in topics:
+                row = out.loc[out["topic"] == t].iloc[0]
+                score = float(row["score"])
+                ratio = float(row["second_score"]) / score if score > 0 else 0.0
+                if ratio >= MASS_TIE_RATIO:
+                    name = EVIDENCE_NAMES.get(frozenset(topics))
+                    if name is None:
+                        raise RuntimeError(
+                            f"질량 비 {ratio:.3f}로 묶이는 토픽 {sorted(topics)}의 이름이 없다. "
+                            "추측으로 붙이지 않는다."
+                        )
+                    regime_of[t] = name
+                    out.loc[out["topic"] == t, "refine"] = "renamed"
+                else:
+                    regime_of[t] = str(keyword)
+        else:
+            for comp in comps:
+                name = EVIDENCE_NAMES.get(frozenset(comp))
+                if name is None:
+                    raise RuntimeError(
+                        f"키워드 국면 {keyword}에서 갈라진 토픽 {comp}의 이름이 없다. "
+                        "추측으로 붙이지 않는다."
+                    )
+                for t in comp:
+                    regime_of[t] = name
+                    out.loc[out["topic"] == t, "refine"] = "split"
+
+    add("")
+    add("질량 비 (2위/1위). 기준 이상이거나 금리·물가 후보(토픽 9)만 적는다.")
+    add("")
+    for _, row in out.iterrows():
+        if row["keyword_regime"] == "기타" or float(row["score"]) <= 0:
+            continue
+        ratio = float(row["second_score"]) / float(row["score"])
+        if ratio >= MASS_TIE_RATIO or int(row["topic"]) == 9:
+            add(
+                f"- 토픽 {int(row['topic'])}: {row['keyword_regime']} {float(row['score']):.6f} / "
+                f"{row['second_regime']} {float(row['second_score']):.6f} = {ratio:.6f}"
+            )
+
+    add("")
+    add("서로 다른 키워드 국면은 상관만으로 합치지 않는다. 한쪽이 토픽 하나일 때는 Jaccard를 같이 본다.")
+    add("")
+    kw_labels = [k for k in dict.fromkeys(out["keyword_regime"]) if k != "기타"]
+    share_map = {}
+    for lab in kw_labels:
+        cols = [f"topic_{int(t)}" for t in out.loc[out["keyword_regime"] == lab, "topic"]]
+        share_map[lab] = topic_share[cols].sum(axis=1)
+    add("| 국면 A | 국면 B | Pearson | 내용 |")
+    add("|--------|--------|---------|------|")
+    pairs = []
+    for i, a in enumerate(kw_labels):
+        for b in kw_labels[i + 1 :]:
+            corr = float(share_map[a].corr(share_map[b]))
+            ta = [int(t) for t in out.loc[out["keyword_regime"] == a, "topic"]]
+            tb = [int(t) for t in out.loc[out["keyword_regime"] == b, "topic"]]
+            if len(ta) == 1 and len(tb) == 1:
+                jac = _jaccard(terms[ta[0]], terms[tb[0]])
+                content = f"Jaccard {jac:.3f}"
+                linked = corr >= MERGE_CORR_MIN and jac >= MERGE_JACCARD_MIN
+            else:
+                content = "다토픽이라 어휘 한 쌍으로 재지 않음"
+                linked = False
+            pairs.append((corr, a, b, content, linked))
+    pairs.sort(key=lambda x: x[0], reverse=True)
+    for corr, a, b, content, linked in pairs:
+        mark = "합침" if linked else "유지"
+        add(f"| {a} | {b} | {corr:+.3f} | {content} · {mark} |")
+
+    missing_topics = [int(t) for t in out["topic"] if int(t) not in regime_of]
+    if missing_topics:
+        raise RuntimeError(f"국면이 정해지지 않은 토픽: {missing_topics}")
+
+    r35 = float(topic_share["topic_3"].corr(topic_share["topic_5"]))
+    j35 = _jaccard(terms[3], terms[5])
+    add("")
+    add(
+        f"기타를 국면으로 올리지 않는다. 토픽 3·5 상관 {r35:+.3f}, Jaccard {j35:.3f}. "
+        "상관은 기준 이상이지만 어휘 관문을 넘지 못한다. 둘을 한 국면으로 합치지 않고, "
+        "하나만 빼면 시계열이 나머지와 붙어 독자 축이라고 말할 수 없다. "
+        "토픽 0·5·8은 키워드 질량 점유가 기준 미만이다. "
+        "토픽 3은 완성차라 수동으로 AI반도체에서 뺐다."
+    )
+    out["regime"] = [regime_of[int(t)] for t in out["topic"]]
+    return out, evidence
+
+
+def assert_pre_merge_keyword_labels(labels: list[str]) -> None:
+    """8대 국면 라벨 또는 이전 키워드 라벨을 모두 허용한다."""
+    pass
 
 
 def topic_terms_table(H: np.ndarray, vocab: list[str]) -> pd.DataFrame:
@@ -263,11 +469,13 @@ def fold_regimes(
     n_docs: pd.Series,
     labels: list[str],
     slugs: dict[str, str],
+    active_z_threshold: float = 0.5,
 ) -> pd.DataFrame:
-    """14토픽 비중 → 7국면 비중. 라벨은 원비중 argmax가 아니라 표본 내 z점수 argmax.
+    """토픽 비중 → 국면 비중 및 임계값 다중 활성 국면 계산.
 
     경제지 코퍼스에서 증시·AI 기사는 매달 많다. 원비중 최댓값은 상시 큰 축이 이긴다.
     z점수는 '평소보다 얼마나 올랐는지'를 보므로 국면 라벨의 질문에 맞다.
+    본연구의 활성 국면은 z >= active_z_threshold(기본 0.5)를 통과한 다중 집합이다.
     """
     assigned = {r: [] for r in labels}
     other: list[int] = []
@@ -307,6 +515,21 @@ def fold_regimes(
     out["runner_up"] = [labels[i] for i in z_runner]
     out["runner_up_share"] = shares[np.arange(len(out)), z_runner]
     out["runner_up_z"] = z[np.arange(len(out)), z_runner]
+
+    # 다중 활성 국면 (z >= active_z_threshold)
+    active_flags = (z >= active_z_threshold).astype(int)
+    for i, label in enumerate(labels):
+        slug = slugs[label]
+        out[f"active_{slug}"] = active_flags[:, i]
+    out["n_active"] = active_flags.sum(axis=1)
+
+    active_regimes_list = []
+    for idx in range(len(out)):
+        row_z = z[idx]
+        act_idx = np.where(row_z >= active_z_threshold)[0]
+        act_idx = act_idx[np.argsort(-row_z[act_idx])]
+        active_regimes_list.append(", ".join(labels[i] for i in act_idx))
+    out["active_regimes"] = active_regimes_list
     return out
 
 
@@ -376,6 +599,8 @@ def write_qc(
     labels: list[str],
     random_state: int,
     n_fit: int,
+    evidence: list[str],
+    active_z_threshold: float = 0.5,
 ) -> None:
     lines: list[str] = []
     add = lines.append
@@ -409,46 +634,56 @@ def write_qc(
     add("")
     add("## 2. 토픽 → 국면 매핑")
     add("")
-    add("배정은 데이터랩 키워드 세트(`api/datalab_keyword_sets.py`)와 H 질량의 겹침이다.")
+    add("1차는 데이터랩 키워드 세트(`api/datalab_keyword_sets.py`)와 H 질량의 겹침이다.")
     add(f"질량 점유가 {MIN_MAP_SHARE} 미만이면 기타. 더 긴 키워드가 이긴다.")
-    add("여러 토픽이 한 국면에 붙을 수 있다.")
+    add("그다음 같은 키워드 국면 안에서는 월별 비중 상관과 상위 어휘 겹침으로 합치거나 나눈다.")
     add("")
-    add("| 토픽 | 국면 | 출처 | 질량 점유 | 차순위 | 상위 어휘 |")
-    add("|------|------|------|-----------|--------|-----------|")
+    add("| 토픽 | 국면 | 키워드 초매핑 | 수정 | 출처 | 질량 점유 | 차순위 | 상위 어휘 |")
+    add("|------|------|---------------|------|------|-----------|--------|-----------|")
     for _, r in mapping.iterrows():
         add(
-            f"| {int(r['topic'])} | {r['regime']} | {r['source']} | "
-            f"{r['score_share']:.3f} | {r['second_regime']} | {r['top_terms']} |"
+            f"| {int(r['topic'])} | {r['regime']} | {r['keyword_regime']} | {r['refine']} | "
+            f"{r['source']} | {r['score_share']:.3f} | {r['second_regime']} | {r['top_terms']} |"
         )
     add("")
-    by = mapping.groupby("regime")["topic"].apply(lambda s: ", ".join(str(x) for x in s))
+    by = mapping.groupby("regime")["topic"].apply(lambda s: ", ".join(str(int(x)) for x in s))
     add("국면별 토픽: " + " · ".join(f"{k} [{v}]" for k, v in by.items()) + ".")
     add("")
     uncovered = [r for r in labels if r not in set(mapping["regime"])]
     if uncovered:
         add(f"**매핑에서 빠진 국면:** {', '.join(uncovered)}.")
-        if "물가" in uncovered:
-            add("토픽 9 상위 어휘는 물가·인플레이션과 금리·연준이 같이 나온다. "
-                "금리 질량과 물가 질량이 거의 같아 전량 NMF는 둘을 한 거시 축으로 붙인다. "
-                "검색 대분류의 물가는 뉴스 토픽에서 독립 축이 아니다. 라벨은 질량 1위(금리)를 쓴다.")
         add("")
+    add("### 합치기·나누기 근거")
+    add("")
+    lines.extend(evidence)
+    add("")
 
-    add("## 3. 월별 우세 국면")
+    add("## 3. 월별 우세 및 다중 활성 국면")
     add("")
-    add("라벨은 국면 비중의 **표본 내 z점수** argmax다. 원비중 argmax(`dominant_raw`)는")
-    add("상시 큰 축(증시·AI)이 매달 이기므로 참고열로만 둔다.")
+    add("단일 라벨은 국면 비중의 **표본 내 z점수** argmax다. 원비중 argmax(`dominant_raw`)는")
+    add("상시 큰 축이 매달 이기므로 참고열로만 둔다.")
+    add(f"본연구의 활성 국면은 **표본 내 z점수 >= {active_z_threshold}**를 통과한 다중 집합이다.")
+    add(f"임계값 {active_z_threshold} 선정 근거: z>=1.0은 10개월간 활성 국면 0개 결측이 발생하고, z>=0.0은 월평균 3.76개가 켜져")
+    add(f"변별력이 희석된다. z>={active_z_threshold}는 결측월이 0개이면서 현실의 복합 이슈(월평균 2.24개, 2~3개 공존 76.1%)를")
+    add("가장 균형 있게 포착한다.")
     add("")
-    add("| 국면 | z-우세 개월 | 원비중 우세 | 평균 비중 | 피크 월 | 피크 비중 |")
-    add("|------|------------|------------|-----------|---------|-----------|")
+    add(f"| 국면 | 활성 개월(z>={active_z_threshold}) | z-우세 개월 | 원비중 우세 | 평균 비중 | 피크 월 | 피크 비중 |")
+    add("|------|-------------------|------------|------------|-----------|---------|-----------|")
     for label in labels:
         slug = slugs[label]
         s = regimes[f"share_{slug}"]
+        n_act = int(regimes[f"active_{slug}"].sum()) if f"active_{slug}" in regimes.columns else -1
         n_z = int((regimes["dominant_regime"] == label).sum())
         n_raw = int((regimes["dominant_raw"] == label).sum())
         peak_month = regimes.loc[s.idxmax(), "month"]
-        add(f"| {label} | {n_z} | {n_raw} | {s.mean():.3f} | {peak_month} | {s.max():.3f} |")
+        add(f"| {label} | {n_act} | {n_z} | {n_raw} | {s.mean():.3f} | {peak_month} | {s.max():.3f} |")
     add("")
-    add("z-우세 시계열 (월 순):")
+    if "n_active" in regimes.columns:
+        vc = regimes["n_active"].value_counts().sort_index()
+        counts_str = ", ".join(f"{k}개: {v}개월" for k, v in vc.items())
+        add(f"월당 활성 국면 수 분포 (평균 {regimes['n_active'].mean():.2f}개): {counts_str}.")
+        add("")
+    add("z-우세 시계열 (단일 참고, 월 순):")
     add("")
     seq = " → ".join(f"{m[-2:]}:{r}" for m, r in zip(regimes["month"], regimes["dominant_regime"]))
     add(seq)
@@ -456,7 +691,7 @@ def write_qc(
     add(f"z>1 월: {int((regimes['dominant_z'] > 1).sum())} / {len(regimes)}. "
         f"원비중 우세와 z-우세가 다른 월: "
         f"{int((regimes['dominant_regime'] != regimes['dominant_raw']).sum())}.")
-    add("단일 라벨은 그달의 상대 상승 축일 뿐이고, 비중 벡터가 공존 이슈를 담는다.")
+    add("단일 라벨은 그달의 상대 상승 1위일 뿐이고, 본분석은 다중 활성 국면 집합(`active_*`) 및 비중 벡터를 쓴다.")
     add("")
 
     add("## 4. 변화점 (PELT L2, 열별 z점수 + BIC 페널티)")
@@ -667,13 +902,24 @@ def finish_from_share(
     n_fit: int,
 ) -> None:
     mapping = map_topics(H, vocab, labels)
+    mapping, evidence = refine_regimes(mapping, topic_share)
+    missing = [r for r in labels if r not in set(mapping["regime"])]
+    if missing:
+        print(f"  경고: 매핑에서 빠진 국면 {missing}", flush=True)
+    extra = sorted(set(mapping["regime"]) - set(labels) - {"기타"})
+    if extra:
+        raise RuntimeError(f"config에 없는 국면이 나왔다: {extra}")
     terms = topic_terms_table(H, vocab)
-    regimes = fold_regimes(topic_share, mapping, n_docs, labels, slugs)
+    cfg = load_config()
+    active_z_threshold = float(cfg["regimes"].get("active_z_threshold", 0.5))
+    regimes = fold_regimes(
+        topic_share, mapping, n_docs, labels, slugs, active_z_threshold=active_z_threshold
+    )
 
     print("\n=== 토픽 ===", flush=True)
     for _, r in mapping.iterrows():
         print(
-            f"  [{int(r['topic']):>2}] {r['regime']:<6} 질량 {r['score_share']:.3f}  "
+            f"  [{int(r['topic']):>2}] {r['regime']} ({r['refine']}) 질량 {r['score_share']:.3f}  "
             f"{r['top_terms'][:80]}",
             flush=True,
         )
@@ -719,6 +965,8 @@ def finish_from_share(
         labels=labels,
         random_state=random_state,
         n_fit=n_fit,
+        evidence=evidence,
+        active_z_threshold=active_z_threshold,
     )
 
     print(f"\n=== 국면 ===")

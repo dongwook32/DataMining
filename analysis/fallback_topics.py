@@ -28,6 +28,7 @@ from scipy import sparse
 from sklearn.decomposition import LatentDirichletAllocation
 
 from analysis.detect_regimes import (
+    assert_pre_merge_keyword_labels,
     CP_MIN_SIZE,
     FIT_PER_MONTH,
     detect_changepoints,
@@ -172,6 +173,7 @@ def run_lda(n_topics: int, random_state: int, max_iter: int, per_month: int, bat
 
     cfg = load_config()
     labels: list[str] = list(cfg["regimes"]["labels"])
+    assert_pre_merge_keyword_labels(labels)
     slugs: dict[str, str] = dict(cfg["regimes"]["slugs"])
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 

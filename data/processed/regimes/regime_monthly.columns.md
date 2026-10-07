@@ -16,6 +16,9 @@
 | runner_up | z점수 2위 국면 |
 | runner_up_share | 2위 원비중 |
 | runner_up_z | 2위 z점수 |
+| active_{slug} | 국면별 z >= 0.5 활성화 여부 이진 플래그 (1 또는 0) |
+| n_active | 그달 활성화된 국면 수 (1 ~ 4개) |
+| active_regimes | 활성화된 국면 목록 (z점수 내림차순 쉼표 구분) |
 
-`share_*` 일곱 개와 `residual_share`의 합은 1이다. 우세 라벨은 요약이고,
-공존 이슈는 비중 벡터로 본다.
+`share_*`와 `residual_share`의 합은 1이다. 우세 라벨(`dominant_regime`)은 단일 참고용이고,
+본연구의 활성 국면은 표본 내 z점수 임계값(`z >= 0.5`)을 넘긴 다중 국면 집합(`active_*`, `active_regimes`)이다.

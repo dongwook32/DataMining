@@ -5,7 +5,9 @@
 | 컬럼 | 설명 |
 |------|------|
 | topic | 토픽 번호 |
-| regime | 배정된 국면 라벨. 키워드 질량이 없으면 `기타` |
+| regime | 근거로 고친 최종 국면. 키워드 질량이 없으면 `기타` |
+| keyword_regime | 고치기 전 키워드 질량 라벨 |
+| refine | `kept` 유지, `split` 쪼갬, `renamed` 질량이 묶여 이름 변경, `residual` 기타 |
 | source | `auto` (키워드 겹침) 또는 `manual` (상위 어휘를 보고 덮어씀) |
 | score | 그 국면 키워드에 실린 H 질량 |
 | score_share | score / 그 토픽 H 행합 |

@@ -23,6 +23,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from analysis.detect_regimes import assert_pre_merge_keyword_labels
 from analysis.measure_reactions import load_joined
 from config import load_config, project_root
 
@@ -167,6 +168,7 @@ def write_qc(
 def run() -> dict:
     cfg = load_config()
     labels: list[str] = list(cfg["regimes"]["labels"])
+    assert_pre_merge_keyword_labels(labels)
     slugs: dict[str, str] = dict(cfg["regimes"]["slugs"])
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 

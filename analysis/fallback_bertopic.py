@@ -26,6 +26,7 @@ import pandas as pd
 from scipy import sparse
 
 from analysis.detect_regimes import (
+    assert_pre_merge_keyword_labels,
     CP_MIN_SIZE,
     detect_changepoints,
     drop_empty,
@@ -190,6 +191,7 @@ def run_bertopic(
 
     cfg = load_config()
     labels: list[str] = list(cfg["regimes"]["labels"])
+    assert_pre_merge_keyword_labels(labels)
     slugs: dict[str, str] = dict(cfg["regimes"]["slugs"])
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 

@@ -1,3 +1,57 @@
+# Progress — 2026-10-07: HAC maxlags=3 standardization & episode reproducibility script
+
+- Standardized HAC Newey-West lag across entire project to maxlags=3 (1 quarter):
+  * Finalized KOSPI volatility regression: R² = 22.8% (0.2275), Wald = 38.0354 (df=8, 58), F = 4.754 (약 4.75), p = 0.00016 (p < 0.001).
+  * Resolved discrepancy between preliminary check (maxlags=2, F=4.25) and pipeline (maxlags=3, p=0.00016).
+- Created `analysis/verify_leading_episodes.py`:
+  * Reproduces BOK rate hike detection: 7/7 (100.0%) during core 2022-2023 hikes, 7/11 (63.6%) full 67 months.
+  * Reproduces stock drop warning precision: 19/28 (67.9%) under z >= 0.5.
+  * Reproduces lead-lag peaks: CCSI h=+1 (r=-0.665), BASE_RATE h=+2 (r=+0.341), KOSPI h=+2 (r=-0.625), USD_KRW h=0 (r=+0.329).
+  * Removed temporary `scratch/count_leading_events.py`.
+- Synchronized documentation:
+  * Updated `docs/FINAL_RESEARCH_RESULTS.md`, `docs/results.md`, `docs/연구_쉬운_요약.md`, `docs/기술_참고.md`, `README.md`, `docs/README.md`.
+  * Updated `analysis/export_summary_page.py`, `analysis/plot_visual_evidence_case.py`, and `analysis/robustness_z_threshold.py` to use maxlags=3.
+  * Cleaned up legacy 7-label assertion in `analysis/detect_regimes.py`.
+
+# Progress — 2026-10-05: Step 4-5 reaction update & z-threshold robustness checks
+
+- Unblocked guard in `analysis/measure_reactions.py` and `analysis/robustness.py` for 8-regime labels.
+- Executed `python -m analysis.measure_reactions`: generated official `regime_reaction.csv`, `regime_tests.csv`, `pairwise_tests.csv`, `share_regression.csv` (kospi_ret R²=0.181 p=0.0106, kospi_ret_std R²=0.228 p=0.00016), `event_study.csv`, and `reactions_qc.md`.
+- Executed `python -m analysis.robustness`: verified that excluding 2026 (60 months) does not flip statistical significance (base_rate_diff p=0.0187 -> 0.0113, kospi_ret_std p=0.0788 -> 0.0799).
+- Implemented `analysis/robustness_z_threshold.py` across z in [0.3, 0.4, 0.5, 0.6, 0.7]:
+  * Rate hike recall (major 7 hikes): 100.0% across all z.
+  * Warning precision for stock drops: 66.7% ~ 69.6% across all z.
+  * Stock volatility R²: 18.3% ~ 26.4%, all p < 0.01.
+  * Confirmed z = 0.5 is optimal goldilocks: 0 missing months, 2.24 active/month, balanced regime coverage (14~22 months).
+- Output artifacts saved to `data/processed/reactions/robustness_z_threshold.csv` and `.md`.
+
+# Progress — 2026-10-05: Step 4 economic indicator alignment plotting
+
+- Implemented `analysis/plot_regime_indicators.py` generating 6 high-resolution figures (PNG 300 DPI & vector PDF) in `docs/figures/`.
+- Verified temporal alignment between active regimes (z >= 0.5) and ECOS indicators:
+  * CPI >= 4%: [금리·물가] active in 11/13 months (84.6%).
+  * Rate hike cycle (0.5% -> 3.5%): [금리·물가] and [가계대출] active in 11/18 months (61.1%).
+  * CCSI < 95 (recession): [가계대출] active in 11/14 months (78.6%), [금리·물가] in 10/14 months (71.4%).
+- Updated `RESEARCH_LOG.md` with Step 4 findings.
+
+# Progress — 2026-10-05: multi-label threshold (z >= 0.5) and keyword profiling
+
+- Evaluated z-score threshold cuts (0.0, 0.5, 1.0); confirmed z >= 0.5 achieves 0 missing months, 2.24 active regimes/month, 76.1% co-occurrence.
+- Added `active_z_threshold: 0.5` to `config/config.yaml`.
+- Implemented `active_{slug}` binary flags, `n_active`, and `active_regimes` calculation directly inside `analysis/detect_regimes.py` (`fold_regimes`, `write_qc`).
+- Executed `python -m analysis.detect_regimes --remap-only` and verified that output `regime_monthly.csv` is 100% identical across all 67 rows and 29 columns against backup.
+- Created `analysis/extract_regime_keywords.py` to ensure reproducible generation of `regime_keywords_monthly.csv` (150 rows) and `regime_keywords_yearly.csv` (6 rows).
+- Updated `data/processed/regimes/regime_monthly.columns.md` and `regimes_qc.md`.
+- Corrected the 2026-10-05 RESEARCH_LOG entry: removed overstated claims, compared against old `share_regression.csv`, recorded pre-check ran before applying threshold (maxlags 2 vs pipeline 3).
+
+# Progress — 2026-10-01: regime merge by correlation and term overlap
+
+- Evidence rule in `analysis/detect_regimes.py` (`refine_regimes`): Pearson ≥ 0.40 and top-25 Jaccard ≥ 0.05 inside a keyword regime; mass tie ≥ 0.90 renames.
+- Labels now 금리·물가, 부동산, 가계대출, 대외통상, AI반도체, 시황, 기업실적, 자본거래.
+- Remap only: `.\.venv\Scripts\python.exe -m analysis.detect_regimes --remap-only`. NMF not refit.
+- Reaction, robustness, RQ4, LDA, BERTopic raise if config labels leave the old keyword set.
+- `docs/results.md` marked as pre-merge numbers.
+
 # Progress — 2026-09-21: docs consolidate
 
 - Added docs/연구_쉬운_요약.md, docs/기술_참고.md, docs/README.md; stub docs/research_plan.md.

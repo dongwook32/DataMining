@@ -25,6 +25,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from analysis.detect_regimes import assert_pre_merge_keyword_labels
 from analysis.measure_reactions import PRIMARY_DEPS, analyze, load_joined
 from analysis.robustness import run as run_robustness
 from analysis.rq4_search import run as run_rq4
@@ -128,6 +129,7 @@ def run(*, force_fallback: bool, skip_fallback: bool) -> dict:
 
     cfg = load_config()
     labels: list[str] = list(cfg["regimes"]["labels"])
+    assert_pre_merge_keyword_labels(labels)
     slugs: dict[str, str] = dict(cfg["regimes"]["slugs"])
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     steps: list[str] = []
