@@ -1,0 +1,177 @@
+﻿run_label,exp_group,init_method,seed,domain_slug,domain_label,support_status,is_formed,n_assigned_topics,assigned_topics,max_candidate_share,min_candidate_mass_ratio
+Baseline_Phase56,Baseline,nndsvd,42,macro,금리·물가,supported,True,1,1,0.0472,0.1913
+Baseline_Phase56,Baseline,nndsvd,42,realestate,부동산,supported,True,2,2;3,0.0403,0.009
+Baseline_Phase56,Baseline,nndsvd,42,hhdebt,가계대출,unrepresented,False,0,,0.0,
+Baseline_Phase56,Baseline,nndsvd,42,trade,대외통상,unrepresented,False,0,,0.0139,0.9509
+Baseline_Phase56,Baseline,nndsvd,42,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,12,0.0125,0.0269
+Baseline_Phase56,Baseline,nndsvd,42,market,시황,supported,True,2,4;13,0.2651,0.0806
+Baseline_Phase56,Baseline,nndsvd,42,earnings,기업실적,supported,True,1,7,0.0189,0.1809
+Baseline_Phase56,Baseline,nndsvd,42,capital,자본거래,supported,True,1,6,0.0222,0.234
+B1_Subsample80_Run01,B1_Subsample_80pct,nndsvd,101,macro,금리·물가,supported,True,1,1,0.0446,0.2245
+B1_Subsample80_Run01,B1_Subsample_80pct,nndsvd,101,realestate,부동산,supported,True,2,2;3,0.048,0.0781
+B1_Subsample80_Run01,B1_Subsample_80pct,nndsvd,101,hhdebt,가계대출,supported,True,1,10,0.0192,0.5199
+B1_Subsample80_Run01,B1_Subsample_80pct,nndsvd,101,trade,대외통상,unrepresented,False,0,,0.0038,0.1125
+B1_Subsample80_Run01,B1_Subsample_80pct,nndsvd,101,aichip,첨단산업(전기차·배터리 중심),supported,True,2,8;11,0.0247,0.0059
+B1_Subsample80_Run01,B1_Subsample_80pct,nndsvd,101,market,시황,supported,True,3,4;9;13,0.2714,0.0507
+B1_Subsample80_Run01,B1_Subsample_80pct,nndsvd,101,earnings,기업실적,supported,True,1,7,0.0193,0.1763
+B1_Subsample80_Run01,B1_Subsample_80pct,nndsvd,101,capital,자본거래,supported,True,1,6,0.0198,0.1922
+B1_Subsample80_Run02,B1_Subsample_80pct,nndsvd,102,macro,금리·물가,supported,True,1,1,0.0446,0.2377
+B1_Subsample80_Run02,B1_Subsample_80pct,nndsvd,102,realestate,부동산,supported,True,2,2;3,0.0466,0.0876
+B1_Subsample80_Run02,B1_Subsample_80pct,nndsvd,102,hhdebt,가계대출,supported,True,1,10,0.0173,0.5377
+B1_Subsample80_Run02,B1_Subsample_80pct,nndsvd,102,trade,대외통상,unrepresented,False,0,,0.0039,0.1004
+B1_Subsample80_Run02,B1_Subsample_80pct,nndsvd,102,aichip,첨단산업(전기차·배터리 중심),supported,True,2,8;12,0.0264,0.0177
+B1_Subsample80_Run02,B1_Subsample_80pct,nndsvd,102,market,시황,supported,True,3,4;9;13,0.2702,0.0457
+B1_Subsample80_Run02,B1_Subsample_80pct,nndsvd,102,earnings,기업실적,supported,True,1,7,0.0181,0.2186
+B1_Subsample80_Run02,B1_Subsample_80pct,nndsvd,102,capital,자본거래,supported,True,1,6,0.0202,0.2108
+B1_Subsample80_Run03,B1_Subsample_80pct,nndsvd,103,macro,금리·물가,supported,True,1,1,0.0432,0.236
+B1_Subsample80_Run03,B1_Subsample_80pct,nndsvd,103,realestate,부동산,supported,True,2,2;3,0.0481,0.0577
+B1_Subsample80_Run03,B1_Subsample_80pct,nndsvd,103,hhdebt,가계대출,supported,True,1,10,0.0241,0.4527
+B1_Subsample80_Run03,B1_Subsample_80pct,nndsvd,103,trade,대외통상,unrepresented,False,0,,0.0075,0.1425
+B1_Subsample80_Run03,B1_Subsample_80pct,nndsvd,103,aichip,첨단산업(전기차·배터리 중심),supported,True,2,8;9,0.0202,0.2988
+B1_Subsample80_Run03,B1_Subsample_80pct,nndsvd,103,market,시황,supported,True,2,4;13,0.278,0.0766
+B1_Subsample80_Run03,B1_Subsample_80pct,nndsvd,103,earnings,기업실적,supported,True,1,7,0.0187,0.1856
+B1_Subsample80_Run03,B1_Subsample_80pct,nndsvd,103,capital,자본거래,supported,True,1,6,0.0225,0.2268
+B1_Subsample80_Run04,B1_Subsample_80pct,nndsvd,104,macro,금리·물가,supported,True,1,9,0.0383,0.2529
+B1_Subsample80_Run04,B1_Subsample_80pct,nndsvd,104,realestate,부동산,supported,True,2,2;3,0.0454,0.0615
+B1_Subsample80_Run04,B1_Subsample_80pct,nndsvd,104,hhdebt,가계대출,supported,True,1,10,0.0252,0.5476
+B1_Subsample80_Run04,B1_Subsample_80pct,nndsvd,104,trade,대외통상,unrepresented,False,0,,0.0082,0.0737
+B1_Subsample80_Run04,B1_Subsample_80pct,nndsvd,104,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,8,0.0214,0.2374
+B1_Subsample80_Run04,B1_Subsample_80pct,nndsvd,104,market,시황,supported,True,2,1;4,0.2786,0.0816
+B1_Subsample80_Run04,B1_Subsample_80pct,nndsvd,104,earnings,기업실적,supported,True,1,7,0.0186,0.1856
+B1_Subsample80_Run04,B1_Subsample_80pct,nndsvd,104,capital,자본거래,supported,True,2,6;13,0.0189,0.2181
+B1_Subsample80_Run05,B1_Subsample_80pct,nndsvd,105,macro,금리·물가,supported,True,1,9,0.0396,0.2344
+B1_Subsample80_Run05,B1_Subsample_80pct,nndsvd,105,realestate,부동산,supported,True,2,2;3,0.0441,0.0681
+B1_Subsample80_Run05,B1_Subsample_80pct,nndsvd,105,hhdebt,가계대출,supported,True,1,10,0.0228,0.4822
+B1_Subsample80_Run05,B1_Subsample_80pct,nndsvd,105,trade,대외통상,unrepresented,False,0,,0.0031,0.1272
+B1_Subsample80_Run05,B1_Subsample_80pct,nndsvd,105,aichip,첨단산업(전기차·배터리 중심),supported,True,2,8;12,0.0304,0.0214
+B1_Subsample80_Run05,B1_Subsample_80pct,nndsvd,105,market,시황,supported,True,3,1;7;13,0.2504,0.0958
+B1_Subsample80_Run05,B1_Subsample_80pct,nndsvd,105,earnings,기업실적,supported,True,1,4,0.0182,0.2067
+B1_Subsample80_Run05,B1_Subsample_80pct,nndsvd,105,capital,자본거래,supported,True,1,6,0.0207,0.2135
+B1_Subsample80_Run06,B1_Subsample_80pct,nndsvd,106,macro,금리·물가,supported,True,1,9,0.039,0.2126
+B1_Subsample80_Run06,B1_Subsample_80pct,nndsvd,106,realestate,부동산,supported,True,2,2;3,0.0441,0.0733
+B1_Subsample80_Run06,B1_Subsample_80pct,nndsvd,106,hhdebt,가계대출,supported,True,1,10,0.0223,0.5038
+B1_Subsample80_Run06,B1_Subsample_80pct,nndsvd,106,trade,대외통상,unrepresented,False,0,,0.0,
+B1_Subsample80_Run06,B1_Subsample_80pct,nndsvd,106,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,8,0.0144,0.0163
+B1_Subsample80_Run06,B1_Subsample_80pct,nndsvd,106,market,시황,supported,True,3,1;4;13,0.2449,0.0795
+B1_Subsample80_Run06,B1_Subsample_80pct,nndsvd,106,earnings,기업실적,supported,True,1,7,0.0188,0.1764
+B1_Subsample80_Run06,B1_Subsample_80pct,nndsvd,106,capital,자본거래,supported,True,1,6,0.0213,0.2465
+B1_Subsample80_Run07,B1_Subsample_80pct,nndsvd,107,macro,금리·물가,supported,True,1,9,0.0377,0.2586
+B1_Subsample80_Run07,B1_Subsample_80pct,nndsvd,107,realestate,부동산,supported,True,2,2;3,0.0468,0.0674
+B1_Subsample80_Run07,B1_Subsample_80pct,nndsvd,107,hhdebt,가계대출,supported,True,1,10,0.0227,0.5134
+B1_Subsample80_Run07,B1_Subsample_80pct,nndsvd,107,trade,대외통상,unrepresented,False,0,,0.007,0.1436
+B1_Subsample80_Run07,B1_Subsample_80pct,nndsvd,107,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,8,0.0212,0.2683
+B1_Subsample80_Run07,B1_Subsample_80pct,nndsvd,107,market,시황,supported,True,3,1;4;13,0.2364,0.1006
+B1_Subsample80_Run07,B1_Subsample_80pct,nndsvd,107,earnings,기업실적,supported,True,1,7,0.0186,0.2013
+B1_Subsample80_Run07,B1_Subsample_80pct,nndsvd,107,capital,자본거래,supported,True,1,6,0.0205,0.2535
+B1_Subsample80_Run08,B1_Subsample_80pct,nndsvd,108,macro,금리·물가,supported,True,1,9,0.0426,0.1622
+B1_Subsample80_Run08,B1_Subsample_80pct,nndsvd,108,realestate,부동산,supported,True,2,2;3,0.0453,0.1388
+B1_Subsample80_Run08,B1_Subsample_80pct,nndsvd,108,hhdebt,가계대출,unrepresented,False,0,,0.0049,0.5466
+B1_Subsample80_Run08,B1_Subsample_80pct,nndsvd,108,trade,대외통상,supported,True,1,8,0.0147,0.8145
+B1_Subsample80_Run08,B1_Subsample_80pct,nndsvd,108,aichip,첨단산업(전기차·배터리 중심),supported,True,2,11;12,0.0136,0.0209
+B1_Subsample80_Run08,B1_Subsample_80pct,nndsvd,108,market,시황,supported,True,3,1;4;13,0.2385,0.0964
+B1_Subsample80_Run08,B1_Subsample_80pct,nndsvd,108,earnings,기업실적,supported,True,1,7,0.0187,0.1808
+B1_Subsample80_Run08,B1_Subsample_80pct,nndsvd,108,capital,자본거래,supported,True,1,6,0.0205,0.2304
+B1_Subsample80_Run09,B1_Subsample_80pct,nndsvd,109,macro,금리·물가,supported,True,1,9,0.0407,0.2256
+B1_Subsample80_Run09,B1_Subsample_80pct,nndsvd,109,realestate,부동산,supported,True,1,3,0.0443,0.0259
+B1_Subsample80_Run09,B1_Subsample_80pct,nndsvd,109,hhdebt,가계대출,supported,True,1,10,0.0239,0.4207
+B1_Subsample80_Run09,B1_Subsample_80pct,nndsvd,109,trade,대외통상,unrepresented,False,0,,0.0,
+B1_Subsample80_Run09,B1_Subsample_80pct,nndsvd,109,aichip,첨단산업(전기차·배터리 중심),supported,True,2,8;12,0.0139,0.7227
+B1_Subsample80_Run09,B1_Subsample_80pct,nndsvd,109,market,시황,supported,True,3,1;7;13,0.22,0.1306
+B1_Subsample80_Run09,B1_Subsample_80pct,nndsvd,109,earnings,기업실적,supported,True,1,4,0.0189,0.1807
+B1_Subsample80_Run09,B1_Subsample_80pct,nndsvd,109,capital,자본거래,supported,True,1,6,0.022,0.1868
+B1_Subsample80_Run10,B1_Subsample_80pct,nndsvd,110,macro,금리·물가,supported,True,1,1,0.0462,0.1829
+B1_Subsample80_Run10,B1_Subsample_80pct,nndsvd,110,realestate,부동산,supported,True,2,2;3,0.0451,0.1767
+B1_Subsample80_Run10,B1_Subsample_80pct,nndsvd,110,hhdebt,가계대출,unrepresented,False,0,,0.0036,0.749
+B1_Subsample80_Run10,B1_Subsample_80pct,nndsvd,110,trade,대외통상,unrepresented,False,0,,0.0145,0.9272
+B1_Subsample80_Run10,B1_Subsample_80pct,nndsvd,110,aichip,첨단산업(전기차·배터리 중심),supported,True,2,9;12,0.012,0.8586
+B1_Subsample80_Run10,B1_Subsample_80pct,nndsvd,110,market,시황,supported,True,2,4;13,0.261,0.0764
+B1_Subsample80_Run10,B1_Subsample_80pct,nndsvd,110,earnings,기업실적,supported,True,1,7,0.0196,0.1561
+B1_Subsample80_Run10,B1_Subsample_80pct,nndsvd,110,capital,자본거래,supported,True,1,6,0.0209,0.2202
+B2_Init_nndsvda_s42,B2_Init_nndsvda,nndsvda,42,macro,금리·물가,supported,True,1,1,0.0473,0.1821
+B2_Init_nndsvda_s42,B2_Init_nndsvda,nndsvda,42,realestate,부동산,supported,True,2,2;3,0.0437,0.2259
+B2_Init_nndsvda_s42,B2_Init_nndsvda,nndsvda,42,hhdebt,가계대출,unrepresented,False,0,,0.0027,0.7271
+B2_Init_nndsvda_s42,B2_Init_nndsvda,nndsvda,42,trade,대외통상,unrepresented,False,0,,0.014,0.9251
+B2_Init_nndsvda_s42,B2_Init_nndsvda,nndsvda,42,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,12,0.0126,0.0259
+B2_Init_nndsvda_s42,B2_Init_nndsvda,nndsvda,42,market,시황,supported,True,2,4;13,0.2642,0.0815
+B2_Init_nndsvda_s42,B2_Init_nndsvda,nndsvda,42,earnings,기업실적,supported,True,1,7,0.0189,0.1822
+B2_Init_nndsvda_s42,B2_Init_nndsvda,nndsvda,42,capital,자본거래,supported,True,1,6,0.0219,0.2289
+B2_Init_nndsvdar_s201,B2_Init_nndsvdar,nndsvdar,201,macro,금리·물가,supported,True,1,1,0.0473,0.1822
+B2_Init_nndsvdar_s201,B2_Init_nndsvdar,nndsvdar,201,realestate,부동산,supported,True,2,2;3,0.0437,0.2269
+B2_Init_nndsvdar_s201,B2_Init_nndsvdar,nndsvdar,201,hhdebt,가계대출,unrepresented,False,0,,0.0027,0.7296
+B2_Init_nndsvdar_s201,B2_Init_nndsvdar,nndsvdar,201,trade,대외통상,unrepresented,False,0,,0.014,0.9253
+B2_Init_nndsvdar_s201,B2_Init_nndsvdar,nndsvdar,201,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,12,0.0126,0.0259
+B2_Init_nndsvdar_s201,B2_Init_nndsvdar,nndsvdar,201,market,시황,supported,True,2,4;13,0.2642,0.0815
+B2_Init_nndsvdar_s201,B2_Init_nndsvdar,nndsvdar,201,earnings,기업실적,supported,True,1,7,0.0189,0.1822
+B2_Init_nndsvdar_s201,B2_Init_nndsvdar,nndsvdar,201,capital,자본거래,supported,True,1,6,0.0219,0.2288
+B2_Init_nndsvdar_s202,B2_Init_nndsvdar,nndsvdar,202,macro,금리·물가,supported,True,1,1,0.0473,0.1822
+B2_Init_nndsvdar_s202,B2_Init_nndsvdar,nndsvdar,202,realestate,부동산,supported,True,2,2;3,0.0436,0.227
+B2_Init_nndsvdar_s202,B2_Init_nndsvdar,nndsvdar,202,hhdebt,가계대출,unrepresented,False,0,,0.0027,0.7298
+B2_Init_nndsvdar_s202,B2_Init_nndsvdar,nndsvdar,202,trade,대외통상,unrepresented,False,0,,0.014,0.9253
+B2_Init_nndsvdar_s202,B2_Init_nndsvdar,nndsvdar,202,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,12,0.0126,0.0259
+B2_Init_nndsvdar_s202,B2_Init_nndsvdar,nndsvdar,202,market,시황,supported,True,2,4;13,0.2642,0.0815
+B2_Init_nndsvdar_s202,B2_Init_nndsvdar,nndsvdar,202,earnings,기업실적,supported,True,1,7,0.0189,0.1822
+B2_Init_nndsvdar_s202,B2_Init_nndsvdar,nndsvdar,202,capital,자본거래,supported,True,1,6,0.0219,0.2288
+B2_Init_nndsvdar_s203,B2_Init_nndsvdar,nndsvdar,203,macro,금리·물가,supported,True,1,1,0.0473,0.1822
+B2_Init_nndsvdar_s203,B2_Init_nndsvdar,nndsvdar,203,realestate,부동산,supported,True,2,2;3,0.0437,0.2267
+B2_Init_nndsvdar_s203,B2_Init_nndsvdar,nndsvdar,203,hhdebt,가계대출,unrepresented,False,0,,0.0027,0.7291
+B2_Init_nndsvdar_s203,B2_Init_nndsvdar,nndsvdar,203,trade,대외통상,unrepresented,False,0,,0.014,0.9252
+B2_Init_nndsvdar_s203,B2_Init_nndsvdar,nndsvdar,203,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,12,0.0126,0.0259
+B2_Init_nndsvdar_s203,B2_Init_nndsvdar,nndsvdar,203,market,시황,supported,True,2,4;13,0.2642,0.0815
+B2_Init_nndsvdar_s203,B2_Init_nndsvdar,nndsvdar,203,earnings,기업실적,supported,True,1,7,0.0189,0.1822
+B2_Init_nndsvdar_s203,B2_Init_nndsvdar,nndsvdar,203,capital,자본거래,supported,True,1,6,0.0219,0.2289
+B2_Init_nndsvdar_s204,B2_Init_nndsvdar,nndsvdar,204,macro,금리·물가,supported,True,1,1,0.0473,0.1822
+B2_Init_nndsvdar_s204,B2_Init_nndsvdar,nndsvdar,204,realestate,부동산,supported,True,2,2;3,0.0437,0.2268
+B2_Init_nndsvdar_s204,B2_Init_nndsvdar,nndsvdar,204,hhdebt,가계대출,unrepresented,False,0,,0.0027,0.7294
+B2_Init_nndsvdar_s204,B2_Init_nndsvdar,nndsvdar,204,trade,대외통상,unrepresented,False,0,,0.014,0.9253
+B2_Init_nndsvdar_s204,B2_Init_nndsvdar,nndsvdar,204,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,12,0.0126,0.0259
+B2_Init_nndsvdar_s204,B2_Init_nndsvdar,nndsvdar,204,market,시황,supported,True,2,4;13,0.2642,0.0815
+B2_Init_nndsvdar_s204,B2_Init_nndsvdar,nndsvdar,204,earnings,기업실적,supported,True,1,7,0.0189,0.1822
+B2_Init_nndsvdar_s204,B2_Init_nndsvdar,nndsvdar,204,capital,자본거래,supported,True,1,6,0.0219,0.2288
+B2_Init_nndsvdar_s205,B2_Init_nndsvdar,nndsvdar,205,macro,금리·물가,supported,True,1,1,0.0473,0.1822
+B2_Init_nndsvdar_s205,B2_Init_nndsvdar,nndsvdar,205,realestate,부동산,supported,True,2,2;3,0.0437,0.2265
+B2_Init_nndsvdar_s205,B2_Init_nndsvdar,nndsvdar,205,hhdebt,가계대출,unrepresented,False,0,,0.0027,0.7286
+B2_Init_nndsvdar_s205,B2_Init_nndsvdar,nndsvdar,205,trade,대외통상,unrepresented,False,0,,0.014,0.9252
+B2_Init_nndsvdar_s205,B2_Init_nndsvdar,nndsvdar,205,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,12,0.0126,0.0259
+B2_Init_nndsvdar_s205,B2_Init_nndsvdar,nndsvdar,205,market,시황,supported,True,2,4;13,0.2642,0.0815
+B2_Init_nndsvdar_s205,B2_Init_nndsvdar,nndsvdar,205,earnings,기업실적,supported,True,1,7,0.0189,0.1822
+B2_Init_nndsvdar_s205,B2_Init_nndsvdar,nndsvdar,205,capital,자본거래,supported,True,1,6,0.0219,0.2289
+B2_Init_random_s301,B2_Init_random,random,301,macro,금리·물가,supported,True,1,9,0.0532,0.1344
+B2_Init_random_s301,B2_Init_random,random,301,realestate,부동산,supported,True,1,3,0.0449,0.0255
+B2_Init_random_s301,B2_Init_random,random,301,hhdebt,가계대출,supported,True,1,7,0.0255,0.4078
+B2_Init_random_s301,B2_Init_random,random,301,trade,대외통상,unrepresented,False,0,,0.01,0.9217
+B2_Init_random_s301,B2_Init_random,random,301,aichip,첨단산업(전기차·배터리 중심),supported,True,2,4;10,0.0142,0.6895
+B2_Init_random_s301,B2_Init_random,random,301,market,시황,supported,True,2,5;6,0.2694,0.0724
+B2_Init_random_s301,B2_Init_random,random,301,earnings,기업실적,supported,True,1,1,0.0207,0.1828
+B2_Init_random_s301,B2_Init_random,random,301,capital,자본거래,supported,True,1,11,0.0236,0.2324
+B2_Init_random_s302,B2_Init_random,random,302,macro,금리·물가,supported,True,1,0,0.0393,0.2215
+B2_Init_random_s302,B2_Init_random,random,302,realestate,부동산,supported,True,1,12,0.0445,0.0246
+B2_Init_random_s302,B2_Init_random,random,302,hhdebt,가계대출,supported,True,1,2,0.0239,0.4806
+B2_Init_random_s302,B2_Init_random,random,302,trade,대외통상,unrepresented,False,0,,0.0124,0.9534
+B2_Init_random_s302,B2_Init_random,random,302,aichip,첨단산업(전기차·배터리 중심),supported,True,2,1;5,0.0139,0.0171
+B2_Init_random_s302,B2_Init_random,random,302,market,시황,supported,True,3,7;9;10,0.2219,0.1223
+B2_Init_random_s302,B2_Init_random,random,302,earnings,기업실적,supported,True,1,6,0.025,0.1904
+B2_Init_random_s302,B2_Init_random,random,302,capital,자본거래,supported,True,1,4,0.0215,0.26
+B2_Init_random_s303,B2_Init_random,random,303,macro,금리·물가,supported,True,1,11,0.0422,0.2569
+B2_Init_random_s303,B2_Init_random,random,303,realestate,부동산,supported,True,1,13,0.0446,0.0246
+B2_Init_random_s303,B2_Init_random,random,303,hhdebt,가계대출,supported,True,1,12,0.0263,0.4048
+B2_Init_random_s303,B2_Init_random,random,303,trade,대외통상,unrepresented,False,0,,0.0018,0.3147
+B2_Init_random_s303,B2_Init_random,random,303,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,9,0.0197,0.3523
+B2_Init_random_s303,B2_Init_random,random,303,market,시황,supported,True,2,6;7,0.2839,0.0668
+B2_Init_random_s303,B2_Init_random,random,303,earnings,기업실적,supported,True,1,4,0.0179,0.2029
+B2_Init_random_s303,B2_Init_random,random,303,capital,자본거래,supported,True,2,1;10,0.0197,0.2488
+B2_Init_random_s304,B2_Init_random,random,304,macro,금리·물가,supported,True,1,0,0.0395,0.2079
+B2_Init_random_s304,B2_Init_random,random,304,realestate,부동산,supported,True,2,1;13,0.0458,0.0626
+B2_Init_random_s304,B2_Init_random,random,304,hhdebt,가계대출,supported,True,1,11,0.0235,0.5087
+B2_Init_random_s304,B2_Init_random,random,304,trade,대외통상,unrepresented,False,0,,0.0127,0.9974
+B2_Init_random_s304,B2_Init_random,random,304,aichip,첨단산업(전기차·배터리 중심),supported_ev_battery_only,True,1,6,0.0142,0.0172
+B2_Init_random_s304,B2_Init_random,random,304,market,시황,supported,True,3,5;9;10,0.2282,0.1175
+B2_Init_random_s304,B2_Init_random,random,304,earnings,기업실적,supported,True,1,4,0.0184,0.1986
+B2_Init_random_s304,B2_Init_random,random,304,capital,자본거래,supported,True,1,12,0.0211,0.2364
+B2_Init_random_s305,B2_Init_random,random,305,macro,금리·물가,supported,True,1,11,0.0424,0.2167
+B2_Init_random_s305,B2_Init_random,random,305,realestate,부동산,supported,True,1,10,0.0446,0.0253
+B2_Init_random_s305,B2_Init_random,random,305,hhdebt,가계대출,supported,True,1,2,0.0246,0.4085
+B2_Init_random_s305,B2_Init_random,random,305,trade,대외통상,unrepresented,False,0,,0.0,
+B2_Init_random_s305,B2_Init_random,random,305,aichip,첨단산업(전기차·배터리 중심),supported,True,2,7;8,0.0137,0.7477
+B2_Init_random_s305,B2_Init_random,random,305,market,시황,supported,True,3,5;6;13,0.2304,0.1136
+B2_Init_random_s305,B2_Init_random,random,305,earnings,기업실적,supported,True,1,1,0.0183,0.1879
+B2_Init_random_s305,B2_Init_random,random,305,capital,자본거래,supported,True,1,12,0.0225,0.2061

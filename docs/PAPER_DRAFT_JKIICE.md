@@ -1,5 +1,5 @@
-# 뉴스 빅데이터와 토픽 모델링 기반의 한국형 경제 이슈 국면 탐지 및 시장·심리 지표 반응 분석
-### Topic Modeling-Based Detection of Korean Economic Issue Regimes and Market Sentiment Reaction Analysis Using News Big Data
+# 뉴스 빅데이터와 NMF 기반의 한국형 경제 이슈 다중 국면 탐지 및 다각적 실증 검증
+### Multi-Regime Detection of Korean Economic Issues via News Big Data and Non-negative Matrix Factorization: Methodological and Empirical Validations
 
 **[ 저자 미정 (심사본) ]**  
 한국성서대학교 AI융합학부 (*School of AI Convergence, Korean Bible University, Seoul, 01757 Korea*)
@@ -7,264 +7,283 @@
 ---
 
 ## 요 약
-본 연구는 2021년 1월부터 2026년 7월까지(총 67개월) 국내 3대 주요 경제 일간지(매일경제, 서울경제, 한국경제)에서 수집한 931,709건의 경제 뉴스 기사와 한국은행 경제통계시스템(ECOS)의 5대 핵심 거시금융 지표를 대상으로 텍스트 마이닝 및 계량시계열 분석을 통해 한국형 경제 이슈 국면 탐지 체계를 구축하고 시장·심리 지표의 반응 패턴을 실증 분석하였다. 형태소 분석 기반의 키워드 마이닝과 TF-IDF 가중치를 적용하여 931,709 × 28,343 차원의 고차원 문서-어휘 희소행렬을 구축하였으며, 비음수 행렬 분해(NMF)를 통해 14개의 잠재 토픽을 도출하고 경제학적 정합성에 따라 8대 핵심 경제 국면(금리·물가, 부동산, 가계대출, 대외통상, AI반도체, 시황, 기업실적, 자본거래)으로 체계화하였다. 특히 기존 연구의 단일 지배 국면(Single Dominant) 강제로 인한 정보 절단 편향(Truncation Bias)을 극복하기 위해, 표준화 z점수 기반의 다중 국면 활성화 체계($z \ge 0.5$)를 제안·적용하였다. 분석 결과, 한국 경제는 전체 기간의 76.1%에서 2~3개의 복합 국면이 동시에 공존하는 구조적 다중성을 보였다. 8대 국면 비중 벡터를 활용하여 Newey-West HAC 견고 회귀분석을 수행한 결과, 코스피 주가 변동성에 대해 22.8%의 설명력($F = 4.75, p = 0.00016$)과 코스피 월간 수익률에 대해 18.1%의 설명력($F = 2.68, p = 0.0106$)을 유의하게 입증하였다. 또한 시차 교차상관(Lead-Lag) 분석 결과, '금리·물가' 국면은 소비자심리지수(CCSI)를 1개월 선행($r = -0.665$), 한국은행 기준금리 조정을 2개월 선행($r = +0.341$)하였으며, 2022~2023년 본격 금리 인상기 7회에 대해 100%의 사전 경고 적중률을 기록하였다. 본 연구는 발표 시차가 존재하는 전통적 거시 통계를 보완하여 비정형 빅데이터로부터 경제 위험을 실시간으로 감지하고 조기 경보할 수 있는 실증적 분석 프레임워크를 제공한다.
+본 연구는 2021년 1월부터 2026년 7월까지(총 67개월) 국내 3대 주요 경제 일간지(매일경제, 서울경제, 한국경제)에서 수집한 931,709건의 경제 뉴스 기사 코퍼스를 대상으로 비지도 학습 기법인 비음수 행렬 분해(NMF)와 고정 표준화 체계를 구축하여 한국 경제의 잠재 이슈 국면을 탐지하고, 시장·거시 지표 및 대중 검색 빅데이터와의 관계를 실증 분석하였다. 특히 미래 정보 누수(Data Leakage)를 원천 차단하기 위해 학습 기간(2021.01~2024.12, 48개월) 전용 어휘 사전(22,193개 단어)과 IDF, NMF 기저 행렬($H$, 14개 잠재 토픽)을 고정하여 테스트 기간(2025.01~2026.07, 19개월)으로 확장 투영하는 엄격한 표본 외(Strict Out-of-Sample) 파이프라인을 확립하였다. 도출된 토픽 중 사전 정의된 매핑 규칙을 통과한 6대 유효 국면(금리·물가, 부동산, 첨단산업(전기차·배터리 중심), 시황, 기업실적, 자본거래)을 체계화하였으며, 기존 선행연구의 단일 대표 국면(Single Dominant) 선택 방식과 학습 고정 $z$점수 기반의 다중 국면 활성화 체계($z \ge 0.5$)를 정량적으로 비교하였다.
 
-**키워드 :** 경제 뉴스 빅데이터, 텍스트 마이닝, 토픽 모델링, 비음수 행렬 분해(NMF), 다중 국면 활성화, HAC OLS 회귀, 조기경보시스템
+실증 분석 결과는 다음과 같다. 첫째, 한국 경제 뉴스는 전체 67개월의 58.21%(39개월; 학습 기간 66.67%, 테스트 기간 36.84%)에서 2개 이상의 경제 국면이 동시에 활성화되었다. 단일 대표 국면 방식으로 표현을 제한할 경우, 다중 국면 방식에서 관측된 활성 국면 신호 중 43.75%(112건 중 49건; 학습 47.19%, 테스트 30.43%)가 별도 국면으로 표현되지 않는다. 이는 표현상 정보 보존성에 관한 결과이며 예측 정확도의 개선을 의미하지는 않는다. 둘째, 67개월 전체 표본에서 6대 국면 표준화 점수와 코스피 과거 변동성 정규화 월간 수익률(`kospi_ret_std`) 간의 Newey-West HAC OLS 동행 회귀분석(maxlags=3) 결과, 모형 설명력 $R^2 = 16.19\%$ ($\text{Adj-}R^2 = 7.81\%$, HAC $F = 4.6833, p = 0.000573$)를 기록하였으며, '금리·물가'($\beta = -0.7418$, 원시 $p = 0.0004$, Holm $p = 0.0024$) 및 '자본거래'($\beta = -0.5299$, 원시 $p = 0.0026$, Holm $p = 0.0129$) 국면이 당월 주가 수익률 충격과 유의한 음(-)의 동행 관계를 형성함을 확인하였다. 셋째, 292주간의 네이버 데이터랩(Datalab) 주별 상대 검색 지수와의 1차 차분 교차 검증(유효 291주) 및 Newey-West HAC(maxlags=4, 24개 검정 Holm 보정) 검정 결과, 전체 기간 동시점($h=0$)에서 '금리·물가' ↔ 금리 검색($r = +0.5026, \text{HAC } p_{\text{holm}} = 1.29 \times 10^{-13}$), '시황' ↔ 국내증시 검색($r = +0.4868, \text{HAC } p_{\text{holm}} = 9.06 \times 10^{-5}$), '금리·물가' ↔ 금리+물가 검색($r = +0.3217, \text{HAC } p_{\text{holm}} = 5.07 \times 10^{-6}$), '기업실적' ↔ 기업실적 검색($r = +0.2795, \text{HAC } p_{\text{holm}} = 3.48 \times 10^{-5}$)의 양(+)의 동행 관계가 유의하였으며, 표본 외(Strict OOS) 테스트 기간($N=82$주)에서는 24개 검정 HAC Holm 보정 후 '시황' ↔ 국내증시 검색($r = +0.4984, \text{HAC } p_{\text{holm}} = 0.0432$)과 '기업실적' ↔ 기업실적 검색($r = +0.4718, \text{HAC } p_{\text{holm}} = 0.0011$) 두 쌍에서 통계적 유의성이 재현되었다('금리·물가' ↔ 금리 검색은 테스트 기간 $r = +0.3397$, HAC 원시 $p = 0.0170$이나 HAC Holm 보정 후 $p_{\text{holm}} = 0.3575$로 유의수준을 충족하지 못함). 본 연구는 인과 추론이나 시장 예측력에 대한 과장된 주장을 배제하고, 다중 국면 표현의 정보 보존성과 이종 빅데이터 간 동시점 교차 동조성을 검증한 재현 가능한 텍스트 마이닝 프레임워크를 제시한다.
+
+**키워드 :** 경제 뉴스 빅데이터, 텍스트 마이닝, 토픽 모델링, 비음수 행렬 분해(NMF), 다중 국면 활성화, 표본 외(Strict OOS) 검증, 네이버 데이터랩, 교차 데이터 검증
 
 ---
 
 ## ABSTRACT
-This study constructs a data-driven economic issue regime detection framework and empirically investigates the reaction patterns of financial markets and consumer sentiment using 931,709 economic news articles collected from three major Korean business dailies (Maeil Business Newspaper, Seoul Economic Daily, and Korea Economic Daily) and five macroeconomic/financial indicators from the Bank of Korea's ECOS database between January 2021 and July 2026 (67 months). We constructed a high-dimensional TF-IDF document-term sparse matrix (931,709 × 28,343), extracted 14 latent topics via Non-negative Matrix Factorization (NMF), and structured them into eight economically consistent regimes: Interest Rate & Inflation, Real Estate, Household Debt, Foreign Trade, AI & Semiconductor, Stock Market, Corporate Earnings, and Capital Transactions. To overcome the severe truncation bias inherent in traditional single-dominant regime approaches, we proposed a multi-regime activation framework based on standardized z-scores ($z \ge 0.5$). Empirical results show that 76.1% of the total sample period exhibited a coexistence of two to three multiple economic regimes. Newey-West HAC robust OLS regressions revealed that the eight regime attention shares explained 22.8% of KOSPI return volatility ($F = 4.75, p = 0.00016$) and 18.1% of monthly KOSPI returns ($F = 2.68, p = 0.0106$). Furthermore, lead-lag cross-correlation analysis confirmed that the 'Interest Rate & Inflation' regime leads the Consumer Sentiment Index (CCSI) by one month ($r = -0.665$) and the Bank of Korea base rate adjustments by two months ($r = +0.341$), achieving 100% early-warning precision during the 2022-2023 rate hike cycle. This study establishes a robust data-driven early warning framework for monitoring macroeconomic risks and market volatility.
+This study establishes an unsupervised text-mining framework based on Non-negative Matrix Factorization (NMF) to detect latent economic issue regimes from 931,709 economic news articles collected from three major Korean business dailies (Maeil Business Newspaper, Seoul Economic Daily, and Korea Economic Daily) from January 2021 to July 2026 (67 months). To strictly prevent future information leakage, we constructed a deterministic Strict Out-of-Sample (OOS) pipeline where the vocabulary (22,193 terms), IDF weights, and NMF basis matrix ($H$, 14 latent topics) were fitted exclusively on the training period (2021.01–2024.12, 48 months) and projected onto the test period (2025.01–2026.07, 19 months). Six valid regimes passing pre-specified mapping rules—Interest Rate & Inflation, Real Estate, Advanced Industry (EV/Battery-centered), Stock Market, Corporate Earnings, and Capital Transactions—were established, and a multi-regime activation framework based on training-fixed standardized scores ($z \ge 0.5$) was compared against single-dominant regime representations.
 
-**Keywords :** Economic News Big Data, Text Mining, Topic Modeling, Non-negative Matrix Factorization (NMF), Multi-Regime Activation, HAC OLS Regression, Early Warning System
+Empirical findings are threefold: First, Korean economic news exhibited concurrent activation of two or more regimes in 58.21% of the 67 months (39/67 months; 66.67% in training and 36.84% in out-of-sample testing). When representation is restricted to a single dominant regime per month, 43.75% (49 out of 112; 47.19% in training and 30.43% in testing) of the active regime signals observed under the multi-regime framework are not represented as separate regimes; this reflects representational information preservation rather than predictive accuracy. Second, in-sample Newey-West HAC OLS regression (maxlags=3) on volatility-standardized monthly KOSPI returns (`kospi_ret_std`, $N=67$) yielded $R^2 = 16.19\%$ ($\text{Adj-}R^2 = 7.81\%$, HAC $F = 4.6833, p = 0.000573$), with 'Interest Rate & Inflation' ($\beta = -0.7418$, raw $p = 0.0004$, Holm $p = 0.0024$) and 'Capital Transactions' ($\beta = -0.5299$, raw $p = 0.0026$, Holm $p = 0.0129$) showing statistically significant negative contemporaneous associations. Third, weekly first-differenced cross-validation across 291 differenced weeks against Naver Datalab relative search indices with Newey-West HAC standard errors (maxlags=4, 24-test Holm correction) confirmed significant contemporaneous ($h=0$) co-movement over the full period for Interest Rates ($r = +0.5026, \text{HAC } p_{\text{holm}} = 1.29 \times 10^{-13}$), Stock Market ($r = +0.4868, \text{HAC } p_{\text{holm}} = 9.06 \times 10^{-5}$), Combined Macro ($r = +0.3217, \text{HAC } p_{\text{holm}} = 5.07 \times 10^{-6}$), and Corporate Earnings ($r = +0.2795, \text{HAC } p_{\text{holm}} = 3.48 \times 10^{-5}$). In the Strict OOS test period ($N=82$ weeks), contemporaneous co-movement remained statistically significant after 24-test HAC Holm correction for two pairs: 'Stock Market' ↔ Domestic Stock search ($r = +0.4984, \text{HAC } p_{\text{holm}} = 0.0432$) and 'Corporate Earnings' ↔ Corporate Earnings search ($r = +0.4718, \text{HAC } p_{\text{holm}} = 0.0011$), whereas 'Interest Rate & Inflation' ↔ Interest Rate search showed $r = +0.3397$ (raw HAC $p = 0.0170$) but did not remain significant after HAC Holm adjustment ($\text{HAC } p_{\text{holm}} = 0.3575$). Avoiding unverified claims of market forecasting or causality, this study provides a reproducible text-mining methodology for multi-regime representation and cross-source concordance analysis.
+
+**Keywords :** Cross-Source Validation, Economic News Big Data, Multi-Regime Activation, Naver Datalab, Non-negative Matrix Factorization (NMF), Strict Out-of-Sample Validation, Text Mining, Topic Modeling
 
 ---
 
 ## Ⅰ. 서 론
-현대 거시경제 시스템은 글로벌 지정학적 갈등, 인플레이션의 급격한 확산, 주요국 중앙은행의 가파른 긴축 통화정책, 글로벌 공급망 블록화, 그리고 생성형 인공지능(AI)과 첨단 반도체 패권 경쟁 등 복합적인 동인들이 동시다발적으로 상호작용하며 급속한 변동성을 겪고 있다[1-3]. 이러한 거시 환경의 복잡성과 불확실성 증대는 주식시장, 외환시장 등 전통적 금융자산의 가격 급변동을 유발할 뿐만 아니라, 가계 및 기업 등 경제 주체들의 심리적 기대를 급격히 냉각시키는 연쇄 파급효과를 초래한다[4-6]. 이에 따라 통화정책을 집행하는 중앙은행과 위험 관리를 수행하는 금융기관 및 정책 당국은 거시경제의 충격을 사전에 감지하고 시장의 동적 변화 경로를 실시간으로 파악할 수 있는 고도화된 조기경보 체계의 필요성을 절실히 요구하고 있다.
 
-그러나 국내총생산(GDP), 소비자물가지수(CPI), 산업생산지수 등 정부 및 공공기관이 공표하는 전통적인 거시경제 통계는 본질적인 한계를 내포하고 있다. 해당 지표들은 실제 경제 활동이 발생한 시점으로부터 짧게는 수주에서 길게는 수개월 이후에야 집계·공표되는 '발표 시차(Publication Lag)'가 존재한다[3, 5]. 또한 통계 발표 이후에도 대규모 데이터 사후 수정(Data Revision)이 빈번하게 발생하여, 급변하는 현대 금융시장 환경에서 정책 당국과 시장 참여자가 실시간으로 기민하게 대응하는 데 심각한 정보 지체 문제를 야기한다[2].
+현대 경제 시스템은 통화정책 긴축, 인플레이션 압력, 글로벌 무역 마찰, 그리고 첨단 산업 구조 재편 등 다양한 거시경제 요인들이 복합적으로 상호작용하며 전개된다[1-3]. 이러한 거시 환경의 변화는 주식시장과 외환시장의 단기 가격 변동을 수반할 뿐만 아니라, 기업의 자본 조달과 경제 주체의 기대 형성에 영향을 미친다[4-6]. 이에 따라 정책 당국과 시장 참여자들은 거시경제 주요 어젠다의 변화를 정량적으로 파악하고 다원적 이슈 구조를 추적하기 위한 텍스트 정보 분석 체계를 필요로 하고 있다.
 
-이러한 전통 통계의 시차적 한계를 극복하기 위해, 최근 계량경제학 및 데이터 마이닝 분야에서는 매일 대량으로 생성되는 비정형 뉴스 텍스트(News Text) 빅데이터를 활용하여 실시간 경제 심리와 경기 변동을 정량화하려는 시도가 급증하고 있다[1, 2, 5]. 뉴스 미디어는 실물 경제에서 발생하는 최신 사건과 시장 참여자들의 기대, 그리고 미래 불확실성을 가장 신속하게 반영하는 고밀도 텍스트 자산이다. 자연어 처리(NLP) 및 머신러닝 기법의 비약적 발전에 힘입어 텍스트로부터 거시경제 불확실성(EPU)[1], 뉴스심리지수(NSI)[5], 그리고 잠재 토픽 비중(Topic Attention)[2, 3]을 산출하는 연구들이 국제적으로 정착되었다.
+전통적인 거시경제 통계인 국내총생산(GDP), 소비자물가지수(CPI), 산업생산지수 등은 집계 및 공표 시차(Publication Lag)를 수반하며[3, 5], 사후적인 통계 수정(Revision)이 발생할 수 있어 고빈도로 변화하는 경제 현안을 실시간으로 요약하는 데 제약이 있다[2]. 이를 보완하기 위해 최근 정보처리 및 금융 빅데이터 분야에서는 매일 대량으로 생성되는 비정형 뉴스 텍스트(News Text) 빅데이터로부터 경제정책불확실성(EPU)[1], 뉴스심리지수(NSI)[5], 잠재 토픽 관심도(Topic Attention)[2, 3]를 도출하여 거시 현안을 추적하려는 연구가 진행되어 왔다.
 
-그러나 텍스트 기반 거시경제 국면 분석을 다룬 기존 연구들은 다음과 같은 세 가지 구조적 한계를 지닌다. 첫째, 기존 연구들은 대부분 각 월에서 출현 비중이 1등인 토픽만을 선택하는 '단일 지배 국면(Single Dominant Regime)' 접근법을 채택하였다[2, 7]. 하지만 현실 경제는 인플레이션 충격과 부동산 경기 침체, 환율 급등과 가계부채 부실 우려가 동시에 병존하는 '복합 위기(Poly-crisis)'가 일반적이다. 단일 국면만을 강제할 경우 2위나 3위의 중대한 잠재 위험 이슈가 통계적으로 완전히 절단(Truncation)되는 심각한 정보 손실 편향을 초래한다. 둘째, 금융 및 거시경제 시계열 데이터가 필연적으로 갖는 고유한 통계적 특성, 즉 잔류 자기상관(Autocorrelation)과 변동성 군집에 따른 이분산성(Heteroskedasticity)을 충분히 통제하지 않은 채 일반 OLS를 적용하여 '허위 회귀(Spurious Regression)'와 표준오차 과소추정 오류를 범하는 경우가 빈번하였다[11, 12]. 셋째, 대규모 언론 텍스트의 의제 비중이 한국은행의 기준금리 결정, 소비자심리지수, 주식시장 변동성 등 실제 정책 및 시장 지표에 대해 구체적으로 몇 개월의 선행(Lead) 시차를 갖는지에 대한 전수 사건 기반의 정량적 실증 검증이 미흡하였다.
+그러나 비정형 텍스트 기반 거시 이슈 국면 분석을 다룬 기존 연구들은 정보 표현 및 실증 검증 측면에서 다음과 같은 세 가지 한계를 나타낸다.
 
-이에 본 연구는 2021년 1월부터 2026년 7월까지(총 67개월) 국내 3대 주요 경제 일간지(매일경제, 서울경제, 한국경제)에서 수집한 931,709건의 방대한 경제 뉴스 기사를 기반으로, 비음수 행렬 분해(NMF) 토픽 모델링을 통해 한국 경제를 대표하는 8대 핵심 거시 이슈 국면을 도출한다. 아울러 정보 절단 편향을 극복하는 표준화 z점수 기반의 '다중 국면 활성화(Multi-Regime Activation) 프레임워크'를 새롭게 제안한다. 또한 시계열 자기상관과 이분산성을 완벽히 보정한 Newey-West HAC 견고 OLS 회귀분석과 시차 교차상관(Lead-Lag Matrix) 분석을 적용하여, 다음과 같은 네 가지 핵심 연구 질문(Research Questions)을 체계적으로 실증 규명하고자 한다:
+첫째, **단일 대표 국면(Single Dominant Regime) 선택 방식으로 인한 복합 이슈 표현의 제한**이다. 기존 연구들은 각 시점에서 출현 비중이 1위인 토픽만을 해당 시점의 대표 국면으로 지정하거나 단일 지수로 축약하는 방식을 주로 채택하였다[2, 7]. 그러나 현실 경제에서는 고물가·금리 인상 충격과 부동산 시장 침체, 또는 증시 변동과 기업실적 공시가 같은 달에 동시에 부각되는 복합 현상이 빈번하다. 월별 대표 국면 1개만을 선택하여 표현을 제한할 경우, 동일한 시점에 임계 수준 이상으로 활성화된 제2·제3의 유효 국면 신호가 별도의 국면으로 표현되지 못하는 한계가 발생한다.
 
-- **RQ1**: 한국 거시경제 이슈는 단일 국면으로 설명 가능한가, 아니면 다수의 이슈 국면이 복합적으로 공존하는가?
-- **RQ2**: 비정형 텍스트 기반 8대 국면 비중은 코스피 주가 변동성 및 월간 수익률 등 금융시장 지표를 통계적으로 유의하게 설명하는가?
-- **RQ3**: 뉴스 국면 지표는 한국은행 기준금리 조정 및 소비자심리지수(CCSI) 등 거시경제 지표에 대해 실질적인 선행 시차(Lead Time)와 조기경보 적중력을 갖는가?
-- **RQ4**: 언론사의 뉴스 의제 비중은 일반 대중의 실제 정보 검색 트렌드(네이버 데이터랩)와 어느 수준의 정량적 동조화를 나타내는가?
+둘째, **표본 외(Out-of-Sample) 검증 설계의 미흡과 미래 정보 누수(Data Leakage)**이다. 많은 텍스트 마이닝 연구들이 전체 분석 기간의 모든 문서를 한꺼번에 투입하여 TF-IDF 어휘 사전을 구축하고 토픽 모델(LDA, NMF) 및 표준화 모수를 적합한 뒤, 그 결과를 과거와 미래 시점에 동일하게 적용한다. 이는 평가 기간에 아직 발생하지 않은 미래의 어휘 분포와 토픽 구조가 과거 시점의 지표 산출에 반영되는 정보 누수 문제를 야기한다.
+
+셋째, **이종 빅데이터를 활용한 주별 차분 교차 검증 및 시계열 정상성 통제의 부족**이다. 비지도 학습으로 추출된 뉴스 토픽 지표가 언론사의 보도 관행에 그치는지, 아니면 일반 대중의 검색 관심도와도 동시점에 동조하는지를 독립된 외부 데이터로 교차 검증한 연구가 부족하였다. 또한 시계열 수준값(Level)의 비정상성(단위근 추세)을 제거하지 않은 채 단순 상관계수를 보고할 경우, 공통 추세에 의한 가짜 상관(Spurious Correlation)을 유의한 관계로 오인할 위험이 크다.
+
+이에 본 연구는 2021년 1월부터 2026년 7월까지(총 67개월) 국내 3대 경제 일간지(매일경제, 서울경제, 한국경제)에서 수집한 931,709건의 경제 뉴스 기사 코퍼스를 바탕으로 비음수 행렬 분해(NMF)를 적용하여 한국형 경제 이슈 국면 탐지 체계를 구축한다. 특히 학습 기간(2021.01~2024.12, 48개월)과 테스트 기간(2025.01~2026.07, 19개월)을 엄격히 분리한 **결정론적 표본 외(Strict OOS) 파이프라인**을 설계하고, 시계열 변환 및 다중검정 보정을 거친 보수적 실증 검증을 수행한다.
+
+본 연구가 규명하고자 하는 핵심 연구 질문(Research Questions)은 다음과 같다:
+- **RQ1 (단일 국면과 다중 국면 활성화 비교)**: 한국 경제 뉴스에서 다중 국면 동시 활성화 방식($z \ge 0.5$)과 단일 대표 국면 선택 방식은 활성 국면 신호 표현에서 어떠한 정량적 차이를 보이는가?
+- **RQ2 (Phase 5.6 Strict OOS 기반 시장·경제 지표 관계 분석)**: 학습 기간 고정 모델로부터 도출된 6대 유효 국면 비중은 코스피 수익률 충격 및 기준금리 변동과 어떠한 동행·시차 관계를 보이며, 조기경보 규칙으로서의 한계는 무엇인가?
+- **RQ3 (네이버 검색 데이터를 이용한 주별 교차 데이터 검증)**: 뉴스 국면 점유율의 주간 변동은 네이버 데이터랩(Datalab) 상대 검색 관심도의 주간 변동과 Newey-West HAC 및 다중검정 보정 하에서 유의한 동시점 동조화를 나타내는가?
 
 ---
 
-## Ⅱ. 관련 연구 및 선행문헌 분석
+## Ⅱ. 관련 연구 및 이론적 배경
 
 ### 2.1 뉴스 텍스트 기반 거시경제 지표 및 시장 반응
-텍스트 데이터를 계량경제학적 분석에 도입한 선구적 연구로 Baker, Bloom, and Davis[1]를 들 수 있다. 이들은 미국의 10대 주요 신문 기사에서 '경제(Economy)', '정책(Policy)', '불확실성(Uncertainty)'과 관련된 어휘의 동시 출현 빈도를 계측하여 경제정책불확실성(EPU) 지수를 개발하였다. EPU 지수는 공표 이후 거시경제 예측, 기업 설비투자 위축, 금융시장 변동성 확대 등을 설명하는 글로벌 표준 거시 충격 지표로 널리 인정받았다.
+텍스트 데이터를 계량경제학적 분석에 도입한 대표적 연구인 Baker, Bloom, and Davis[1]는 주요 신문 기사에서 '경제', '정책', '불확실성' 관련 키워드의 출현 빈도를 집계하여 경제정책불확실성(EPU) 지수를 개발하였다. 이후 텍스트 분석 연구는 단어 빈도 계측에서 확률적·선형대수적 토픽 모델링으로 확장되었다. Bybee et al.[2]은 월스트리트저널(WSJ) 기사 약 80만 건을 토픽 모델링으로 분석하여 거시경제 주제 비중(Attention) 시계열을 도출하고 실물 경기 변동과의 관련성을 분석하였다. Thorsrud[3]는 일간 비즈니스 신문의 토픽 비중 시계열을 동적 요인 모형(DFM)과 결합하여 경기 동행 지수를 구축하였다.
 
-이후 텍스트 분석 연구는 단순 키워드 빈도 계측에서 확률적 머신러닝 기법인 토픽 모델링으로 진화하였다. Bybee et al.[2]은 1984년부터 2017년까지 미국 월스트리트저널(WSJ)에 게재된 약 80만 건의 기사 전문을 잠재 디리클레 할당(LDA) 토픽 모델링으로 분석하여 거시경제 전반의 의제를 포괄하는 주제 비중(Attention) 시계열을 도출하였다. 이들은 감성 분석을 완전히 배제하고 오직 토픽 비중의 변화만으로도 실물 경제의 비즈니스 사이클을 추적할 수 있으며, 정부 통계 발표 이전에 거시 충격을 선행 예측하는 증분 정보(Incremental Information)를 제공함을 입증하였다. 또한 Thorsrud[3]는 일간 비즈니스 신문의 토픽 비중 시계열을 동적 요인 모형(Dynamic Factor Model)과 결합하여 공식 분기 GDP에 선행하는 실시간 경기 동행 지수를 구축하였다. 금융시장 분야에서는 Tetlock[4]과 Garcia[14]가 뉴스 미디어에 표출된 비관적 텍스트가 투자자 심리를 위축시키고 주식시장의 하락 압력과 거래 변동성을 급증시키는 비대칭적 충격을 계량적으로 실증하였다.
+국내에서도 텍스트 마이닝을 활용한 거시경제 지표 연구가 진행되었다. 서범석 외[5]는 뉴스심리지수(NSI)를 개발하여 소비자심리지수(CCSI) 등과의 관계를 분석하였고, 김수현·박기영[6]과 송원호·강규호[16]는 경제 기사 텍스트를 활용하여 거시 심리 및 통화정책 관련 반응을 연구하였다. 그러나 기존 연구들은 주로 단일 지수나 단일 대표 국면 할당에 초점을 맞추었으며, 복수의 경제 이슈가 동일 월에 동시에 활성화되는 다중 국면 구조와 단일 대표 국면 선택 시 미표현되는 신호의 비중을 학습·테스트 분할 환경에서 정량화한 연구는 드물다.
 
-국내에서도 텍스트 마이닝을 활용한 거시경제 연구가 활발히 진행되었다. 서범석 외[5]는 한국은행 경제통계국에서 트랜스포머 기반 딥러닝 모형을 활용하여 일별 뉴스심리지수(NSI)를 개발하였으며, 소비자심리지수(CCSI) 및 경기동행지수 순환변동치에 1~2개월 선행함을 보고하였다. 김수현·박기영[6]은 경제 기사 텍스트 분석을 통해 경제 주체의 심리 변화가 실제 경기 변동과 긴밀히 동조화됨을 실증하였다. 박성호·정용운[7] 또한 뉴스 빅데이터의 토픽 시계열이 주요 거시경제 지표에 유의한 선행성을 가짐을 입증하였으며, 송원호·강규호[16]는 뉴스 텍스트를 통해 통화정책 충격의 자산 가격 파급효과를 정밀 분석하였다. 그러나 기존 국내외 연구들은 토픽 비중을 단일 지수 형태로 가공하거나 연속형 예측 인자로 단순 투입하는 데 그쳤으며, 경제의 메인 어젠다가 어떤 영역으로 전환(Regime Switching)되는지, 그리고 복합 위기 국면에서 여러 이슈가 공존할 때 시장의 차별적 반응 경로가 어떻게 형성되는지를 규명하지는 못하였다.
+### 2.2 비음수 행렬 분해(NMF)와 고정 특징 투영
+토픽 모델링 기법 중 비음수 행렬 분해(NMF)는 문서-어휘 가중치 행렬 $V \in \mathbb{R}^{N \times M}_+$를 두 개의 저차원 비음수 행렬 $W \in \mathbb{R}^{N \times K}_+$와 $H \in \mathbb{R}^{K \times M}_+$의 곱으로 근사 분해하는 기법이다[8]:
 
-### 2.2 비음수 행렬 분해(NMF)와 특징 추출
-토픽 모델링은 대규모 비정형 텍스트 코퍼스로부터 잠재된 주제 구조를 비지도 학습 방식으로 추출하는 기법이다[9]. 가장 널리 쓰이는 LDA는 문서가 토픽들의 혼합으로 생성되고 토픽은 단어들의 다항분포로 생성된다고 가정하는 베이지안 확률 모형이다. 그러나 LDA는 반복적인 깁스 샘플링(Gibbs Sampling) 과정으로 인해 수십만 건 이상의 대규모 코퍼스에서 연산 부하가 크고, 무작위 초기화에 따라 토픽 할당 결과의 재현성이 저하되는 한계가 있다.
+$$V \approx W \times H \quad (\text{단, } W \ge 0, H \ge 0) \tag{1}$$
 
-반면 비음수 행렬 분해(NMF)는 문서-어휘 가중치 행렬 $V \in \mathbb{R}^{N \times M}_+$를 두 개의 저차원 비음수 행렬 $W \in \mathbb{R}^{N \times K}_+$와 $H \in \mathbb{R}^{K \times M}_+$의 곱으로 근사 분해하는 선형대수학적 차원 축소 기법이다[8]:
+여기서 $W$는 각 문서가 $K$개 잠재 토픽에 갖는 가중치 행렬이며, $H$는 각 토픽이 $M$개 어휘에 갖는 단어 가중치 행렬이다. NMF는 비음수 제약(Non-negativity Constraint)을 통해 가산적 부분 기반 표현(Part-based Representation)을 산출하며, 고정된 초기화(`nndsvd`)와 좌표 하강법(Coordinate Descent)을 사용할 때 결정론적 재현성을 확보할 수 있다.
 
-$$V \approx W \times H \quad (\text{단, } W \ge 0, H \ge 0)$$
+특히 표본 외(Strict OOS) 평가를 수행할 때, 학습 기간(Train) 문서에서 적합된 기저 행렬 $H_{\text{train}}$과 IDF 가중치를 고정(Freeze)한 뒤, 테스트 기간(Eval)의 새로운 문서 행렬 $V_{\text{eval}}$에 대해 $W_{\text{eval}} \approx \arg\min_{W \ge 0} \| V_{\text{eval}} - W H_{\text{train}} \|_F$를 투영함으로써 평가 기간의 미래 텍스트 정보가 토픽 기저 형성에 개입하는 것을 원천 차단할 수 있다.
 
-여기서 $W$는 각 문서가 $K$개의 잠재 토픽에 대해 가지는 가중치(기여도) 행렬이며, $H$는 각 토픽이 $M$개의 어휘에 대해 가지는 단어 중요도 행렬이다. NMF는 음수 가중치를 엄격히 배제하는 비음수 제약(Non-negativity Constraint)으로 인해 부품이 모여 전체를 구성하는 '부분 기반 표현(Part-based Representation)'을 산출한다. 따라서 도출된 토픽의 가중치가 항상 양수이므로 통계적 해석이 매우 명확하며, 희소 행렬에 대해 결정론적이고 고속 수렴하는 특성을 지녀 93만 건에 달하는 대규모 뉴스 코퍼스의 잠재 구조를 추출하는 데 극히 적합하다.
+### 2.3 시계열 정상성, Newey-West HAC 공분산 및 다중검정 보정
+거시경제 및 뉴스·검색 시계열 데이터는 자기상관(Autocorrelation)과 이분산성(Heteroskedasticity)을 수반하며[11, 15], 수준값(Level) 시계열이 단위근 추세를 공유할 경우 실제 단기 동조성이 없더라도 높은 상관계수가 산출되는 가짜 상관(Spurious Correlation)이 발생한다.
 
-### 2.3 시계열 자기상관 보정과 Newey-West HAC 추정
-금융 및 거시경제 시계열 데이터는 과거의 경제적 충격이 수개월에 걸쳐 잔류하는 자기상관(Autocorrelation)과, 평온한 시기와 위기 시기의 변동 폭이 상이한 이분산성(Heteroskedasticity)이라는 두 가지 고질적 통계적 특성을 필연적으로 수반한다[11, 13, 15]. 일반 최소제곱법(OLS)은 오차항들이 독립적이고 동일한 분산을 갖는다는(i.i.d.) 이상적 가정을 전제하므로, 이러한 시계열 데이터에 일반 OLS를 그대로 적용할 경우 표준오차가 과소추정되어 실제로는 관계가 없음에도 통계적으로 유의한 것처럼 판정되는 '허위 회귀(Spurious Regression)' 오류를 범하게 된다.
+본 연구에서는 단위근 추세에 의한 착시를 방지하기 위해 상관 및 교차 검증 시 지수 수준값 대신 **월간 수익률·차분 또는 주간 1차 차분(First Difference)** 변환 시계열을 사용한다. 또한 회귀분석 및 주별 상관 검정 시 Newey and West[12]의 HAC(Heteroskedasticity and Autocorrelation Consistent) 견고 공분산 추정량(Bartlett 커널)을 적용한다:
 
-본 연구에서는 이러한 시계열 착시 현상을 완벽히 차단하기 위해 Newey and West[12]가 고안한 HAC(Heteroskedasticity and Autocorrelation Consistent) 견고 공분산 추정법을 적용한다. 오차항의 자기상관이 최대 $q$개 시차에 걸쳐 존재한다고 할 때, HAC 공분산 행렬 $V_{\text{HAC}}$는 Bartlett 커널 가중치 $w_l = 1 - l / (q + 1)$을 적용하여 다음과 같이 계산된다:
+$$V_{\text{HAC}} = (X'X)^{-1} \left[ \Gamma_0 + \sum_{l=1}^{q} \left(1 - \frac{l}{q + 1}\right) (\Gamma_l + \Gamma_l') \right] (X'X)^{-1} \tag{2}$$
 
-$$V_{\text{HAC}} = (X'X)^{-1} \left[ \Gamma_0 + \sum_{l=1}^{q} w_l (\Gamma_l + \Gamma_l') \right] (X'X)^{-1}$$
-
-본 연구에서는 분기 단위(3개월)의 잔류 시계열 잔상을 효과적으로 통제하기 위해 차수 $q = 3$ (maxlags=3)을 설정하였다. 이를 통해 8대 국면 비중 벡터의 회귀계수 $\beta$에 대해 결합 왈드 통계량 $W = \beta' [ V_{\text{HAC}} ]^{-1} \beta$를 산출하고, 이를 변수 개수(8)로 정규화한 Wald $F$-검정($F = W / 8$)을 수행함으로써 가장 보수적이고 엄격한 통계적 유의성을 검정한다.
+아울러 복수의 국면·지표·시차를 동시에 검정할 때 발생하는 제1종 오류(Family-wise Error Rate) 팽창을 통제하기 위해, 모든 다중 가설 패밀리에 대해 Holm-Bonferroni 단계적 보정($p_{\text{holm}}$)을 적용하고 $p_{\text{holm}} < 0.05$ 기준을 충족한 경우에만 다중검정 보정 후 통계적으로 유의한 결과로 판정한다.
 
 ---
 
-## Ⅲ. 연구 방법
+## Ⅲ. 연구 방법 및 Strict OOS 시스템 설계
 
-### 3.1 연구 대상 및 데이터 수집
-본 연구의 텍스트 데이터는 한국언론진흥재단의 뉴스 빅데이터 플랫폼인 빅카인즈(BigKinds)를 통해 수집되었다. 분석 기간은 2021년 1월 1일부터 2026년 7월 31일까지 총 67개월이며, 국내 자본시장과 산업계에서 가장 공신력 있는 3대 주요 경제 일간지인 **매일경제, 서울경제, 한국경제**의 경제 섹션 기사 전량을 수집 대상으로 하였다. 빅카인즈 데이터는 기사 원문 내보내기 시 저작권 보호를 위해 200자 절단 제한이 적용되지만, 기사 전문을 형태소 분석하여 명사 단위로 정제한 '키워드' 필드를 온전히 제공한다. 따라서 본 연구는 200자 요약본이 아닌 기사 원문 전체의 의미를 보존하고 있는 키워드 정제 코퍼스 총 931,709건을 최종 분석 투입물로 확정하였다.
+### 3.1 경제 뉴스 코퍼스 및 전처리
+텍스트 데이터는 한국언론진흥재단 빅카인즈(BigKinds)를 통해 2021년 1월 1일부터 2026년 7월 31일까지(총 67개월) 국내 3대 경제 일간지인 **매일경제, 서울경제, 한국경제**의 경제 섹션 기사 전량을 수집하였다. 저작권 보호로 본문 200자 절단이 적용되는 원문 요약 대신, 기사 전문에서 추출된 형태소 분석 명사 키워드 필드(`keywords`)를 사용하였다. 수집된 원시 데이터 931,709건은 결측치 및 중복(`article_id`) 검사 후 931,709건 전량이 분석 코퍼스로 확정되었다(어휘 사전에 매칭되는 토큰이 전혀 없는 11건만 월별 비중 분모에서 제외됨).
 
-종속변수로 활용된 거시경제 및 금융시장 데이터는 한국은행 경제통계시스템(ECOS) API를 통해 월별 시계열로 구축되었다. 주식시장 반응 지표로는 코스피(KOSPI) 월간 종가 기준 수익률(kospi_ret)과 일별 수익률의 표준편차로 정의된 월간 변동성(kospi_ret_std)을 수집하였다. 외환시장 반응 지표로는 원/달러 환율(USD/KRW) 월말 매매기준율의 월간 수익률(usdkrw_ret)을 산출하였다. 실물 거시 및 심리 지표로는 전국 도시 가구 대상 설문조사 기반의 소비자심리지수 월간 차분(ccsi_diff), 한국은행 기준금리 월간 변화분(base_rate_diff), 그리고 소비자물가지수(CPI) 전년동월대비 상승률을 취합하였다. 또한 포털 검색 트렌드 대조를 위해 네이버 데이터랩(Datalab)의 월별 검색어 지수를 결합하였다.
+거시금융 시장 지표는 한국은행 경제통계시스템(ECOS) 등을 통해 월별 패널(`monthly_panel.csv`, 67개월)로 구축하였다:
+1. **코스피 월간 로그수익률 (`kospi_ret`)**: $\text{kospi\_ret}_t = 100 \times \ln(\text{KOSPI}_t / \text{KOSPI}_{t-1})$ ($\%$)
+2. **과거 변동성 정규화 월간 수익률 (`kospi_ret_std`)**: $\text{kospi\_ret\_std}_t = \text{kospi\_ret}_t / \text{kospi\_vol12}_{t-1}$, 여기서 $\text{kospi\_vol12}_t = \operatorname{SD}(\text{kospi\_ret}_{t-11 : t})$는 직전 12개월 월간 수익률의 표본 표준편차이다. 이는 변동성 수준 자체가 아니라 과거 변동성 크기로 스케일을 조정한 월간 수익률 충격 지표이다.
+3. **거시 변동 지표**: 한국은행 기준금리 월간 변화폭(`base_rate_diff` $= \text{BASE\_RATE}_t - \text{BASE\_RATE}_{t-1}$), 소비자심리지수 월간 변화분(`ccsi_diff`), 원/달러 환율 월간 로그수익률(`usdkrw_ret`).
 
-### 3.2 텍스트 전처리 및 문서-어휘 희소행렬 구축
-수집된 931,709건의 뉴스 기사로부터 문서 빈도(Document Frequency) 기반의 키워드 필터링을 수행하였다. 전체 문서 집합에서 지나치게 빈번하게 등장하여 변별력이 없는 범용 명사(예: 기업, 시장, 경제, 사업, 한국 등)와 문서 빈도가 5회 미만인 극단적 희소 어휘를 제거하였다. 이후 TF-IDF 가중치를 적용하여 931,709개 문서와 28,343개 핵심 어휘로 구성된 대규모 문서-어휘 희소행렬(`doc_term.npz`)을 구축하였다.
+대중 검색 관심도 대조를 위해서는 네이버 데이터랩(Datalab) Search Trend API를 통해 고정 조회 기간(`2016-01-01 ~ 2026-07-31`) 동안 각 검색어 그룹을 공통 앵커 키워드(`'은행'`)와 함께 조회하여 일별 원시 상대지수(`score`, 그룹 내 최대 검색일=100 기준)와 앵커 대비 상대지수(`score_rel = score / anchor_score`)를 수집하고, 뉴스 코퍼스와 동일한 ISO 8601 주차(`iso_yw`) 기준 주별 평균으로 집계하였다.
 
-### 3.3 NMF 토픽 모델링 및 8대 경제 이슈 국면 체계화
-구축된 희소행렬을 대상으로 NMF 모델(NNDSVDa 초기화, Frobenius norm 손실함수)을 적용하여 14개의 잠재 토픽을 추출하였다. 추출된 14개 토픽 중 일반 기업 경영(토픽 0), 모빌리티 완성차(토픽 3), 유통 할인 마케팅(토픽 5), 제도 행정 감사(토픽 8) 등 거시경제 흐름과 직접 관련이 적은 일반 산업 잔차 토픽 4개를 분리하였다. 나머지 10개 핵심 토픽에 대해 경제학적 정합성을 검토한 결과, 물가와 금리는 동시 출현 상관도가 0.995에 달하여 실질적으로 한 몸으로 움직이는 충격이므로 '금리·물가(토픽 9)'로 결합하였다. 반면 기존 연구에서 '증시'라는 하나의 토픽으로 뭉뚱그려졌던 기사들은 일일 장중 수급(토픽 1, 4, 13), 분기 실적 공시(토픽 7), M&A 및 지분 매각(토픽 6)으로 성격이 완전히 구분되므로, 이를 '시황', '기업실적', '자본거래'의 독립 국면으로 정밀 분리하였다.
+### 3.2 TF-IDF와 NMF 기반 경제 이슈 토픽 추출
+본 연구는 미래 정보 누수를 원천 차단하기 위해 전체 67개월을 다음과 같이 고정 분할하였다(`RUN_PHASE5_6_20261027_184959`):
+- **학습 기간 (Train)**: `2021-01 ~ 2024-12` (48개월, 기사 643,095건)
+- **표본 외 테스트 기간 (Eval OOS)**: `2025-01 ~ 2026-07` (19개월, 기사 288,614건)
 
-이를 통해 최종 확정된 **8대 경제 이슈 국면**은 다음과 같다: 1. 금리·물가(macro), 2. 부동산(realestate), 3. 가계대출(hhdebt), 4. 대외통상(trade), 5. AI반도체(aichip), 6. 시황(market), 7. 기업실적(earnings), 8. 자본거래(capital).
+모든 텍스트 특징 선택과 모델 적합은 학습 기간(48개월) 내부에서만 수행되었다:
+1. **어휘 사전(Vocabulary)**: 학습 기간 643,095건 기사에서 최소 문서빈도 `MIN_DF = 200`, 최대 문서빈도 비율 `MAX_DF_RATIO = 0.15`, 상한 30,000개 조건을 적용하고 `(-DF, 토큰 사전순)`으로 정렬하여 최종 **22,193개 어휘**를 확정하였다.
+2. **IDF 및 NMF 적합 표본**: 학습 기간 48개월에서 월별 3,000건씩 층화 비복원 추출(`seed=42`)한 144,000건의 학습 표본에 대해 `TfidfTransformer`와 NMF(`n_components=14, init='nndsvd', solver='cd', max_iter=400, random_state=42`)를 단 1회 적합하여 기저 행렬 $H_{\text{train}}$ ($14 \times 22,193$)을 고정하였다.
+3. **전 기간 변환 및 월별·주별 집계**: 고정된 어휘 사전, IDF, $H_{\text{train}}$에 전체 문서를 `transform` 방식으로만 투영하여 문서별 토픽 가중치 $W_{i,k}$를 산출하고, 유효 문서($\sum_k W_{i,k} > 0$)의 정규화 토픽 비중 $w_{i,k} = W_{i,k} / \sum_{k=0}^{13} W_{i,k}$를 월별 및 ISO 주차별로 평균하였다.
 
-### 3.4 다중 국면 활성화 체계 ($z \ge 0.5$)
-기존의 텍스트 국면 분류 연구들은 각 월에서 비중 1등 토픽만을 취하는 단일 지배 국면(Single Dominant, argmax)을 채택해 왔다. 그러나 현실 경제는 물가 폭등과 금리 인상, 원/달러 환율 급등이 동시에 발생하는 복합 위기 상황이 빈번하다. 1등 국면만 뽑을 경우 2등, 3등의 중대한 위기 신호가 전부 탈락하여 거시경제 설명력이 붕괴된다. 본 연구는 각 국면의 월별 비중 $s_{i,t}$에 대해 전체 표본 기간(67개월)의 평균 $\mu_i$과 표준편차 $\sigma_i$을 이용해 표준화 점수 $z_{i,t} = (s_{i,t} - \mu_i) / \sigma_i$를 산출하고, $z_{i,t} \ge 0.5$를 만족하는 모든 국면을 해당 월의 활성 국면으로 채택하는 **다중 국면 활성화 체계**를 도입하였다.
+### 3.3 14개 토픽에서 6개 유효 경제 국면으로의 매핑
+토픽 번호에 대한 자의적 개입을 배제하기 위해, 사전 구축된 8개 경제 도메인 키워드 사전(`DOMAIN_SPEC`)과 학습 기저 행렬 $H_{\text{train}}$만을 입력으로 하는 규칙 기반 자동 매핑 함수(`map_topics`)를 적용하였다. 각 토픽에서 1위 도메인의 어휘 가중치 점유율(`best_share`)이 `0.01`(`MIN_MAP_SHARE`) 미만이면 `residual`(잔차), 2위 도메인과의 질량 비율(`second_mass / best_mass`)이 `0.90`(`MASS_TIE_RATIO`) 이상이면 `ambiguous`(경합·모호), 두 조건을 모두 통과하면 1위 도메인으로 `assigned`(할당) 판정하였다.
 
-### 3.5 실증 분석 방법론
-본 연구는 8대 국면 체계의 실증적 타당성을 검증하기 위해 다음과 같은 6단계 분석을 체계적으로 수행하였다:
-1. 8대 국면의 비중 기술통계 및 임계값 분포 분석
-2. NMF 14개 잠재 토픽 프로파일링 및 키워드 가중치 분석
-3. 단일 지배 방식 대비 다중 활성화 방식의 사건 복원력 비교
-4. Newey-West HAC OLS 다중 회귀분석을 통한 금융시장 및 거시지표 설명력 검정
-5. 시차 교차상관(Lead-Lag Matrix) 및 67개월 전수 사건 조기경보 적중률 분석
-6. z 임계값 민감도(0.3~0.7) 및 2026년 대폭락 표본 분할 강건성 검정
-7. 국면 전환 전후 ±3개월 거시금융 지표 반응 이벤트 스터디
-8. 언론 의제와 대중 검색어 트렌드 간 동조화 검증(RQ4)
+학습 기간 14개 잠재 토픽(`토픽 0 ~ 13`)의 실제 상위 키워드와 매핑 결과는 다음과 같다:
+- **할당된 6대 유효 국면 (총 8개 토픽 할당)**:
+  - **`macro` (금리·물가, 1개 토픽)**: **토픽 1** (`물가, 금리, 경제, Fed, 인상, 인플레이션, 통화, 경기, 연방, 중앙은행, 정책, 기준금리` — `macro` 점유율 `0.0472`, 2위/1위 비율 `0.191`, 신뢰도 `0.809`)
+  - **`realestate` (부동산, 2개 토픽)**: **토픽 2** (`대출, 주택, 금리, 부동산, 은행, 아파트, 전세, 집계, 포인트, 매매, 집값, 담보` — `realestate` 점유율 `0.0284`, 2위 `hhdebt`와의 비율 `0.664`) + **토픽 3** (`단지, 분양, 가구, 아파트, 지상, 지하, 전용, 인근, 청약, 조성, 주택, 입주` — `realestate` 점유율 `0.0403`, 2위/1위 비율 `0.009`)
+  - **`aichip` (첨단산업(전기차·배터리 중심), 1개 토픽)**: **토픽 12** (`차량, 전기차, 모델, 자동차, 주행, 출시, 현대차, 탑재, SUV, 성능, 기아, 충전, 배터리, 전기` — `aichip` 점유율 `0.0125`, 2위/1위 비율 `0.027`, 우세 세부 그룹 `전기차배터리`)
+  - **`market` (시황, 2개 토픽)**: **토픽 4** (`종목, 매수, 외국인, 지수, 순매도, 주가, 하락, 삼성전자, 증시, 상위, 시가, 코스피` — `market` 점유율 `0.0343`, 2위/1위 비율 `0.381`) + **토픽 13** (`코스닥, 출발, 개장, 마감, 코스피, 거래일, 종료, 포인트, 상장, 공모가, 하락, 보통주추가상장` — `market` 점유율 `0.2651`, 2위/1위 비율 `0.081`)
+  - **`earnings` (기업실적, 1개 토픽)**: **토픽 7** (`영업, 이익, 전년, 영업이익, 실적, 매출액, 공시, 연결, 감소, 영업익, 순이익, 분기` — `earnings` 점유율 `0.0189`, 2위/1위 비율 `0.181`)
+  - **`capital` (자본거래, 1개 토픽)**: **토픽 6** (`상장, 주식, 투자자, 펀드, 자산, 지분, 보유, 자금, 수익, 운용, 주주, IB, 인수, ETF, 공모, 매각, 발행, IPO` — `capital` 점유율 `0.0222`, 2위/1위 비율 `0.234`)
+- **미형성 국면 (`unrepresented / NaN`, 2개 도메인)**:
+  - **가계대출(`hhdebt`)**은 토픽 2에서 `realestate`에 차순위(질량비 `0.664`)로 흡수되어 독립 토픽을 형성하지 못하였으며, **대외통상(`trade`)**은 토픽 0(점유율 `0.0012 < 0.01`)과 토픽 8(`aichip`과 경합비 `0.951 >= 0.90`)이 임계 규칙을 통과하지 못하여 미형성 처리되었다.
+- **비할당 잔차·경합 토픽 (`residual / ambiguous`, 6개 토픽)**:
+  - **토픽 0** (`경영, 환경, 사회, ESG, 지배구조, 탄소` — `residual`), **토픽 5** (`브랜드, 고객, 상품, 구매, 출시, 매장, 할인` — `residual`), **토픽 8** (`공장, 수출, 중국, 제조, 반도체, 확보, 유럽, 소재, 장비, 배터리` — `trade` 1위·`aichip` 2위 경합비 `0.951`로 `ambiguous`), **토픽 9** (`현지시간, 마켓, 글로벌마켓, 달러, 플랫폼, 해외, CEO, 주가, 테슬라, 뉴욕, 애플, 머스크` — `aichip` 1위·`market` 2위 경합비 `0.906`으로 `ambiguous`), **토픽 10** (`지적, 방안, 제도, 조치, 시행, 위원회, 국회, 규정, 개정` — `residual`), **토픽 11** (`분야, AI, 협력, 혁신, 인공지능, 구축, 역량, 교육, 스타트업, 디지털, 플랫폼, 데이터, 솔루션` — 1위 `aichip` 점유율 `0.0088 < 0.01`로 `residual`) 등 6개 토픽의 비중 합은 `residual_share`로 집계되었다.
+
+> [!NOTE]
+> **`첨단산업(전기차·배터리 중심)`(`aichip`) 국면의 매핑 경위 및 의미적 한계 (`supported_ev_battery_only`):**
+> 기존 코드의 `KEYWORD_SETS["AI반도체"]`(`aichip`) 검색어 분류체계는 4개 세부 그룹(`인공지능`, `반도체`, `빅테크인프라`, `전기차배터리`)을 묶어 구성되었다. 학습 기간 NMF 적합 결과, 인공지능 관련 어휘가 모인 **토픽 11**은 영문 단일 토큰 `"AI"`가 한글 위주 사전 키워드(`인공지능, 챗GPT, 생성형AI` 등)에 포함되지 않아 도메인 점유율(`0.88%`)이 최소 기준(`1.0%`)에 미달(`residual`)하였고, 반도체·수출 중심의 **토픽 8**과 해외 빅테크 중심의 **토픽 9**는 각각 `trade` 및 `market` 도메인과의 질량비가 `0.90`을 초과하여 `ambiguous`로 분류되었다. 반면 주요 키워드가 `차량, 전기차, 모델, 자동차, 주행, 출시, 현대차, 탑재, SUV, 성능, 기아, 충전, 배터리, 전기` 등에 집중된 **토픽 12**는 사전 내 `전기차배터리` 세부 그룹의 지지를 받아 유일하게 `aichip` 식별자에 매핑되었다(`supported_ev_battery_only`). 본 연구는 사후적인 토픽 재할당이나 규칙 변경을 배제하기 위해 코드 식별자(`aichip`)와 모델 매핑(`토픽 12`)을 그대로 유지하되, 실제 포착된 토픽의 의미를 반영하여 논문 내 국면 명칭을 **`첨단산업(전기차·배터리 중심)`**으로 표기한다. 또한 이러한 매핑이 AI·반도체 산업 전반에 대한 의미 타당성을 입증하는 것은 아니라는 점을 명확히 한계로 규정한다.
+
+### 3.4 학습 기간 고정 다중 국면 활성화 체계 ($z \ge 0.5$)
+각 유효 국면 $d$의 월별 점유율 $s_{d,t}$에 대해, 미래 정보 누수를 차단하기 위해 **학습 기간(2021.01~2024.12, 48개월)만의 표본 평균 $\mu_{d,\text{train}}$과 표본 표준편차 $\sigma_{d,\text{train}}$(`ddof=1`)**을 모수로 고정하여 표준화 점수를 산출하였다:
+
+$$z_{d,t} = \frac{s_{d,t} - \mu_{d,\text{train}}}{\sigma_{d,\text{train}}} \tag{3}$$
+
+테스트 기간(2025.01~2026.07, 19개월)에서도 테스트 표본의 평균·표준편차를 다시 계산하지 않고 학습 기간 고정 모수($\mu_{d,\text{train}}, \sigma_{d,\text{train}}$)를 그대로 적용하였으며, $z_{d,t} \ge 0.5$를 충족하는 모든 국면을 해당 월의 활성 국면으로 정의하였다.
 
 ---
 
-## Ⅳ. 분석 결과
+## Ⅳ. 실증 분석 결과
 
-### 4.1 8대 경제 이슈 국면 프로파일 및 비중 분포
-67개월(2021.01~2026.07) 동안 수집된 93만 건의 기사를 바탕으로 산출한 8대 국면의 비중 기술통계 및 $z \ge 0.5$ 임계선은 표 1과 같다.
+### 4.1 6대 유효 경제 국면 분포 및 기술통계
+`phase5_6_train_only_regime_monthly.csv`에서 산출된 6대 유효 국면 및 잔차 비중의 학습 기간(48개월) 고정 표준화 모수와 구간별 활성 개월 수 분포는 표 1과 같다.
 
-**Table 1. Distribution of 8 Economic Regimes and z ≥ 0.5 Cutoff Thresholds.**
+**Table 1. Training-Period Standardization Parameters (2021.01–2024.12, $N=48$) and Active Month Counts ($z \ge 0.5$) Across Sample Splits.**
 
-| Regime Name | Slug | Mean Share(%) | Std. Dev.(%p) | z≥0.5 Cutoff(%) | Active Months | Share(%) |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| 대외통상 | trade | 10.68 | 0.70 | 11.03 | 22 | 32.8 |
-| 자본거래 | capital | 8.84 | 0.68 | 9.18 | 20 | 29.9 |
-| 시황 | market | 7.97 | 0.70 | 8.32 | 15 | 22.4 |
-| 금리·물가 | macro | 7.68 | 1.22 | 8.29 | 15 | 22.4 |
-| AI반도체 | aichip | 7.49 | 2.18 | 8.58 | 14 | 20.9 |
-| 부동산 | realestate | 7.45 | 0.62 | 7.76 | 20 | 29.9 |
-| 가계대출 | hhdebt | 6.05 | 0.59 | 6.34 | 22 | 32.8 |
-| 기업실적 | earnings | 6.01 | 1.18 | 6.59 | 22 | 32.8 |
-| *(기타 잔차)* | residual | 37.85 | 1.75 | - | - | - |
+| 국면 표시 명칭 (실질 포착 내용) | 코드 (`Slug`) | 할당 토픽 번호 ($K=14$) | 학습 기간 평균 비중 $\mu_{\text{train}}$ (%, $N=48$) | 학습 기간 표준편차 $\sigma_{\text{train}}$ (%p, $N=48$) | 활성화 임계 비중 ($z \ge 0.5$, %) | 전체 기간 활성 월수 ($N=67$) | 학습 기간 활성 월수 ($N=48$) | 테스트 기간 활성 월수 ($N=19$) |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **부동산** (전월세·청약분양) | `realestate` | [2, 3] | 12.54 | 0.70 | 12.89 | 18 (26.9%) | 16 (33.3%) | 2 (10.5%) |
+| **자본거래** (IPO·공모주·M&A) | `capital` | [6] | 8.66 | 0.71 | 9.02 | 22 (32.8%) | 17 (35.4%) | 5 (26.3%) |
+| **금리·물가** (통화정책·물가) | `macro` | [1] | 6.67 | 1.26 | 7.30 | 13 (19.4%) | 12 (25.0%) | 1 (5.3%) |
+| **시황** (국내외 증시 마감·수급) | `market` | [4, 13] | 6.16 | 0.37 | 6.35 | 25 (37.3%) | 16 (33.3%) | 9 (47.4%) |
+| **첨단산업(전기차·배터리 중심)** | `aichip` | [12] | 6.05 | 0.42 | 6.26 | 16 (23.9%) | 14 (29.2%) | 2 (10.5%) |
+| **기업실적** (매출·영업이익 공시) | `earnings` | [7] | 5.63 | 1.13 | 6.19 | 18 (26.9%) | 14 (29.2%) | 4 (21.1%) |
+| *(미형성 국면: 가계대출·대외통상)* | `hhdebt`, `trade` | — | NaN | NaN | — | — | — | — |
+| *(비할당 잔차·경합 토픽 합계)* | `residual` | [0, 5, 8, 9, 10, 11] | 54.30 | 1.27 | — | — | — | — |
+| **할당 6대 국면 합계 / 활성 신호 총합** | — | **8개 토픽** | **45.70** | — | — | **112건** | **89건** | **23건** |
 
-표 1에 제시된 바와 같이, 8개 국면의 활성 개월 수는 14개월에서 22개월(20.9%~32.8%) 사이로 고르게 분포하여 특정 이슈에 편중되지 않는 우수한 균형성을 입증하였다. 특히 AI반도체 국면은 표준편차가 2.18%p로 가장 높아 생성형 AI 기술 혁신에 따른 폭발적 관심 집중을 반영하였으며, 금리·물가 역시 1.22%p의 높은 표준편차를 보여 한국은행 기준금리 인상 사이클의 파급력을 여실히 보여준다.
+*주: 표 1의 평균 비중($\mu_{\text{train}}$)과 표준편차($\sigma_{\text{train}}$, `ddof=1`)는 Strict OOS 표준화 공식 $z_{d,t} = (s_{d,t} - \mu_{d,\text{train}})/\sigma_{d,\text{train}}$에 사용된 **학습 기간(2021.01~2024.12, 48개월)** 통계량이며, 활성화 임계 비중은 $\mu_{d,\text{train}} + 0.5\sigma_{d,\text{train}}$이다. 참고로 전체 67개월(2021.01~2026.07) 평균 비중은 `realestate` 12.28%, `capital` 8.71%, `macro` 6.59%, `market` 6.24%, `aichip` 5.96%, `earnings` 5.54%, `residual` 54.69%이며, 테스트 기간(2025.01~2026.07, 19개월) 평균 비중은 `realestate` 11.62%, `capital` 8.81%, `macro` 6.41%, `market` 6.43%, `aichip` 5.75%, `earnings` 5.31%, `residual` 55.67%이다.
 
-### 4.2 NMF 14개 잠재 토픽 및 키워드 구조
-NMF 모델을 통해 도출된 14개 잠재 토픽의 상위 핵심 어휘와 배정 국면은 표 2와 같다.
+표 1에서 확인되듯, 학습 기간 기준 6대 할당 국면의 평균 비중 합계는 45.70%이며 6개 비할당·경합 토픽이 54.30%의 잔차 비중(`residual_share`)을 차지한다. 개별 국면의 전체 67개월 중 활성 월수($z_{d,t} \ge 0.5$)는 금리·물가 13개월(19.4%)부터 시황 25개월(37.3%)까지 분포하며, 6대 국면의 활성 신호 총합은 전체 기간 **112건**(학습 89건 + 테스트 23건)이다.
 
-**Table 2. Top Keywords of 14 NMF Latent Topics and Regime Assignment Mapping.**
+---
 
-| Topic ID | Assigned Regime | Top 7 Keywords (Highest Feature Weights) | Topic Characteristics & Scope |
-| :---: | :---: | :--- | :--- |
-| Topic 0 | (Residual) | 분야, 혁신, 경영, ESG, 사회, 인재, 활동 | 기업의 일반 경영, 사회공헌(ESG), 인재 채용 |
-| Topic 1 | 시황 | 종목, 매수, 외국인, 지수, 하락, 코스피, 기관 | 일일 장중 투자자별 수급 동향 및 코스피 등락 |
-| Topic 2 | 부동산 | 아파트, 단지, 분양, 주택, 청약, 분양가, 집값 | 부동산 분양 시장, 아파트 청약 및 집값 정책 |
-| Topic 3 | (Residual) | 차량, 전기차, 자동차, 현대차, 기아, 배터리 | 완성차·전기차 신차 출시 및 모빌리티 산업 |
-| Topic 4 | 시황 | 마감, 코스닥, 코스피, 상장, 공모가, 공모, 청약 | 장 마감 지수 시황 및 신규 상장(IPO) 공모주 |
-| Topic 5 | (Residual) | 브랜드, 고객, 상품, 출시, 할인, 매장, 이벤트 | 유통·소비재·패션 매장 할인 및 마케팅 일반 |
-| Topic 6 | 자본거래 | 주식, 지분, 펀드, 인수, 자금, 주주, 매각, M&A | 기업 인수합병(M&A), 지분 매각, 사모펀드 자본 거래 |
-| Topic 7 | 기업실적 | 영업이익, 매출액, 실적, 분기, 공시, 흑자, 적자 | 상장사 분기별 실적 공시 및 컨센서스 전망치 |
-| Topic 8 | (Residual) | 제도, 조치, 규정, 국회, 정책, 개정, 위원회 | 정부 법안 개정, 국회 정책 감사, 제도 개선 기사 |
-| Topic 9 | 금리·물가 | 물가, 금리, Fed, 인플레이션, 한국은행, 기준금리, 유가 | 한은·연준 기준금리 결정 및 인플레이션 충격 |
-| Topic 10 | 가계대출 | 대출, 은행, 금리, 주담대, 신용, 한도, 가계부채 | 시중은행 주택담보대출 및 가계부채 DSR 규제 |
-| Topic 11 | AI반도체 | AI, 인공지능, 반도체, 엔비디아, 메모리, 클라우드, HBM | 생성형 AI, 엔비디아 공급망 및 HBM 반도체 수요 |
-| Topic 12 | 대외통상 | 수출, 공급망, 중국, 미국, 관세, 수주, 해외공장 | 글로벌 수출입, 공급망 블록화 및 관세 분쟁 |
-| Topic 13 | 시황 | 개장, 코스피, 코스닥, 환율, 개장초반, 외환시장, 상승 | 오전 9시 장 개장 직후 코스피·환율 시황 속보 |
+### 4.2 단일 국면과 다중 국면 활성화 비교 (RQ1)
+다중 국면 활성화 체계와 단일 대표 국면(Argmax) 선택 방식이 월별 활성 국면 신호를 어떻게 다르게 표현하는지 `single_vs_multi_metrics.csv`, `single_vs_multi_monthly.csv`, `single_vs_multi_regime_combinations.csv`를 통해 정량적으로 비교하였다.
 
-### 4.3 단일 지배 방식 대비 다중 활성화 비교
-기존의 1등 국면 강제 방식(Single Dominant)과 제안된 다중 활성화 방식($z \ge 0.5$)을 67개월 전체 기간에 대해 전수 대조한 결과는 표 3과 같다.
+비교 대상 방식은 다음 세 가지이다:
+- **방식 A-1 (Unconstrained Argmax)**: 임계값 조건 없이 매월 6개 국면 중 $z_{d,t}$가 가장 높은 1개 국면을 무조건 대표 국면으로 지정.
+- **방식 A-2 (Hurdle Argmax)**: 매월 최대 점수 국면이 $\max_d z_{d,t} \ge 0.5$를 충족할 때만 해당 1개 국면을 대표 국면으로 지정하고, 미달 시 비활성(`none`)으로 분류.
+- **방식 B (Multi-Regime Activation, 제안)**: 매월 $z_{d,t} \ge 0.5$를 충족하는 모든 국면을 동시에 활성 국면으로 지정.
 
-**Table 3. Comparison of Event Detection: Single Dominant vs. Proposed Multi-Regime Activation.**
+구간별 비교 결과는 표 2와 같다.
 
-| Regime Name | Single Dominant (Months) | Proposed Multi-Regime (z≥0.5) | Difference (Months) | Main Restored Historical Episodes |
-| :--- | :---: | :---: | :---: | :--- |
-| 가계대출 | 6 | 22 | +16 | 2021년 말 대출 총량 규제 및 2022년 영끌 대출 침체기 정상 복원 |
-| 대외통상 | 8 | 22 | +14 | 2022년 킹달러 무역적자 및 글로벌 관세·공급망 리스크 온전 포착 |
-| 기업실적 | 10 | 22 | +12 | 매년 4·7·10월 분기별 정기 어닝 시즌 실적 발표 기간 충실 복원 |
-| 부동산 | 10 | 20 | +10 | 2021년 집값 급등기 및 분양 열풍 기간의 잠재 리스크 정상 복원 |
-| 자본거래 | 11 | 20 | +9 | 대형 IPO 공모주 청약 및 M&A 지분 매각 활황기 정상 포착 |
-| 금리·물가 | 8 | 15 | +7 | 2022~2023년 연속 빅스텝 기준금리 인상기 거시 충격 선명화 |
-| 시황 | 5 | 15 | +10 | 증시 급변동기 및 수급 충격 장세의 시장 분위기 포착 |
-| AI반도체 | 9 | 14 | +5 | HBM 및 엔비디아 공급망 주도 랠리 집중 구간 복원 |
-| **총 사건 수** | **67회 (월평균 1.0개)** | **150회 (월평균 2.24개)** | **+83회** | **전체 월의 76.1%에서 2~3개 국면이 복합적으로 공존함** |
+**Table 2. Quantitative Comparison of Single-Dominant vs. Multi-Regime Activation Representations.**
 
-표 3에서 확인되듯, 단일 지배 방식에서는 부동산이나 금리 등 단일 거대 이슈에 가려져 거의 탐지되지 못했던 '가계대출(+16개월)'과 '대외통상(+14개월)' 이슈가 다중 활성화 체계에서 온전히 복원되었다. 총 150건의 활성 사건이 도출되었으며, 전체 67개월 중 76.1%(51개월)에서 2~3개의 복합 국면이 동시에 활성화되었다. 또한 활성 국면이 전무한 결측 개월 수는 0개월로 나타나 모델의 완전성을 입증하였다.
+| 분석 구간 (Sample Split) | 개월 수 ($N$) | 월평균 활성 국면 수 | 0개 활성 (`none`) 월수 (%) | 1개 활성 월수 (%) | 2개 활성 월수 (%) | 3개 활성 월수 (%) | $\ge 2$개 다중 활성 월수 (%) | 다중 국면 방식 전체 활성 신호 수 | 단일 국면 방식 표현 신호 수 (Hurdle 기준) | 단일 국면 제한 시 별도 미표현 활성 신호 수 (%) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Full Sample (`2021-01~2026-07`)** | 67 | 1.672 | 4 (5.97%) | 24 (35.82%) | 29 (43.28%) | 10 (14.93%) | **39 (58.21%)** | 112 | 63 | **49 (43.75%)** |
+| **Train Period (`2021-01~2024-12`)** | 48 | 1.854 | 1 (2.08%) | 15 (31.25%) | 22 (45.83%) | 10 (20.83%) | **32 (66.67%)** | 89 | 47 | **42 (47.19%)** |
+| **Eval OOS Period (`2025-01~2026-07`)** | 19 | 1.211 | 3 (15.79%) | 9 (47.37%) | 7 (36.84%) | 0 (0.00%) | **7 (36.84%)** | 23 | 16 | **7 (30.43%)** |
 
-### 4.4 거시금융시장 설명력: Newey-West HAC OLS 회귀분석
-8대 국면의 비중 벡터를 독립변수로 하고 거시금융 지표를 종속변수로 하여 분기 시계열 잔상(maxlags=3)을 통제한 Newey-West HAC OLS 회귀분석을 수행한 결과는 표 4와 같다.
+표 2 및 국면 조합 분석 결과는 다음 네 가지 사실을 보여준다:
+1. **복합 국면 활성화의 빈도**: 전체 67개월 중 **58.21%(39개월)**에서 월 2개 이상의 경제 국면이 동시에 임계값($z_{d,t} \ge 0.5$)을 상회하였다(2개 활성 29개월[43.28%], 3개 활성 10개월[14.93%], 4개 이상 활성 0개월). 학습 기간(48개월)에서는 다중 활성화 비율이 **66.67%(32개월)**였으며, 표본 외 테스트 기간(19개월)에서도 **36.84%(7개월)**에서 2개 국면이 동시에 활성화되었다.
+2. **단일 대표 국면 표현의 구조적 차이(43.75%)**: 단일 대표 국면 방식으로 표현을 제한할 경우, 다중 국면 방식에서 관측된 활성 국면 신호 중 **43.75%(112건 중 49건; 학습 기간 89건 중 42건[47.19%], 테스트 기간 23건 중 7건[30.43%])가 별도 국면으로 표현되지 않는다.** 또한 모든 국면이 $z_{d,t} < 0.5$인 비활성 4개월(전체 5.97%: 학습 1개월[`2021-07`], 테스트 3개월[`2025-05, 2026-04, 2026-06`])에 대해 무제약 Argmax(방식 A-1)는 임계값 미달 국면을 강제로 할당하는 반면, Hurdle Argmax(방식 A-2)와 다중 국면 방식(방식 B)은 이를 비활성(`none`) 상태로 구분한다.
+3. **실제 관측된 동시 활성화 국면 조합**: `single_vs_multi_regime_combinations.csv` 및 `single_vs_multi_monthly.csv` 확인 결과, 전체 67개월에서 가장 빈번히 관측된 2국면 단독 조합은 **`market;earnings`(5개월: 학습 3, 테스트 2)**였으며, 이어서 **`aichip;capital`(4개월: 학습 4)**, **`macro;realestate`(3개월: 학습 3)**, **`realestate;capital`(3개월: 학습 3)**, **`earnings;capital`(3개월: 학습 2, 테스트 1)** 순으로 나타났다. 3국면 동시 활성 월(10개월)까지 포함한 쌍별 동시 활성화 빈도를 시기별로 보면, 2022~2023년 고물가·금리 인상기에는 **2022년 중 `macro`와 `realestate`의 동시 활성화가 5개월**(2국면 단독 `macro;realestate` 3개월[`2022-05, 2022-07, 2022-11`] + 3국면 조합 2개월[`2022-06, 2022-10`]), **2022~2023년 중 `macro`와 `market`의 동시 활성화가 5개월**(2국면 단독 `macro;market` 2개월[`2022-09, 2023-09`] + 3국면 조합 3개월[`2022-06, 2022-10, 2023-08`]) 관측된 반면, 같은 2022~2023년 기간 중 `macro`와 `capital`이 동시에 활성화된 달은 없었다(0개월; 전 기간 중 `macro`와 `capital`의 동시 활성화는 `2024-12`의 `macro;market;capital` 1개월뿐임).
+4. **해석 범위의 명확한 제한**: 위 43.75% 수치는 월별 국면 표현 방식에 따른 **표현상 정보 보존성(Representational Information Preservation)**에 관한 결과이며, 다중 국면 방식이 시장 수익률이나 거시지표의 예측 정확도를 개선한다는 것을 입증하지 않는다.
 
-**Table 4. Newey-West HAC OLS Regression Results Across Macro-Financial Dependent Variables.**
+---
 
-| Dependent Variable | R² (%) | Adj R²(%) | Wald Stat(W) | F-statistic | p-value | Key Statistically Significant Regimes (Coeff, p-value) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| 코스피 변동성 (kospi_ret_std) | 22.75 | 12.10 | 38.04 | 4.75 | 0.00016*** | 시황(-0.48, p=0.003), 금리물가(-0.36, p=0.006), 자본거래(-0.45, p=0.048) |
-| 코스피 수익률 (kospi_ret) | 18.08 | 6.78 | 21.42 | 2.68 | 0.0106** | 자본거래(-3.23, p=0.049), 시황(-2.70, p=0.026), 금리물가(-1.83, p=0.045) |
-| 소비자심리 변화 (ccsi_diff) | 12.12 | 0.00 | 11.90 | 1.49 | 0.1890 | 금리·물가 (-1.32, p=0.021**) |
-| 원/달러 환율 수익률 (usdkrw_ret) | 9.42 | -3.07 | 7.10 | 0.89 | 0.5293 | 결합 유의성 비유의 (외환시장 실시간 당월 즉각 반영 특성) |
+### 4.3 Phase 5.6 Strict OOS 기반 시장·경제 지표 관계 분석 (RQ2)
 
-표 4에 제시된 바와 같이, 코스피 주가 변동성 모델은 결정계수 $R^2 = 22.75\%$를 기록하였으며, 결합 검정 통계량 $F = 4.75, p = 0.00016$으로 99.9% 신뢰수준에서 압도적인 유의성을 보였다. 우연에 의해 이 같은 설명력이 도출될 확률은 0.016%에 불과하다. 또한 코스피 월간 수익률에 대해서도 $R^2 = 18.08\%, F = 2.68, p = 0.0106$으로 5% 유의수준을 여유 있게 통과하였다. 개별 회귀계수를 살펴보면, '금리·물가'와 '시황' 국면의 비중 증가는 주가 수익률을 유의하게 억누르고 변동성을 확대시키는 악재 요인으로 작용함을 정량적으로 확인하였다.
+#### 4.3.1 코스피 수익률 충격에 대한 Newey-West HAC OLS 동행 회귀분석
+학습 기간 고정 NMF 투영으로 도출된 6대 유효 국면 표준화 점수(`z_*`)를 설명변수로 하고, 과거 변동성 정규화 월간 코스피 수익률(`kospi_ret_std`)을 종속변수로 하여 전체 67개월(`2021-01 ~ 2026-07`, 결측치 없음) 표본에서 Newey-West HAC 견고 회귀분석(Bartlett 커널, `maxlags=3`)을 수행한 결과(`verification_ols_results.csv`, 모형 ID `Phase56_StrictOOS_ret_std_67m`)는 표 3과 같다.
 
-### 4.5 시차 선행성 실증 분석 (Lead-Lag Matrix 및 사건 분석)
-뉴스가 경제지표와 정책 결정을 실질적으로 선행하는지를 입증하기 위해, 시차 $h = -2$부터 $+2$개월까지의 교차상관계수를 측정한 결과는 표 5와 같다.
+**Table 3. Newey-West HAC OLS Estimation on Volatility-Standardized Monthly KOSPI Return (`kospi_ret_std`, $N=67$, `maxlags=3`).**
 
-**Table 5. Lead-Lag Cross-Correlation Matrix Between Issue Regimes and Key Economic Indicators.**
+| 설명변수 (Variable) | 회귀계수 ($\beta$) | HAC 표준오차 (SE) | $t$-통계량 ($z$) | 95% 신뢰구간 (CI) | 원시 $p$-값 (`p_value_raw`) | Holm 보정 $p$-값 (`p_value_holm`, 6변수) | VIF |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| `const` (상수항) | $+0.0631$ | $0.1357$ | $+0.465$ | $[-0.2029, +0.3291]$ | $0.6419$ | — | — |
+| **`z_macro` (금리·물가)** | **$-0.7418$** | **$0.2093$** | **$-3.543$** | **$[-1.1521, -0.3315]$** | **$0.0004$** | **$0.0024$** | $1.95$ |
+| **`z_capital` (자본거래)** | **$-0.5299$** | **$0.1758$** | **$-3.015$** | **$[-0.8744, -0.1854]$** | **$0.0026$** | **$0.0129$** | $1.91$ |
+| `z_realestate` (부동산) | $-0.2082$ | $0.1185$ | $-1.757$ | $[-0.4403, +0.0240]$ | $0.0789$ | $0.3155$ | $1.27$ |
+| `z_market` (시황) | $-0.1437$ | $0.0898$ | $-1.600$ | $[-0.3197, +0.0323]$ | $0.1096$ | $0.3289$ | $1.16$ |
+| `z_aichip` (첨단산업(전기차·배터리 중심)) | $-0.2583$ | $0.1802$ | $-1.434$ | $[-0.6115, +0.0948]$ | $0.1517$ | $0.3289$ | $1.33$ |
+| `z_earnings` (기업실적) | $-0.1143$ | $0.1698$ | $-0.673$ | $[-0.4471, +0.2185]$ | $0.5008$ | $0.5008$ | $1.27$ |
+| **모형 적합도 (Model Fit)** | \multicolumn{7}{l}{$N = 67$ (`2021-01~2026-07`), $df_{\text{model}} = 6$, $df_{\text{resid}} = 60$, $R^2 = 0.161879$ (**$16.19\%$**), $\text{Adjusted } R^2 = 0.078067$ (**$7.81\%$**)} |
+| **HAC 결합 검정 (Joint Test)** | \multicolumn{7}{l}{Newey-West HAC ($\text{maxlags}=3$) $F(6, 60) = 4.683257$ (**$p = 0.000573$**), $\text{Wald } \chi^2 = 28.099544$} |
 
-| Economic Indicator | Paired Key Regime | h=-2 (Lag 2M) | h=-1 (Lag 1M) | h=0 (Concurrent) | h=+1 (Lead 1M) | h=+2 (Lead 2M) | Empirical Peak Lead Determination |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| 소비자심리지수 (CCSI) | 금리·물가 | -0.377 | -0.484 | -0.606 | -0.665*** | -0.659 | 1개월 선행 피크 ($r = -0.665$) |
-| 한국은행 기준금리 | 금리·물가 | +0.068 | +0.141 | +0.217 | +0.286 | +0.341** | 2개월 선행 피크 ($r = +0.341$) |
-| 코스피 주가지수 | 가계대출 | -0.462 | -0.499 | -0.548 | -0.605 | -0.625*** | 2개월 선행 하락 피크 ($r = -0.625$) |
-| 원/달러 환율 | 대외통상 | +0.278 | +0.321 | +0.329* | +0.291 | +0.217 | 당월 동시 피크 (외환시장 즉각 반영) |
+표 3의 주요 결과는 다음과 같다:
+1. 6대 국면 동행 회귀모형은 과거 변동성 정규화 월간 수익률(`kospi_ret_std`) 변동의 $R^2 = 16.19\%$ ($\text{Adj-}R^2 = 7.81\%$)를 설명하며, Newey-West HAC 결합 검정 통계량 $F = 4.6833$ ($p = 0.000573$)으로 유의하였다. 모든 설명변수의 분산팽창계수(VIF)는 $1.16 \sim 1.95$로 다중공선성 문제가 없었다(학습 48개월 단독 적합 시에는 $R^2 = 24.55\%, \text{Adj-}R^2 = 13.50\%, \text{HAC } F = 2.9842, p = 0.0164$).
+2. 6개 국면 변수에 대한 Holm-Bonferroni 다중검정 보정 결과, **`z_macro`(금리·물가: $\beta = -0.7418, \text{HAC SE} = 0.2093, p_{\text{raw}} = 0.0004, p_{\text{holm}} = 0.0024$)**와 **`z_capital`(자본거래: $\beta = -0.5299, \text{HAC SE} = 0.1758, p_{\text{raw}} = 0.0026, p_{\text{holm}} = 0.0129$)** 두 변수만 유의한 음(-)의 동행 관계를 보였다.
+3. 본 회귀분석은 67개월 전체 표본에서 당월($t$) 뉴스 국면 점유율과 당월($t$) 수익률 충격 간의 관계를 추정한 **표본 내 동시점 설명 회귀(In-sample Contemporaneous Regression)**이며, 미래 수익률 예측력을 의미하지 않는다.
 
-표 5의 시차 상관 분석 결과는 뉴스가 경제의 단순 사후 중계자가 아님을 강력히 입증한다. '금리·물가' 국면은 소비자심리지수를 1개월 선행하여 가장 강력한 음(-)의 상관관계($r = -0.665$)를 보였으며, 한국은행 기준금리 조정에 대해서는 2개월 선행 피크($r = +0.341$)를 기록하였다. 또한 '가계대출' 국면은 주가지수를 2개월 선행하여 강한 하락 압력($r = -0.625$)을 형성하였다. 67개월 전체 사건에 대한 전수 검증 결과, 2022년 4월부터 2023년 1월까지 단행된 **한은의 7회 연속 기준금리 인상 사건에 대해 7회 모두 사전에 뉴스 $z \ge 0.5$ 경고등이 점등되어 100.0%의 조기경보 적중률**을 달성하였다. 아울러 주식시장 하락 경고 정밀도는 67.9%로 랜덤워크 확률(50%)을 압도하였다.
+#### 4.3.2 월별 거시지표 시차 상관 및 조기경보 규칙 평가의 구분
+`verification_correlation_lag_results.csv`에서 6대 유효 국면과 차분·수익률 변환된 4대 거시·금융 지표(`kospi_ret`, `base_rate_diff`, `ccsi_diff`, `usdkrw_ret`) 간 5개 시차($h \in \{-2, -1, 0, +1, +2\}$, $h>0$은 뉴스 선행, $h<0$은 경제지표 선행)의 **총 120개 검정 패밀리**에 대해 단일 Holm 보정을 수행한 결과는 다음과 같다:
+- **`kospi_ret`과의 시차 상관**: `macro` ↔ `kospi_ret` 상관은 $h=0$($N=67, r=-0.1598, p_{\text{raw}}=0.1965, p_{\text{holm}}=1.000$) 및 $h=+1$($N=66, r=+0.0734, p_{\text{raw}}=0.5583, p_{\text{holm}}=1.000$) 모두 비유의하였으며, 6대 국면 전체에서 120개 검정 Holm 보정 후 유의한 단일 변수 주가 수익률 시차 상관은 존재하지 않았다($p_{\text{holm}} \ge 0.4304$).
+- **`base_rate_diff`(한국은행 기준금리 월간 변화폭)와의 시차 상관**: 120개 검정 중 Holm 보정 후 유의한($p_{\text{holm}} < 0.05$) 조합은 총 4개로, ① **`macro` ↔ `base_rate_diff` ($h=-2$, 금리 2개월 선행, $N=65$): $r = +0.4886$ ($p_{\text{raw}} = 3.63 \times 10^{-5}, p_{\text{holm}} = 0.0044$)**, ② **`macro` ↔ `base_rate_diff` ($h=+1$, 뉴스 1개월 선행, $N=66$): $r = +0.4749$ ($p_{\text{raw}} = 5.60 \times 10^{-5}, p_{\text{holm}} = 0.0067$)**, ③ **`macro` ↔ `base_rate_diff` ($h=0$, 동월 동행, $N=67$): $r = +0.4580$ ($p_{\text{raw}} = 9.74 \times 10^{-5}, p_{\text{holm}} = 0.0115$)**, ④ **`capital` ↔ `base_rate_diff` ($h=0$, 동월 동행, $N=67$): $r = -0.4260$ ($p_{\text{raw}} = 3.25 \times 10^{-4}, p_{\text{holm}} = 0.0380$)**이다. $h=-2$(금리 변동 선행) 상관이 $h=+1$(뉴스 선행)보다 더 크게 나타난 것은 2022~2023년 연속 금리 인상기 동안 통화정책 결정과 언론 보도가 상호 피드백하며 동조화(Co-movement)되었음을 보여준다.
 
-### 4.6 z 임계값 민감도 및 표본 분할 강건성 검정
-본 연구에서 채택한 $z \ge 0.5$ 임계값의 자의성을 배제하고 분석 결과의 일반성을 검증하기 위해 $z = 0.3$부터 $0.7$까지 전 구간에 대해 민감도 분석을 수행한 결과는 표 6과 같다.
+또한 `verification_warning_performance_results.csv`에서 검증된 월별 조기경보 규칙(향후 1~2개월 예측창 $t+1, t+2$ 평가; 마지막 2개월을 제외한 전체 평가 가능 기간 `2021-01~2026-05` [$N=65$개월] 및 테스트 평가 가능 기간 `2025-01~2026-05` [$N=17$개월])의 성과와 한계는 평가 기준별로 다음과 같이 엄격히 구분된다:
+1. **일반 주가 하락 경고 ($\text{kospi\_ret}_{t+1} < 0\%$ 또는 $\text{kospi\_ret}_{t+2} < 0\%$)**:
+   - 과거 8국면 기반의 원래 2국면 결합 규칙(`z_macro >= 0.5 | z_hhdebt >= 0.5`)은 65개월 동안 28회 경고를 발생시켜 정밀도 **67.86%**($TP=19, FP=9, FN=26, TN=11$, Recall `42.22%`, Specificity `55.00%`)를 기록하였으나, 동일 기간 실제 하락창 자연발생률 **69.23%**(`45/65`)보다 `-1.37%p` 낮아 변별력이 없었으며, Phase 5.6 Strict OOS에서는 `hhdebt` 국면이 미형성(`NaN`)되어 원래 규칙 자체를 평가할 수 없다.
+   - `hhdebt` 결측에 따라 `z_macro >= 0.5` 단독으로 축소한 **Phase 5.6 대체 규칙(`Phase5.6_StrictOOS_MacroOnly`)**은 전체 65개월에서 경고 13건 중 9건 적중(Precision **69.23%**, Recall **20.00%**, $TP=9, FP=4, FN=36, TN=16$)으로 자연발생률(`69.23%`)과 차이가 없었으며(`0.00%p`), **Strict OOS 테스트 평가 가능 기간(17개월, `2025-01~2026-05`)에서는 경고 1건(`2026-03`)이 발생했으나 실제 하락 사건창(9건)을 포착하지 못하였다($TP=0, FP=1, FN=9, TN=7$, Precision `0.00%`, Recall `0.00%`, Specificity `87.50%`, $F_1 = 0.000, \text{MCC} = -0.2582$).**
+2. **코스피 급락($\text{kospi\_ret}_t \le -3.0\%$, 전체 67개월 중 16건) 사전 포착**: 과거 2국면 결합 규칙은 16건 중 11건(`68.75%`: `hhdebt` 단독 8건, `macro` 3건)에서 직전 1~2개월 경고가 켜졌으나, Phase 5.6의 `z_macro >= 0.5` 단독 대체 규칙은 2022년 급락 3건(`2022-06, 2022-09, 2022-12`)만 포착(`3/16 = 18.75%`)하였고 테스트 기간 급락 3건(`2025-11, 2026-03, 2026-07`)은 포착하지 못하였다(`0/3 = 0.00%`).
+3. **한국은행 기준금리 인상($\text{base\_rate\_diff}_t > 0$, 전체 11건) 사전 포착**: 직전 1~2개월 `z_macro >= 0.5` 기준 포착률은 전체 `7/11 = 63.64%`였으나, 포착된 7건은 모두 `z_macro >= 0.5`가 11개월 연속 지속된 `2022-04~2023-01` 연속 인상기(`7/7 = 100%`, 직전 인상의 사후 보도와 차기 인상 사전 경고창이 중첩되는 구간)에 집중되었고, 긴축 전환 초기 인상 3건(`2021-08, 2021-11, 2022-01`)과 표본 외 재인상 1건(`2026-07`)은 모두 미탐지(`0/4 = 0.00%`)되었다.
 
-**Table 6. Robustness Checks Across Standardized Thresholds (z = 0.3 ~ 0.7).**
+따라서 본 연구는 월별 뉴스 국면 지표를 주가나 금리 전환점의 사전 예측(Early-Warning Forecasting) 도구로 주장하지 않으며, 당월 시장 충격과의 동행 설명력(표 3) 및 대중 검색 관심도와의 동시점 교차 검증(표 4)에 실증적 초점을 둔다.
 
-| Threshold | Avg. Regimes | Missing Months | Rate Hike Precision(%) | Market Drop Recall(%) | Warning Precision(%) | Volatility R²(%) | p-value | Robustness Determination |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| z ≥ 0.3 | 2.85 | 0.0 | 100.0 | 60.0 | 66.7 | 23.4 | p = 0.0025 | 포용적 기준 (통계적 강건성 유지) |
-| z ≥ 0.4 | 2.57 | 0.0 | 100.0 | 60.0 | 68.8 | 20.8 | p = 0.0000 | 포용적 기준 (통계적 강건성 유지) |
-| **z ≥ 0.5** | **2.24** | **0.0** | **100.0** | **60.0** | **67.9** | **18.3** | **p = 0.0013** | **최적 기준 (Goldilocks Point)** |
-| z ≥ 0.6 | 2.06 | 0.0 | 100.0 | 56.7 | 69.2 | 19.0 | p = 0.0068 | 보수적 기준 (통계적 강건성 유지) |
-| z ≥ 0.7 | 1.85 | 1.0 | 100.0 | 46.7 | 69.6 | 26.4 | p = 0.0002 | 보수적 기준 (결측 1개월 발생) |
+---
 
-표 6에 제시된 바와 같이, z 임계값을 0.3에서 0.7까지 폭넓게 변화시켜도 기준금리 인상 적중률(100.0%), 주가 하락 경고 정밀도(66.7%~69.6%), 주가 변동성 설명력($p < 0.01$)의 통계적 유의성이 완벽하게 유지되었다. 특히 $z = 0.5$는 결측 개월 수가 0개이면서 주도 국면(월평균 2.24개)만을 선별하는 최적의 골디락스 포인트(Goldilocks Point)임을 확인하였다. 또한 2026년 1~7월의 극단적 대폭락 장세를 제외한 60개월 표본으로 재추정하더라도 기준금리 변화($p = 0.0113$) 및 변동성($p = 0.0799$)의 유의성이 불변함을 검증하였다.
+### 4.4 네이버 검색 데이터를 이용한 주별 교차 데이터 검증 (RQ3)
+뉴스 코퍼스에서 도출된 주별 국면 점유율(`news_share_*`)과 네이버 데이터랩 주별 상대 검색 지수(`score_rel`) 간의 교차 타당성을 검증하기 위해, 292개 ISO 주차(`2020-W53 ~ 2026-W31`: 학습 209주[`2020-W53~2024-W52`], 테스트 83주[`2025-W01~2026-W31`]) 패널을 구축하였다.
 
-### 4.7 언론 의제와 대중 검색어 트렌드 간 동조화 검증 (RQ4)
-언론사 기사(공급자 측면의 의제 설정)가 일반 대중의 실제 정보 탐색(네이버 데이터랩 월별 검색량)과 정합성을 갖는지 교차 검증한 결과는 표 7과 같다.
+비정상 시계열의 공통 추세로 인한 가짜 상관을 배제하기 위해 각 구간(`Train`, `Eval OOS`, `Full`) 내부에서 뉴스 점유율과 검색 지수에 각각 **주간 1차 차분(First Difference)**을 적용하였으며(차분 후 $h=0$ 유효 표본 수: 학습 $N=208$, 테스트 $N=82$, 전체 $N=291$; 시차 $h=\pm 1$ 유효 표본 수: 학습 $N=207$, 테스트 $N=81$, 전체 $N=290$), 시계열 자기상관과 이분산성을 통제하기 위해 표준화 차분 회귀에 **Newey-West HAC 표준오차(Bartlett 커널, `maxlags=4`)**를 적용하였다. 다중검정 보정은 각 구간별로 **사전 지정된 8개 뉴스-검색 매칭 쌍 $\times$ 3개 시차($h \in \{-1, 0, +1\}$) = 총 24개 검정 패밀리**에 대해 Holm-Bonferroni 보정(`hac_p_holm`)을 수행하였다. `news_search_hac_results.csv`의 전체 검증 결과는 표 4와 같다.
 
-**Table 7. Correlation Analysis Between News Regime Attention and Naver Datalab Search Trends (RQ4).**
+**Table 4. Weekly First-Difference Cross-Validation Between News Regimes and Naver Datalab Relative Search Indices (`news_search_hac_results.csv`, Newey-West HAC `maxlags=4`, 24-Test Holm Adjustment per Split).**
 
-| Economic Regime | Search Metric | Sample Size (N) | Pearson Corr (r) | Spearman Corr (ρ) | Empirical Concordance Evaluation |
-| :--- | :--- | :---: | :---: | :---: | :--- |
-| AI반도체 | 상대검색량 지수 | 67개월 | 0.751*** | 0.876*** | 극히 높은 선형 및 순위 동조화 (엔비디아·HBM 열풍) |
-| 부동산 | 상대검색량 지수 | 67개월 | 0.558*** | 0.547*** | 유의한 정량적 동조화 (청약·분양 및 규제 관심) |
-| 금리 | 상대검색량 지수 | 67개월 | 0.525*** | 0.370** | 유의한 동조화 (한은 기준금리 인상기 검색 급증) |
-| 가계대출 | 상대검색량 지수 | 67개월 | 0.421*** | 0.450*** | 유의한 정량적 동조화 (주담대 한도 및 DSR 규제) |
-| 대외통상 | 상대검색량 지수 | 67개월 | 0.338** | 0.404*** | 유의한 순위 동조화 (환율 급등 및 수출입 이슈) |
+| 뉴스 국면 ↔ 네이버 검색 그룹 (`pair_label`) | 시차 ($h$) | 학습 구간 (`2021~2024`, $N=208/207$) Pearson $r$ (HAC $p_{\text{holm}}$) | 테스트 구간 (`2025~2026`, $N=82/81$) Pearson $r$ (HAC $p_{\text{holm}}$) | 전체 구간 (`2021~2026`, $N=291/290$) Pearson $r$ (HAC $p_{\text{holm}}$) | 다중검정 보정 후 판정 (HAC $p_{\text{holm}} < 0.05$) |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **1. 시황 뉴스 ↔ 국내증시 검색** | **$h = 0$ (동행)** | **$+0.6478$ ($1.14 \times 10^{-7}$)** | **$+0.4984$ ($0.0432$)** | **$+0.4868$ ($9.06 \times 10^{-5}$)** | **학습·테스트·전체 동행 유의** |
+| (`market` ↔ `search_market`) | $h = -1$ (검색 1주 선행) | $-0.2448$ ($0.1783$) | $-0.3461$ ($0.0244$) | $-0.2822$ ($0.0026$) | 1주 시차 음(-)의 반전 |
+| | $h = +1$ (뉴스 1주 선행) | $-0.1338$ ($1.0000$) | $+0.0442$ ($1.0000$) | $-0.0144$ ($1.0000$) | 비유의 |
+| **2. 기업실적 뉴스 ↔ 기업실적 검색** | **$h = 0$ (동행)** | **$+0.2160$ ($0.0143$)** | **$+0.4718$ ($0.0011$)** | **$+0.2795$ ($3.48 \times 10^{-5}$)** | **학습·테스트·전체 동행 유의** |
+| (`earnings` ↔ `search_earnings`) | $h = -1$ (검색 1주 선행) | $-0.1654$ ($0.1603$) | $+0.0444$ ($1.0000$) | $-0.1160$ ($0.7033$) | 비유의 |
+| | $h = +1$ (뉴스 1주 선행) | $-0.0638$ ($1.0000$) | $-0.2033$ ($1.0000$) | $-0.0968$ ($1.0000$) | 비유의 |
+| **3. 금리·물가 뉴스 ↔ 금리 검색** | **$h = 0$ (동행)** | **$+0.5511$ ($2.57 \times 10^{-13}$)** | $+0.3397$ ($0.3575$)$^{\dagger}$ | **$+0.5026$ ($1.29 \times 10^{-13}$)** | **학습·전체 동행 유의** (테스트 보정 후 비유의) |
+| (`macro` ↔ `search_macro_interest`) | $h = -1$ (검색 1주 선행) | $-0.2885$ ($9.48 \times 10^{-5}$) | $-0.1246$ ($1.0000$) | $-0.2588$ ($3.00 \times 10^{-5}$) | 학습·전체 1주 시차 음(-)의 반전 |
+| | $h = +1$ (뉴스 1주 선행) | $-0.2556$ ($2.15 \times 10^{-5}$) | $-0.2221$ ($0.7698$) | $-0.2453$ ($4.11 \times 10^{-6}$) | 학습·전체 1주 시차 음(-)의 반전 |
+| **4. 금리·물가 뉴스 ↔ 금리+물가 검색** | **$h = 0$ (동행)** | **$+0.4978$ ($3.28 \times 10^{-11}$)** | $+0.2254$ ($1.0000$) | **$+0.3217$ ($5.07 \times 10^{-6}$)** | **학습·전체 동행 유의** (테스트 비유의) |
+| (`macro` ↔ `search_macro_combined`) | $h = -1$ (검색 1주 선행) | $-0.3060$ ($8.93 \times 10^{-5}$) | $+0.0420$ ($1.0000$) | $-0.1311$ ($0.0100$) | 학습·전체 1주 시차 음(-)의 반전 |
+| | $h = +1$ (뉴스 1주 선행) | $-0.1104$ ($1.0000$) | $+0.0839$ ($1.0000$) | $-0.0174$ ($1.0000$) | 비유의 |
+| **5. 금리·물가 뉴스 ↔ 물가 검색** | $h = 0$ (동행) | $+0.0658$ ($1.0000$) | $+0.1355$ ($1.0000$) | $+0.0776$ ($1.0000$) | 비유의 ($h=-1, +1$ 모두 $p_{\text{holm}} \ge 0.1406$) |
+| **6. 자본거래 뉴스 ↔ 공모주 검색** | $h = 0$ (동행) | $+0.1437$ ($1.0000$) | $+0.1658$ ($1.0000$) | $+0.1348$ ($0.9527$) | 비유의 ($h=-1, +1$ 모두 $p_{\text{holm}} = 1.0000$) |
+| **7. 부동산 뉴스 ↔ 부동산 검색** | $h = 0$ (동행) | $+0.1288$ ($1.0000$) | $-0.0768$ ($1.0000$) | $+0.1008$ ($1.0000$) | 비유의 ($h=-1, +1$ 모두 $p_{\text{holm}} \ge 0.5117$) |
+| **8. 첨단산업(전기차·배터리 중심) 뉴스 ↔ AI반도체 검색** | $h = 0$ (동행) | $-0.0357$ ($1.0000$) | $+0.1417$ ($1.0000$) | $+0.0609$ ($1.0000$) | 비유의 ($h=-1, +1$ 모두 $p_{\text{holm}} = 1.0000$) |
 
-표 7에서 확인되듯, AI반도체($r = 0.751, \rho = 0.876$), 부동산($r = 0.558, \rho = 0.547$), 금리($r = 0.525$), 가계대출($r = 0.421$) 등 주요 핵심 국면에서 뉴스 기사 비중과 대중의 검색 트렌드가 일관되게 높은 양(+)의 상관관계를 나타내었다. 이는 본 연구가 추출한 8대 국면이 언론사의 단순 자의적 보도가 아니라, 실물 경제 주체들의 실제 관심과 정보 수요를 정확히 대변하고 있음을 실증한다.
+*주: $h=0$은 동일 ISO 주차 내 뉴스 점유율 차분과 검색 지수 차분 간 상관($N=208, 82, 291$)이며, $h=+1$은 $t$주 뉴스 차분과 $t+1$주 검색 차분, $h=-1$은 $t$주 뉴스 차분과 $t-1$주 검색 차분 간 상관($N=207, 81, 290$)이다. 괄호 안 수치는 각 구간 내 24개 검정에 대한 Newey-West HAC(`maxlags=4`) Holm 보정 $p$-값(`hac_p_holm`)이다. $^{\dagger}$테스트 구간(`Eval OOS`, $N=82$)의 '금리·물가 뉴스 ↔ 금리 검색'($h=0$)은 $r = +0.3397$, HAC 원시 $p = 0.0170$이나 24개 검정 HAC Holm 보정 후 $p_{\text{holm}} = 0.3575$로 유의수준($0.05$)을 초과하므로 다중검정 보정 후 유의 결과로 분류하지 않는다.
 
-### 4.8 국면 전환 전후 거시금융 지표 반응 이벤트 스터디 (Event Study)
-주요 경제 이슈 국면이 전환되는 시점을 기준으로 전후 3개월간 거시금융 지표의 누적 변화(Post - Pre)를 추적하고, 54회 무작위 플라시보 구간 대비 통계적 극단성(Placebo Percentile)을 평가한 결과는 표 8과 같다.
-
-**Table 8. Cumulative Indicator Movements Around Regime Switching Changepoints (Event Study).**
-
-| Event Month | Transition | Target Indicator | Pre 3M Sum | Event Month | Post 3M Sum | Diff (Post-Pre) | Placebo Percentile | Statistical Reaction Evaluation |
-| :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| 2022-03 | 부동산→금리물가 | 코스피 수익률(%) | -5.05 | +2.14 | -16.74 | -11.69 | 75.9% | 주가 급락세 본격 심화 (악재 전환) |
-| 2022-03 | 부동산→금리물가 | 원/달러 환율(%) | +0.78 | +0.67 | +6.56 | +5.78 | 64.8% | 환율 가파른 상승 압력 가속화 |
-| 2023-11 | 금리물가→자본거래 | 코스피 수익률(%) | -14.47 | +10.70 | +4.14 | +18.60 | 96.3% | 역대급 주가 급반등 (플라시보 상위 3.7%) |
-| 2023-11 | 금리물가→자본거래 | 소비심리(CCSI) | -5.40 | -0.90 | +4.60 | +10.00 | 72.2% | 소비심리 큰 폭 반등세 전환 |
-| 2025-02 | 자본거래→대외통상 | 소비심리(CCSI) | -10.60 | +4.00 | +6.70 | +17.30 | 96.3% | 소비자 기대심리 역사적 반등 구간 |
-
-표 8의 이벤트 스터디 분석 결과는 국면 전환이 시장 참여자들에게 매우 강력한 구조적 전환 신호(Structural Regime Shift)로 기능함을 보여준다. 특히 2023년 11월 긴축 완화 기대와 함께 '금리·물가' 국면에서 '자본거래' 국면으로 전환될 당시, 코스피 3개월 누적 수익률은 +18.60%p 급반등하여 무작위 플라시보 54개 구간 중 상위 3.7%(96.3 분위)에 달하는 통계적 이상 반응을 기록하였다. 이는 본 연구의 국면 전환 탐지가 시장 변곡점을 판별하는 데 있어 탁월한 실무적 유효성을 지님을 강력히 뒷받침한다.
+표 4의 분석 결과는 다음과 같이 요약된다:
+1. **표본 외 테스트 기간에서도 HAC Holm 보정 후 재현된 동시점($h=0$) 동조 관계**: 테스트 기간($N=82$주)에서 24개 검정 HAC Holm 보정 후 통계적으로 유의한 동시점 양(+)의 관계는 **① '시황 뉴스 ↔ 국내증시 검색'($r = +0.4984, \text{HAC } p_{\text{raw}} = 0.0020, \text{HAC } p_{\text{holm}} = 0.0432$)**과 **② '기업실적 뉴스 ↔ 기업실적 검색'($r = +0.4718, \text{HAC } p_{\text{raw}} = 4.49 \times 10^{-5}, \text{HAC } p_{\text{holm}} = 0.0011$)** 두 쌍으로 확인되었다. 이 두 쌍은 학습 기간($r = +0.6478 [p_{\text{holm}} = 1.14 \times 10^{-7}]$, $r = +0.2160 [p_{\text{holm}} = 0.0143]$)과 전체 기간($r = +0.4868 [p_{\text{holm}} = 9.06 \times 10^{-5}]$, $r = +0.2795 [p_{\text{holm}} = 3.48 \times 10^{-5}]$) 모두에서 일관되게 유의하였다.
+2. **금리·물가 뉴스와 금리 검색의 구간별 결과 구분**: '금리·물가 뉴스 ↔ 금리 검색'($h=0$)은 학습 기간($r = +0.5511, \text{HAC } p_{\text{holm}} = 2.57 \times 10^{-13}$)과 전체 기간($r = +0.5026, \text{HAC } p_{\text{holm}} = 1.29 \times 10^{-13}$)에서 가장 강한 동시점 동조성을 나타냈으며, '금리+물가 통합 검색'($h=0$) 역시 학습($r = +0.4978, p_{\text{holm}} = 3.28 \times 10^{-11}$)과 전체($r = +0.3217, p_{\text{holm}} = 5.07 \times 10^{-6}$)에서 유의하였다. 반면 금리 변동의 빈도가 줄어든 테스트 기간($N=82$주)에서 금리 검색은 $r = +0.3397$, HAC 원시 $p = 0.0170$의 양(+)의 상관을 보였으나, 24개 검정에 대한 HAC Holm 보정 후에는 $p_{\text{holm}} = 0.3575$로 통계적 유의수준을 충족하지 못하였다.
+3. **1주 시차($h = \pm 1$)에서의 양(+)의 선행성 부재**: $h = -1$(검색 1주 선행) 및 $h = +1$(뉴스 1주 선행)에서는 모든 국면 쌍에서 유의한 양(+)의 상관이 관찰되지 않았으며, 오히려 급등 직후 차주의 기저효과(평균 회귀)로 인해 '시황'($h=-1$)과 '금리'($h=\pm 1$)에서 음(-)의 반전 상관이 나타났다. 이는 뉴스 보도와 대중 검색 관심이 1주 단위의 시차를 두고 한쪽이 다른 쪽을 일방향으로 선행하기보다 **동일 주간($h=0$) 내에 동시적으로 반응**함을 보여준다.
+4. **차분 후 비유의 국면(부동산·자본거래·물가·첨단산업)의 원인**: 수준값에서는 완만한 추세를 공유하던 부동산, 공모주(자본거래), 물가 검색은 주간 1차 차분 후 단기 변동 상관이 비유의하였다. 특히 '첨단산업(전기차·배터리 중심) 뉴스(`aichip`) ↔ AI반도체 검색'($h=0, r = +0.0609, p_{\text{holm}} = 1.0000$)의 비유의성은 3.3절에서 규명한 바와 같이 학습 기간 NMF에서 `aichip` 식별자에 할당된 토픽 12가 실제로는 전기차·배터리·자동차 어휘 중심으로 구성된 반면, 검색 지수는 생성형 AI·HBM·반도체 전반을 포괄하는 의미적 범위 차이에 기인한다.
+5. **공통 앵커(`'은행'`) 분모 민감도 점검 (`news_search_anchor_sensitivity.csv`)**: 네이버 데이터랩 상대지수(`score_rel = score / anchor_score`)는 서로 다른 API 호출 간 스케일 비교를 위해 공통 앵커 키워드(`'은행'`)의 상대지수로 나눈 값이다. 공통 분모의 변동이 주간 차분 상관에 미친 영향을 점검하기 위해 ① 앵커 지수(`anchor_score`)로 나누지 않은 각 검색 그룹 자체의 원래 상대 검색 지수(`score`, 단일 API 조회 구간 내 자체 최대값=100 기준 상대 지표)의 주간 1차 차분($\Delta \text{score}$)을 사용한 분석과, ② $\Delta \text{score\_rel}$ 회귀식에 주간 앵커 차분($\Delta \text{anchor\_score}$)을 통제변수로 추가한 부분회귀 분석을 수행하였다. 분석 결과, 앵커를 나누지 않은 원래 상대 검색 지표($\Delta \text{score}$)의 차분에서도 전체 구간 동시점($h=0$)에서 '금리'($r = +0.5290, \text{HAC } p_{\text{holm}} = 3.95 \times 10^{-16}$), '시황'($r = +0.5330, \text{HAC } p_{\text{holm}} = 1.92 \times 10^{-5}$), '금리+물가'($r = +0.3651, \text{HAC } p_{\text{holm}} = 1.30 \times 10^{-8}$), '기업실적'($r = +0.3464, \text{HAC } p_{\text{holm}} = 8.26 \times 10^{-8}$) 및 테스트 구간($N=82$)의 '시황'($r = +0.5355, \text{HAC } p_{\text{holm}} = 0.0327$), '기업실적'($r = +0.5508, \text{HAC } p_{\text{holm}} = 0.00016$)에서 유사한 양(+)의 동행 관계가 일관되게 확인되었다(테스트 구간 '금리'는 $r = +0.3461, \text{HAC } p_{\text{holm}} = 0.1615$로 동일하게 보정 후 비유의). 다만 네이버 데이터랩의 원래 지수(`score`) 역시 조회 기간 내 최댓값을 100으로 둔 상대 지표이므로 이를 절대 검색량이나 실제 검색 횟수로 해석할 수 없으며, API 정규화 구조상 공통 분모나 스케일링의 영향이 완전히 제거되었다고 단정하지 않는다.
 
 ---
 
 ## Ⅴ. 결 론
-본 연구는 2021년 1월부터 2026년 7월까지 수집된 국내 3대 경제 일간지 기사 931,709건과 한국은행 거시금융 데이터를 결합하여, NMF 토픽 모델링 기반의 8대 경제 이슈 국면 탐지 체계와 다중 활성화 프레임워크를 실증적으로 제안하고 검증하였다.
 
-본 연구의 핵심 실증 결과를 요약하면 다음과 같다:
-1. **복합 국면 공존성 규명**: 93만 건의 뉴스 빅데이터로부터 도출된 14개 잠재 토픽을 경제학적 정합성에 맞게 8대 국면으로 체계화하였으며, 한국 경제는 전체 기간의 76.1%에서 2~3개의 국면이 동시에 활성화되는 복합 이슈 구조를 지님을 규명하였다.
-2. **정보 절단 편향 극복**: 기존 연구의 단일 지배 국면 강제로 인한 정보 절단 편향을 극복하는 표준화 z점수 기반 다중 활성화 체계($z \ge 0.5$)를 구축하여, 가계대출(+16개월)과 대외통상(+14개월) 등 중대한 거시 리스크 이슈를 온전히 복원하였다.
-3. **금융시장 설명력 입증**: Newey-West HAC 견고 회귀분석 결과, 8대 국면 비중은 코스피 주가 변동성의 22.8%($p = 0.00016$)와 월간 수익률의 18.1%($p = 0.0106$)를 통계적으로 매우 유의하게 설명함을 입증하였다.
-4. **거시지표 선행성 및 조기경보**: 시차 교차상관 분석을 통해 '금리·물가' 국면이 소비자심리지수(CCSI)를 1개월 선행($r = -0.665$), 기준금리를 2개월 선행($r = +0.341$)함을 밝혔으며, 2022~2023년 본격 금리 인상기 7회 전부에 대해 100%의 사전 조기경보 적중률을 달성하였다.
-5. **방법론적 강건성 확증**: $z = 0.3 \sim 0.7$ 임계값 민감도 분석과 2026년 제외 표본 분할 검정, 이벤트 스터디 및 네이버 검색어 트렌드 대조를 통해 제안 방법론의 통계적 강건성을 확증하였다.
+### 5.1 연구 요약 및 학술적 기여
+본 연구는 2021년 1월부터 2026년 7월까지 수집된 국내 3대 경제 일간지 기사 931,709건을 바탕으로, 미래 정보 누수를 차단한 결정론적 표본 외(Strict OOS) NMF 파이프라인과 다중 국면 활성화 체계를 구축하고 금융시장 지표 및 네이버 검색 트렌드와의 관계를 검증하였다.
 
-본 연구의 학술적 기여점은 텍스트 마이닝의 단일 지배 국면 강제 오류를 극복하고 다중 공존 체계를 구축하여 거시 설명력을 비약적으로 개선한 데 있다. 정책적·실무적으로는 공식 통계의 발표 시차를 보완하여 매일 쏟아지는 뉴스로부터 복합 위험을 조기에 진단하는 '한국형 뉴스 조기경보지수(K-NEI)' 프레임워크를 제공한다.
+본 연구의 핵심 기여는 다음 세 가지로 요약된다:
+1. **결정론적 Strict OOS 텍스트 마이닝 파이프라인 및 국면 매핑 체계 확립**: 어휘 사전(22,193개), IDF, NMF 기저 행렬($H_{\text{train}}$, 14개 토픽), 그리고 국면 표준화 모수($\mu_{\text{train}}, \sigma_{\text{train}}$)를 모두 48개월 학습 기간(2021~2024)에서만 적합·고정하고 19개월 표본 외 테스트 기간(2025~2026.07)으로 투영하는 무누수(Zero-Leakage) 아키텍처와 6대 유효 국면의 동시점 시장 반응 설명력($R^2 = 16.19\%, \text{HAC } F = 4.6833, p = 0.000573$)을 검증하였다.
+2. **단일 국면 대비 다중 국면 활성화의 정보 보존성 정량화**: 한국 경제 뉴스는 전체 67개월 중 58.21%(학습 66.67%, 테스트 36.84%)에서 월 2개 이상의 경제 국면이 동시에 활성화되었으며, 단일 대표 국면 방식으로 표현을 제한할 경우 다중 국면 방식에서 관측된 활성 국면 신호 중 **43.75%(112건 중 49건; 학습 47.19%, 테스트 30.43%)가 별도 국면으로 표현되지 않는다**는 점을 실증적으로 규명하였다.
+3. **주별 1차 차분 및 Newey-West HAC 기반 뉴스-네이버 검색 데이터 교차 검증**: 단위근 추세를 제거한 주별 1차 차분 시계열(291주)과 24개 검정 HAC Holm 보정을 통해, 전체 기간에서 금리($r = +0.5026, \text{HAC } p_{\text{holm}} = 1.29 \times 10^{-13}$), 시황($r = +0.4868, \text{HAC } p_{\text{holm}} = 9.06 \times 10^{-5}$), 금리+물가($r = +0.3217, \text{HAC } p_{\text{holm}} = 5.07 \times 10^{-6}$), 기업실적($r = +0.2795, \text{HAC } p_{\text{holm}} = 3.48 \times 10^{-5}$) 뉴스 점유율과 네이버 상대 검색 지수 간의 유의한 동시점($h=0$) 양(+)의 동조성을 확인하였으며, 특히 **시황($r = +0.4984, \text{HAC } p_{\text{holm}} = 0.0432$)과 기업실적($r = +0.4718, \text{HAC } p_{\text{holm}} = 0.0011$) 두 국면은 표본 외 테스트 기간($N=82$주)에서도 다중검정 보정 후 유의성이 재현**됨을 입증하였다.
 
-본 연구의 한계로는 분석 대상 언론사가 3대 경제 일간지로 한정되어 종합일간지나 방송 미디어의 대중적 의제가 일부 누락되었을 가능성이 있으며, 거시경제적 위기에 대해서는 탁월한 선행성을 보이나 정치적 비상사태나 총선 등 경제 외적인 돌발 사회적 이벤트로 인한 단기 심리 충격까지는 사전에 포착하기 어렵다는 한계가 있다. 향후 연구에서는 종합일간지 및 소셜 미디어 데이터를 포괄하고 대규모 언어 모델(LLM) 기반의 정밀 인과 추론 기법을 결합하여 분석 범위를 고도화할 필요가 있다.
+### 5.2 연구 한계 및 향후 연구
+1. **동시점 설명 관계와 사전 예측력의 엄격한 구분**: 본 연구의 월별 코스피 수익률 회귀분석($R^2 = 16.19\%, \text{HAC } F = 4.6833$)과 주별 네이버 검색 교차 검증($h=0$)은 모두 **동시점(Contemporaneous) 동행 관계**를 검증한 것이며, 미래 주가나 금리 변동의 인과적 예측력을 입증한 것이 아니다. 실제로 월별 주가 하락 조기경보 평가에서 기존 2국면 규칙의 일반 하락 정밀도(67.86%)는 자연발생률(69.23%)을 상회하지 못했고, Phase 5.6의 `z_macro >= 0.5` 단독 대체 규칙 역시 테스트 평가 가능 기간(17개월)에서 경고 1건, 적중 0건($TP=0, FP=1$)에 그쳤다.
+2. **비지도 토픽 매핑의 미형성 국면 및 `첨단산업(전기차·배터리 중심)`(`aichip`) 국면의 의미적 한계**: 학습 기간 NMF에서 가계대출(`hhdebt`)과 대외통상(`trade`)이 독립 토픽으로 분리되지 못하여 미형성(`unrepresented`) 처리되었다. 또한 코드 식별자 `aichip`에 매핑된 토픽 12는 주요 키워드가 `차량, 전기차, 자동차, 현대차, 충전, 배터리` 등에 집중되어 있으며, 기존 AI·반도체 검색어 분류체계에 전기차·배터리 세부 그룹이 포함되어 해당 토픽이 매핑되었다(`supported_ev_battery_only`). 따라서 본 연구에서는 실제 토픽의 의미를 반영하여 국면 명칭을 `첨단산업(전기차·배터리 중심)`으로 표기하였으며, 이러한 매핑이 AI·반도체 전반의 의미 타당성을 입증하는 것은 아니라는 한계를 갖는다. 향후 연구에서는 씨드 단어 가중치를 결합한 준지도(Anchored/Seeded) 토픽 모델링을 통해 도메인 분리도를 개선할 필요가 있다.
+3. **기사 단위 인간 평가 미수행에 따른 의미 타당성 검증의 한계**: 본 연구는 비지도 학습으로 도출된 경제 이슈 국면의 의미적 타당성을 독립 평가자의 기사 단위 라벨링을 통해 검증하지 못했다는 한계를 갖는다. 향후 연구에서는 복수의 평가자가 참여하는 블라인드 다중 라벨 평가를 수행하여 국면별 의미 일치도와 분류 성능을 추가적으로 검증할 필요가 있다.
 
 ---
 
 ## REFERENCES
-1. S. R. Baker, N. Bloom, and S. J. Davis, “Measuring Economic Policy Uncertainty,” *The Quarterly Journal of Economics*, vol. 131, no. 4, pp. 1593-1636, 2016.
-2. L. Bybee, B. T. Kelly, A. Manela, and D. Xiu, “Business News and Business Cycles,” *The Journal of Finance*, vol. 79, no. 5, pp. 2947-2993, 2024. (NBER Working Paper No. 26648)
-3. L. A. Thorsrud, “Words are the New Numbers: A Newsy Coincident Index of the Business Cycle,” *Journal of Business & Economic Statistics*, vol. 38, no. 2, pp. 393-409, 2020.
-4. P. C. Tetlock, “Giving Content to Investor Sentiment: The Role of Media in the Stock Market,” *The Journal of Finance*, vol. 62, no. 3, pp. 1139-1168, 2007.
-5. 서범석, 이영환, 조형배, “기계학습을 이용한 뉴스심리지수(NSI)의 작성과 활용,” *국민계정리뷰*, 제2022-1호, pp. 1-32, 2022.
-6. 김수현, 박기영, “텍스트 분석을 이용한 한국의 경제 심리 및 경기 변동 연구,” *금융연구*, 제35권 제3호, pp. 1-35, 2021.
-7. 박성호, 정용운, “비정형 뉴스 빅데이터를 활용한 거시경제 지표 선행성 분석,” *한국데이터정보과학회지*, 제31권 제5호, pp. 895-909, 2020.
-8. D. D. Lee and H. S. Seung, “Learning the Parts of Objects by Non-negative Matrix Factorization,” *Nature*, vol. 401, no. 6755, pp. 788-791, 1999.
-9. D. M. Blei, A. Y. Ng, and M. I. Jordan, “Latent Dirichlet Allocation,” *Journal of Machine Learning Research*, vol. 3, pp. 993-1022, 2003.
-10. C. Truong, L. Runge, and N. Vayatis, “Selective Review of Offline Change Point Detection Methods,” *Signal Processing*, vol. 167, 107299, 2020.
-11. J. H. Stock and M. W. Watson, *Introduction to Econometrics*, 4th ed., Pearson, 2019.
-12. W. K. Newey and K. D. West, “A Simple, Positive Semi-Definite, Heteroskedasticity and Autocorrelation Consistent Covariance Matrix,” *Econometrica*, vol. 55, no. 3, pp. 703-708, 1987.
-13. J. D. Hamilton, “A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle,” *Econometrica*, vol. 57, no. 2, pp. 357-384, 1989.
-14. D. Garcia, “Sentiment During Recessions,” *The Journal of Finance*, vol. 68, no. 3, pp. 1267-1300, 2013.
-15. R. F. Engle, “Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation,” *Econometrica*, vol. 50, no. 4, pp. 987-1007, 1982.
-16. 송원호, 강규호, “뉴스 텍스트를 활용한 통화정책 충격의 금융시장 파급효과 분석,” *경제학연구*, 제67권 제4호, pp. 5-42, 2019.
+[1] S. R. Baker, N. Bloom, and S. J. Davis, “Measuring Economic Policy Uncertainty,” *The Quarterly Journal of Economics*, vol. 131, no. 4, pp. 1593-1636, Nov. 2016. DOI: 10.1093/qje/qjw024.
+[2] L. Bybee, B. T. Kelly, A. Manela, and D. Xiu, “Business News and Business Cycles,” *The Journal of Finance*, vol. 79, no. 5, pp. 2947-2993, Oct. 2024. DOI: 10.1111/jofi.13377.
+[3] L. A. Thorsrud, “Words are the New Numbers: A Newsy Coincident Index of the Business Cycle,” *Journal of Business & Economic Statistics*, vol. 38, no. 2, pp. 393-409, Apr. 2020. DOI: 10.1080/07350015.2018.1506344.
+[4] P. C. Tetlock, “Giving Content to Investor Sentiment: The Role of Media in the Stock Market,” *The Journal of Finance*, vol. 62, no. 3, pp. 1139-1168, Jun. 2007. DOI: 10.1111/j.1540-6261.2007.01232.x.
+[5] B. Seo, Y. Lee, and H. Cho, “Constructing and Utilizing a News Sentiment Index (NSI) Using Machine Learning,” *National Accounts Review (Bank of Korea)*, no. 2022-1, pp. 1-32, 2022. (서범석, 이영환, 조형배, “기계학습을 이용한 뉴스심리지수(NSI)의 작성과 활용,” *국민계정리뷰*, 제2022-1호, pp. 1-32, 2022.)
+[6] S. Kim and K. Park, “A Study on Economic Sentiment and Business Cycles in Korea Using Text Analysis,” *Journal of Money & Finance (KIF)*, vol. 35, no. 3, pp. 1-35, 2021. (김수현, 박기영, “텍스트 분석을 이용한 한국의 경제 심리 및 경기 변동 연구,” *금융연구*, 제35권 제3호, pp. 1-35, 2021.)
+[7] S. Park and Y. Jung, “Lead-Lag Analysis of Macroeconomic Indicators Using Unstructured News Big Data,” *Journal of the Korean Data & Information Science Society*, vol. 31, no. 5, pp. 895-909, 2020. (박성호, 정용운, “비정형 뉴스 빅데이터를 활용한 거시경제 지표 선행성 분석,” *한국데이터정보과학회지*, 제31권 제5호, pp. 895-909, 2020.)
+[8] D. D. Lee and H. S. Seung, “Learning the Parts of Objects by Non-negative Matrix Factorization,” *Nature*, vol. 401, no. 6755, pp. 788-791, Oct. 1999. DOI: 10.1038/44565.
+[9] D. M. Blei, A. Y. Ng, and M. I. Jordan, “Latent Dirichlet Allocation,” *Journal of Machine Learning Research*, vol. 3, pp. 993-1022, Jan. 2003.
+[10] C. Truong, L. Runge, and N. Vayatis, “Selective Review of Offline Change Point Detection Methods,” *Signal Processing*, vol. 167, 107299, Feb. 2020. DOI: 10.1016/j.sigpro.2019.107299.
+[11] J. H. Stock and M. W. Watson, *Introduction to Econometrics*, 4th ed. New York, NY: Pearson, 2019.
+[12] W. K. Newey and K. D. West, “A Simple, Positive Semi-Definite, Heteroskedasticity and Autocorrelation Consistent Covariance Matrix,” *Econometrica*, vol. 55, no. 3, pp. 703-708, May 1987. DOI: 10.2307/1913610.
+[13] J. D. Hamilton, “A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle,” *Econometrica*, vol. 57, no. 2, pp. 357-384, Mar. 1989. DOI: 10.2307/1912559.
+[14] D. Garcia, “Sentiment During Recessions,” *The Journal of Finance*, vol. 68, no. 3, pp. 1267-1300, Jun. 2013. DOI: 10.1111/jofi.12027.
+[15] R. F. Engle, “Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation,” *Econometrica*, vol. 50, no. 4, pp. 987-1007, Jul. 1982. DOI: 10.2307/1912773.
+[16] W. Song and K. Kang, “Analysis of the Financial Market Spillover Effects of Monetary Policy Shocks Using News Text,” *The Korean Journal of Economic Studies*, vol. 67, no. 4, pp. 5-42, 2019. (송원호, 강규호, “뉴스 텍스트를 활용한 통화정책 충격의 금융시장 파급효과 분석,” *경제학연구*, 제67권 제4호, pp. 5-42, 2019.)

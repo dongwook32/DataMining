@@ -141,5 +141,5 @@ python -m preprocess.mine_keywords --stage cluster   # 월별 동조성 군집
 - `mine_keywords --stage topics`의 `topic_monthly_share.csv`는 월별 앞 3,000건 표본이라
   **탐색용입니다**. 국면 시계열은 `data/processed/regimes`의 전량 변환 적합입니다.
 - 분석 창 끝(2026-03 중동전쟁, 2026-07 대폭락)에 극단적 사건이 몰려 코스피 월수익률
-  변동성이 앞 구간의 네 배가 넘습니다. 반응 분석은 `kospi_ret_std`와 2026년 제외 표본으로
+  변동성이 앞 구간의 네 배가 넘습니다. 반응 분석은 `kospi_ret_std`(과거 12개월 변동성 기준 표준화 월간 수익률)와 2026년 제외 표본으로
   강건성을 함께 봐야 합니다. 상세는 `data/processed/panel/panel_qc.md`.
