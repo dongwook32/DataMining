@@ -2,9 +2,9 @@
 
 연구의 4대 핵심 실증 성과를 단 1초 만에 전수 재현 및 검증한다:
 1. 한국은행 기준금리 인상 사건 사전 적중률 (67개월 전체 7/11, 본격 인상기 7/7 100%)
-2. 주식시장(코스피) 악재 경고 정밀도 (28개월 경고 중 19개월 실제 하락 적중 = 67.9%)
+2. 주식시장(코스피) 악재 경고 정밀도 (일반 하락 19/28 = 67.9%, 급락 14/28 = 50.0%) 및 급락 재현율 (11/16 = 68.8%)
 3. 주요 지표별 시차 선행성 피크 (CCSI 1달 선행, 기준금리 2달 선행, 코스피 2달 선행)
-4. HAC OLS 회귀분석 모형 성과 (코스피 변동성 R²=22.8%, F=4.75, p=0.00016)
+4. HAC OLS 회귀분석 모형 성과 (과거 변동성 기준 코스피 표준화 수익률 R²=22.8%, F=4.75, p=0.00016)
 
 실행:
     python -m analysis.verify_leading_episodes
@@ -16,6 +16,7 @@ import pandas as pd
 import statsmodels.api as sm
 
 from config import project_root
+from analysis.event_definitions import KOSPI_CRASH_THRESHOLD, KOSPI_DROP_THRESHOLD
 
 ROOT = project_root()
 PANEL_PATH = ROOT / "data" / "processed" / "panel" / "monthly_panel.csv"
@@ -76,7 +77,7 @@ def verify_bok_hikes(df: pd.DataFrame) -> None:
 
 def verify_stock_drop_warning(df: pd.DataFrame) -> None:
     print("=" * 70)
-    print("2. 주식시장(코스피) 악재 경고등 정밀도 전수 조사 (z >= 0.5)")
+    print("2. 주식시장(코스피) 악재 경고등 정밀도 및 급락 재현율 전수 조사 (z >= 0.5)")
     print("=" * 70)
     
     z_macro = (df["share_macro"] - df["share_macro"].mean()) / df["share_macro"].std(ddof=1)
@@ -84,30 +85,106 @@ def verify_stock_drop_warning(df: pd.DataFrame) -> None:
     df["z_macro"] = z_macro
     df["z_hhdebt"] = z_hhdebt
     
-    # 악재 경고등 (금리·물가 또는 가계대출 z >= 0.5)
+    n_total = len(df)
+    eval_limit_idx = n_total - 3  # 마지막 2개월(2026-06, 2026-07)은 t+1, t+2 전부 관측 불가하여 제외
+
+    # (1) 조기경보 정밀도 (Precision) 전수 조사
     df["warning"] = (df["z_macro"] >= 0.5) | (df["z_hhdebt"] >= 0.5)
     warn_df = df[df["warning"]].copy()
     
-    hits = 0
-    for idx, row in warn_df.iterrows():
+    # 평가 가능한 경고월 필터링
+    eval_warn_df = warn_df[warn_df.index <= eval_limit_idx].copy()
+    excluded_warn_df = warn_df[warn_df.index > eval_limit_idx].copy()
+    
+    gen_hits = 0
+    crash_hits = 0
+    
+    print("[악재 경고월별 t+1, t+2 관측 및 적중 여부]")
+    for idx, row in eval_warn_df.iterrows():
         pos = row.name
-        ret1 = df.loc[pos + 1, "kospi_ret"] if pos + 1 < len(df) else np.nan
-        ret2 = df.loc[pos + 2, "kospi_ret"] if pos + 2 < len(df) else np.nan
-        m1 = df.loc[pos + 1, "month"] if pos + 1 < len(df) else ""
-        m2 = df.loc[pos + 2, "month"] if pos + 2 < len(df) else ""
+        ret1 = df.loc[pos + 1, "kospi_ret"]
+        ret2 = df.loc[pos + 2, "kospi_ret"]
+        m1 = df.loc[pos + 1, "month"]
+        m2 = df.loc[pos + 2, "month"]
         
-        hit = (ret1 < 0) or (ret2 < 0)
-        if hit:
-            hits += 1
+        hit_gen = (ret1 < KOSPI_DROP_THRESHOLD) or (ret2 < KOSPI_DROP_THRESHOLD)
+        hit_crash = (ret1 <= KOSPI_CRASH_THRESHOLD) or (ret2 <= KOSPI_CRASH_THRESHOLD)
+        
+        if hit_gen:
+            gen_hits += 1
+        if hit_crash:
+            crash_hits += 1
             
-        status = "★ 적중 (하락)" if hit else "미적중"
+        status_gen = "일반하락 적중" if hit_gen else "하락 미적중"
+        status_crash = "★ 급락 적중" if hit_crash else "급락 미적중"
+        
         print(f"경고월: {row['month']} (금리물가 z={row['z_macro']:+.2f}, 가계대출 z={row['z_hhdebt']:+.2f}) | "
-              f"1달뒤 {m1}({ret1:+.2f}%), 2달뒤 {m2}({ret2:+.2f}%) -> {status}")
+              f"1달뒤 {m1}({ret1:+.2f}%), 2달뒤 {m2}({ret2:+.2f}%) -> {status_gen} | {status_crash}")
+              
+    if len(excluded_warn_df) > 0:
+        print(f"\n[평가 제외된 경고월 (이후 1~2개월 미관측)]: {excluded_warn_df['month'].tolist()}")
+    else:
+        print(f"\n[평가 제외된 경고월]: 없음 (모든 경고월이 2026-05 이전 관측 구간에 포함)")
+        
+    print("-" * 70)
+    print(f">> 총 경고 점등 개월 수: {len(warn_df)}개월 (평가 가능 경고월: {len(eval_warn_df)}개월)")
+    print(f">> [지표 1. 일반 하락 정밀도 (ret < 0)]: {gen_hits}/{len(eval_warn_df)} = {gen_hits/len(eval_warn_df)*100:.1f}%")
+    print(f">> [지표 2. 급락 경고 정밀도 (ret <= {KOSPI_CRASH_THRESHOLD}%)]: {crash_hits}/{len(eval_warn_df)} = {crash_hits/len(eval_warn_df)*100:.1f}%")
+    
+    # 65개월 전체 기간의 베이스 레이트 (경고 점등 여부와 무관한 자연 발생 확률)
+    base_gen = 0
+    base_crash = 0
+    for i in range(eval_limit_idx + 1):
+        r1 = df.loc[i + 1, "kospi_ret"]
+        r2 = df.loc[i + 2, "kospi_ret"]
+        if (r1 < KOSPI_DROP_THRESHOLD) or (r2 < KOSPI_DROP_THRESHOLD):
+            base_gen += 1
+        if (r1 <= KOSPI_CRASH_THRESHOLD) or (r2 <= KOSPI_CRASH_THRESHOLD):
+            base_crash += 1
+    eval_n = eval_limit_idx + 1
+    print(f">> [비교: 전체 65개월 기준 자연 발생률 (Base Rate)]")
+    print(f"   - 일반 하락 자연 발생률: {base_gen}/{eval_n} = {base_gen/eval_n*100:.1f}%")
+    print(f"   - 급락 사건 자연 발생률: {base_crash}/{eval_n} = {base_crash/eval_n*100:.1f}%\n")
+
+    # (2) 코스피 급락 사전 경고 재현율 (Recall) 전수 조사
+    crashes = df[df["kospi_ret"] <= KOSPI_CRASH_THRESHOLD].copy()
+    n_crashes = len(crashes)
+    
+    print("-" * 70)
+    print(f"[코스피 급락 사건 (kospi_ret <= {KOSPI_CRASH_THRESHOLD}%) 전수 조사 (총 {n_crashes}개월)]")
+    
+    k_hits = 0
+    hit_list = []
+    miss_list = []
+    
+    for idx, row in crashes.iterrows():
+        pos = row.name
+        z_m1 = df.loc[pos - 1, "z_macro"] if pos >= 1 else 0
+        z_m2 = df.loc[pos - 2, "z_macro"] if pos >= 2 else 0
+        z_h1 = df.loc[pos - 1, "z_hhdebt"] if pos >= 1 else 0
+        z_h2 = df.loc[pos - 2, "z_hhdebt"] if pos >= 2 else 0
+        
+        warned = (z_m1 >= 0.5) or (z_m2 >= 0.5) or (z_h1 >= 0.5) or (z_h2 >= 0.5)
+        m_str = row["month"]
+        ret_val = row["kospi_ret"]
+        
+        if warned:
+            k_hits += 1
+            hit_list.append(m_str)
+            status = "★ 적중 (사전경고 점등)"
+        else:
+            miss_list.append(m_str)
+            status = "미탐지"
+            
+        print(f"급락월: {m_str} ({ret_val:+.2f}%) | 직전 1달전(물가 z={z_m1:+.2f}, 대출 z={z_h1:+.2f}), "
+              f"2달전(물가 z={z_m2:+.2f}, 대출 z={z_h2:+.2f}) -> {status}")
               
     print("-" * 70)
-    print(f">> 총 경고 점등 개월 수: {len(warn_df)}개월")
-    print(f">> 1~2달 내 실제 주가 하락 적중: {hits}개월")
-    print(f">> 최종 조기경보 정밀도(Precision): {hits}/{len(warn_df)} = {hits/len(warn_df)*100:.1f}%\n")
+    print(f">> 실제 코스피 급락월 수: {n_crashes}개월")
+    print(f">> 사전 경고 적중 급락월 수: {k_hits}개월")
+    print(f">> 급락 사전 경고 재현율 (Recall): {k_hits}/{n_crashes} = {k_hits/n_crashes*100:.1f}%")
+    print(f">> 적중 급락월 목록 ({len(hit_list)}개): {hit_list}")
+    print(f">> 미탐지 급락월 목록 ({len(miss_list)}개): {miss_list}\n")
 
 
 def verify_lead_lag(df: pd.DataFrame) -> None:
@@ -153,18 +230,18 @@ def verify_hac_regression(df: pd.DataFrame) -> None:
     Z = df[share_cols].apply(lambda s: (s - s.mean()) / s.std(ddof=1))
     X = sm.add_constant(Z)
     
-    # 1) 코스피 변동성
-    y_vol = df["kospi_ret_std"]
-    m_vol = sm.OLS(y_vol, X).fit(cov_type="HAC", cov_kwds={"maxlags": 3})
-    w_vol = m_vol.fvalue * 8.0
+    # 1) 과거 12개월 표준편차로 표준화한 코스피 월간 수익률 (kospi_ret_std)
+    y_std = df["kospi_ret_std"]
+    m_std = sm.OLS(y_std, X).fit(cov_type="HAC", cov_kwds={"maxlags": 3})
+    w_std = m_std.fvalue * 8.0
     
-    # 2) 코스피 수익률
+    # 2) 코스피 월간 로그수익률 (kospi_ret)
     y_ret = df["kospi_ret"]
     m_ret = sm.OLS(y_ret, X).fit(cov_type="HAC", cov_kwds={"maxlags": 3})
     
-    print(f"[코스피 월간 변동성 (kospi_ret_std)]")
-    print(f"   R² = {m_vol.rsquared*100:.2f}%, F-통계량 = {m_vol.fvalue:.3f} (Wald={w_vol:.2f}), p-value = {m_vol.f_pvalue:.6f}")
-    print(f"[코스피 월간 수익률 (kospi_ret)]")
+    print(f"[과거 12개월 표준편차로 표준화한 코스피 월간 수익률 (kospi_ret_std)]")
+    print(f"   R² = {m_std.rsquared*100:.2f}%, F-통계량 = {m_std.fvalue:.3f} (Wald={w_std:.2f}), p-value = {m_std.f_pvalue:.6f}")
+    print(f"[코스피 월간 로그수익률 (kospi_ret)]")
     print(f"   R² = {m_ret.rsquared*100:.2f}%, F-통계량 = {m_ret.fvalue:.3f}, p-value = {m_ret.f_pvalue:.6f}")
     print("=" * 70)
 

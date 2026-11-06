@@ -377,7 +377,9 @@ def create_pdf(out_path: Path):
     ))
     story.append(Paragraph(
         "종속변수로 활용된 거시경제 및 금융시장 데이터는 한국은행 경제통계시스템(ECOS) API를 통해 월별 시계열로 구축되었다. 주식시장 반응 지표로는 "
-        "코스피(KOSPI) 월간 종가 기준 수익률(kospi_ret)과 일별 수익률의 표준편차로 정의된 월간 변동성(kospi_ret_std)을 수집하였다. "
+        "코스피(KOSPI) 월간 종가 기준 로그수익률(kospi_ret)과, 이를 직전 12개월 월간 수익률의 표준편차로 나눈 표준화 월간 수익률(kospi_ret_std)을 산출하였다. "
+        "이 표준화 수익률 변수는 특정 시점의 분산 급증이 회귀 추정을 지배하지 않도록 통제하며 과거 변동성 대비 당월 수익률의 극단적 충격 강도를 측정하기 위한 "
+        "강건성 보조 지표이며, 일별 고빈도 자료 기반의 실현변동성(Realized Volatility)과는 구분된다. "
         "외환시장 반응 지표로는 원/달러 환율(USD/KRW) 월말 매매기준율의 월간 수익률(usdkrw_ret)을 산출하였다. 실물 거시 및 심리 지표로는 "
         "전국 도시 가구 대상 설문조사 기반의 소비자심리지수 월간 차분(ccsi_diff), 한국은행 기준금리 월간 변화분(base_rate_diff), 그리고 "
         "소비자물가지수(CPI) 전년동월대비 상승률을 취합하였다. 또한 포털 검색 트렌드 대조를 위해 네이버 데이터랩(Datalab)의 월별 검색어 지수를 결합하였다.",
@@ -552,7 +554,7 @@ def create_pdf(out_path: Path):
     # Table 4
     t4_pdata = [
         [Paragraph(c, tbl_hdr) for c in ["Dependent Variable", "R² (%)", "Adj R²(%)", "Wald Stat(W)", "F-statistic", "p-value", "Key Statistically Significant Regimes (Coeff, p-value)"]],
-        [Paragraph("코스피 변동성 (kospi_ret_std)", tbl_cell), Paragraph("22.75", tbl_cell), Paragraph("12.10", tbl_cell), Paragraph("38.04", tbl_cell), Paragraph("4.75", tbl_cell), Paragraph("0.00016***", tbl_cell), Paragraph("시황(-0.48, p=0.003), 금리물가(-0.36, p=0.006), 자본거래(-0.45, p=0.048)", tbl_cell_left)],
+        [Paragraph("코스피 표준화 수익률 (kospi_ret_std)*", tbl_cell), Paragraph("22.75", tbl_cell), Paragraph("12.10", tbl_cell), Paragraph("38.04", tbl_cell), Paragraph("4.75", tbl_cell), Paragraph("0.00016***", tbl_cell), Paragraph("시황(-0.48, p=0.003), 금리물가(-0.36, p=0.006), 자본거래(-0.45, p=0.048)", tbl_cell_left)],
         [Paragraph("코스피 수익률 (kospi_ret)", tbl_cell), Paragraph("18.08", tbl_cell), Paragraph("6.78", tbl_cell), Paragraph("21.42", tbl_cell), Paragraph("2.68", tbl_cell), Paragraph("0.0106**", tbl_cell), Paragraph("자본거래(-3.23, p=0.049), 시황(-2.70, p=0.026), 금리물가(-1.83, p=0.045)", tbl_cell_left)],
         [Paragraph("소비자심리 변화 (ccsi_diff)", tbl_cell), Paragraph("12.12", tbl_cell), Paragraph("0.00", tbl_cell), Paragraph("11.90", tbl_cell), Paragraph("1.49", tbl_cell), Paragraph("0.1890", tbl_cell), Paragraph("금리·물가 (-1.32, p=0.021**)", tbl_cell_left)],
         [Paragraph("원/달러 환율 수익률 (usdkrw_ret)", tbl_cell), Paragraph("9.42", tbl_cell), Paragraph("-3.07", tbl_cell), Paragraph("7.10", tbl_cell), Paragraph("0.89", tbl_cell), Paragraph("0.5293", tbl_cell), Paragraph("결합 유의성 비유의 (외환시장 실시간 당월 즉각 반영 특성)", tbl_cell_left)]
@@ -570,10 +572,11 @@ def create_pdf(out_path: Path):
     story.append(t4_pdf)
     story.append(Spacer(1, 3))
     story.append(Paragraph(
-        "표 4에 제시된 바와 같이, 코스피 주가 변동성 모델은 결정계수 R² = 22.75%를 기록하였으며, 결합 검정 통계량 F = 4.75, p = 0.00016으로 "
+        "표 4에 제시된 바와 같이, 과거 12개월 변동성으로 표준화한 코스피 수익률(kospi_ret_std) 모델은 결정계수 R² = 22.75%를 기록하였으며, 결합 검정 통계량 F = 4.75, p = 0.00016으로 "
         "99.9% 신뢰수준에서 압도적인 유의성을 보였다. 우연에 의해 이 같은 설명력이 도출될 확률은 0.016%에 불과하다. 또한 코스피 월간 수익률에 "
-        "대해서도 R² = 18.08%, F = 2.68, p = 0.0106으로 5% 유의수준을 여유 있게 통과하였다. 개별 회귀계수를 살펴보면, '금리·물가'와 '시황' 국면의 "
-        "비중 증가는 주가 수익률을 유의하게 억누르고 변동성을 확대시키는 악재 요인으로 작용함을 정량적으로 확인하였다.",
+        "대해서도 R² = 18.08%, F = 2.68, p = 0.0106으로 5% 유의수준을 통과하였다. 개별 회귀계수를 살펴보면, '금리·물가'와 '시황', '자본거래' 국면의 "
+        "비중 증가는 주가 수익률 및 표준화 수익률을 유의하게 억누르는 주요 악재 요인으로 작용함을 정량적으로 확인하였다. "
+        "단, 본 설명력은 과거 변동성 수준으로 스케일링된 월간 수익률에 대한 것이며, 고빈도 실현변동성 자체에 대한 직접 설명력은 아니다.",
         body_indent
     ))
 
@@ -737,7 +740,7 @@ def create_pdf(out_path: Path):
         body_indent
     ))
     story.append(Paragraph(
-        "셋째, Newey-West HAC 견고 회귀분석 결과, 8대 국면 비중은 코스피 주가 변동성의 22.8%(p = 0.00016)와 월간 수익률의 18.1%(p = 0.0106)를 "
+        "셋째, Newey-West HAC 견고 회귀분석 결과, 8대 국면 비중은 과거 변동성 기준 표준화 코스피 수익률의 22.8%(p = 0.00016)와 월간 로그수익률의 18.1%(p = 0.0106)를 "
         "통계적으로 매우 유의하게 설명함을 입증하였다.",
         body_indent
     ))

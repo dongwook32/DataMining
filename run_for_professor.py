@@ -241,16 +241,16 @@ def verify_hac_regressions(df):
     print(f" [검증 4] Newey-West HAC OLS 다중 회귀분석 모형 성과 (maxlags=3) [{engine_name}]")
     print("=" * 80)
 
-    # 코스피 변동성
+    # 과거 변동성 기준 표준화 코스피 수익률
     res_vol = fit_hac_ols_pure_numpy(df["kospi_ret_std"].values, X, q=3)
-    print(f" 1) 코스피 월간 주가 변동성 (kospi_ret_std)")
+    print(f" 1) 과거 12개월 표준편차로 표준화한 코스피 월간 수익률 (kospi_ret_std)")
     print(f"    - 설명력 (R²): {res_vol['r2']*100:.2f}%")
     print(f"    - 모형 F-통계량: F(8, 58) = {res_vol['f_stat']:.3f} (Wald W = {res_vol['wald']:.2f})")
     print(f"    - 모형 유의확률: p = {res_vol['f_pval']:.6f} (*** p < 0.001 유의)")
 
-    # 코스피 수익률
+    # 코스피 월간 로그수익률
     res_ret = fit_hac_ols_pure_numpy(df["kospi_ret"].values, X, q=3)
-    print(f"\n 2) 코스피 월간 수익률 (kospi_ret)")
+    print(f"\n 2) 코스피 월간 로그수익률 (kospi_ret)")
     print(f"    - 설명력 (R²): {res_ret['r2']*100:.2f}%")
     print(f"    - 모형 F-통계량: F(8, 58) = {res_ret['f_stat']:.3f}")
     print(f"    - 모형 유의확률: p = {res_ret['f_pval']:.6f} (** p < 0.05 유의)")
@@ -279,7 +279,7 @@ def verify_robustness(df):
     Z_sub = df_sub[[f"share_{s}" for s in slugs]].apply(lambda s: (s - s.mean()) / s.std(ddof=1)).values
     X_sub = np.column_stack([np.ones(len(Z_sub)), Z_sub])
     res_sub = fit_hac_ols_pure_numpy(df_sub["kospi_ret_std"].values, X_sub, q=3)
-    print(f"\n 2) 2026년 대외충격 제외 표본 (60개월) 변동성 R²: {res_sub['r2']*100:.2f}% (p = {res_sub['f_pval']:.6f})")
+    print(f"\n 2) 2026년 대외충격 제외 표본 (60개월) 표준화 수익률 R²: {res_sub['r2']*100:.2f}% (p = {res_sub['f_pval']:.6f})")
     print("=" * 80 + "\n")
 
 
@@ -297,8 +297,8 @@ def export_summary_artifacts(df, hike_res, warn_res, lead_lag_res, reg_res):
         {"카테고리": "3. 시차 선행성 (Lead-Lag)", "지표명": "한국은행 기준금리 피크 시차", "값": "2개월 선행 (r = +0.341)"},
         {"카테고리": "3. 시차 선행성 (Lead-Lag)", "지표명": "코스피 주가지수 피크 시차", "값": "2개월 선행 (r = -0.625)"},
         {"카테고리": "3. 시차 선행성 (Lead-Lag)", "지표명": "원/달러 환율 피크 시차", "값": "동행 (r = +0.329)"},
-        {"카테고리": "4. HAC OLS 회귀분석", "지표명": "코스피 변동성 설명력 (R²)", "값": f"{reg_res['res_vol']['r2']*100:.2f}%"},
-        {"카테고리": "4. HAC OLS 회귀분석", "지표명": "코스피 변동성 모형 F-통계량 (p-value)", "값": f"F = {reg_res['res_vol']['f_stat']:.3f} (p = {reg_res['res_vol']['f_pval']:.6f})"},
+        {"카테고리": "4. HAC OLS 회귀분석", "지표명": "표준화 코스피 수익률 설명력 (R²)", "값": f"{reg_res['res_vol']['r2']*100:.2f}%"},
+        {"카테고리": "4. HAC OLS 회귀분석", "지표명": "표준화 코스피 수익률 모형 F-통계량 (p-value)", "값": f"F = {reg_res['res_vol']['f_stat']:.3f} (p = {reg_res['res_vol']['f_pval']:.6f})"},
         {"카테고리": "4. HAC OLS 회귀분석", "지표명": "코스피 수익률 설명력 (R²)", "값": f"{reg_res['res_ret']['r2']*100:.2f}%"},
         {"카테고리": "4. HAC OLS 회귀분석", "지표명": "코스피 수익률 모형 F-통계량 (p-value)", "값": f"F = {reg_res['res_ret']['f_stat']:.3f} (p = {reg_res['res_ret']['f_pval']:.6f})"},
     ]

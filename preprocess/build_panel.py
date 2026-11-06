@@ -96,12 +96,12 @@ def add_indicator_derivatives(panel: pd.DataFrame) -> pd.DataFrame:
         out[name] = out[col].diff()
     # 물가는 기저효과 탓에 전월비가 계절을 타므로 전년동월비를 함께 둔다.
     out["cpi_yoy"] = 100 * (out["CPI"] / out["CPI"].shift(12) - 1)
-    # 직전 3개월 실현변동성. 국면별 '반응 크기'가 아니라 '반응 불확실성' 비교용.
+    # 직전 3개월 월수익률 롤링 표준편차. 국면별 '반응 크기'가 아니라 '반응 불확실성' 비교용.
     out["kospi_vol3"] = out["kospi_ret"].rolling(3).std()
 
     # 2026년 상반기 코스피 변동성이 앞 구간의 다섯 배로 뛴다(7월 대폭락). 실제 값이지만
     # 수준 그대로 회귀에 넣으면 마지막 몇 달이 국면 계수를 통째로 끌고 간다.
-    # 직전 12개월 변동성으로 나눈 표준화 수익률을 강건성 검증용으로 함께 둔다.
+    # 직전 12개월 수익률 표준편차(vol12)로 나눈 표준화 월간 수익률(Standardized Return)을 강건성 검증용으로 함께 둔다.
     # shift(1)로 당월을 빼서 미래 정보가 스케일에 섞이지 않게 한다.
     out["kospi_vol12"] = out["kospi_ret"].rolling(12).std()
     out["kospi_ret_std"] = out["kospi_ret"] / out["kospi_vol12"].shift(1)

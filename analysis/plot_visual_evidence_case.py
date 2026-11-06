@@ -1,4 +1,4 @@
-"""사용자가 요청한 3가지 실화 데이터(2022년 물가쇼크 선행성, 한은 빅스텝, 주가 변동성 설명력)를
+"""사용자가 요청한 3가지 실화 데이터(2022년 물가쇼크 선행성, 한은 빅스텝, 표준화 주가수익률 설명력)를
 비전공자도 1초 만에 직관적으로 이해할 수 있는 '타임라인 및 이벤트 비교 인포그래픽 차트'로 시각화하는 스크립트.
 
 산출물:
@@ -6,7 +6,7 @@
    - 2022년 집중 확대(Zoom-in) 타임라인
    - 뉴스 경고등 폭발(5~6월) -> 1달 뒤 소비심리 붕괴(7월) -> 2달 뒤 한은 빅스텝(7월) 인과 화살표 표시
 2. docs/figures/fig_volatility_actual_vs_pred.png:
-   - 주가 변동성 실제값(Observed) vs 뉴스 8국면 모형 예측값(Predicted) 시계열 대조 (R²=22.8%, F=4.75, p=0.00016)
+   - 과거 변동성 기준 코스피 표준화 수익률 실제값(Observed) vs 뉴스 8국면 모형 예측값(Predicted) 시계열 대조 (R²=22.8%, F=4.75, p=0.00016)
 """
 
 from pathlib import Path
@@ -99,7 +99,7 @@ def plot_case_2022(df: pd.DataFrame):
 
 
 def plot_volatility_fit(df: pd.DataFrame):
-    """주가 변동성 실제값 vs 모형 예측값 비교 차트 (R²=22.8%)."""
+    """과거 변동성 기준 표준화 수익률 실제값 vs 모형 예측값 비교 차트 (R²=22.8%)."""
     slugs = ["macro", "realestate", "hhdebt", "trade", "aichip", "market", "earnings", "capital"]
     X = df[[f"share_{s}" for s in slugs]]
     X = sm.add_constant(X)
@@ -116,18 +116,18 @@ def plot_volatility_fit(df: pd.DataFrame):
     for y_year in [2021, 2022, 2023, 2024, 2025, 2026]:
         ax.axvline(pd.to_datetime(f"{y_year}-01-01"), color="#e0e0e0", linestyle="--", linewidth=1.0)
 
-    ax.plot(dates, y, color="#222222", linewidth=2.5, label="실제 코스피 월간 변동성 (Observed)", zorder=3)
+    ax.plot(dates, y, color="#222222", linewidth=2.5, label="실제 코스피 표준화 수익률 (Observed, kospi_ret_std)", zorder=3)
     ax.plot(dates, pred, color="#d62728", linewidth=2.2, linestyle="--", label=f"뉴스 8국면 모형 예측값 (Predicted, R²={model.rsquared*100:.1f}%)", zorder=4)
 
     # 2022년 변동성 정점 및 2026년 변동성 정점 설명
-    ax.annotate("2022년 긴축 쇼크 변동성 폭발\n(뉴스 모형이 정점 정확히 포착)",
+    ax.annotate("2022년 긴축 쇼크 하락 충격 포착\n(뉴스 모형이 정점 정확히 추적)",
                 xy=(pd.to_datetime("2022-09-01"), y[df["month"]=="2022-09"].values[0]),
                 xytext=(pd.to_datetime("2021-08-01"), 0.09),
                 arrowprops=dict(arrowstyle="->", color="#d62728", lw=1.5),
                 fontweight="bold", color="#d62728", fontsize=9.5)
 
-    ax.set_ylabel("코스피 월간 수익률 표준편차 (변동성)", fontsize=11, fontweight="bold")
-    ax.set_title("[실화 데이터 3 시각화] 뉴스 8국면만으로 코스피 주가 변동성의 23%를 완벽 설명 (p=0.0005)", fontsize=12, fontweight="bold", pad=12)
+    ax.set_ylabel("표준화 월간 수익률 (kospi_ret_std)", fontsize=11, fontweight="bold")
+    ax.set_title("[실화 데이터 3 시각화] 뉴스 8국면 기반 코스피 표준화 수익률 설명력 (R²=22.8%, p=0.00016)", fontsize=12, fontweight="bold", pad=12)
     ax.grid(True, linestyle=":", alpha=0.6)
     ax.legend(loc="upper right", framealpha=0.95, fontsize=10.5)
 
