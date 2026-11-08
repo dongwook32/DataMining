@@ -1,0 +1,39 @@
+﻿category,item_name,approved_value,source_artifact
+NMF_Convergence,NMF-400 실제 반복 횟수 및 상태,"n_iter_=400 (상한 도달, ConvergenceWarning=True)",A-2 convergence_metrics.csv
+NMF_Convergence,NMF-800 실제 반복 횟수 및 상태,"n_iter_=447 (완전 수렴, ConvergenceWarning=False)",A-2 convergence_metrics.csv
+NMF_Convergence,Reconstruction Error (NMF-400 vs NMF-800),"369.804840 vs 369.777710 (-0.027130, -0.007336%)",A-2 convergence_metrics.csv
+NMF_Convergence,14-Topic 전체 평균 코사인 유사도 (400 vs 800),0.980223 (약 0.9802),A-2 topic_similarity.csv
+NMF_Convergence,14-Topic 전체 중앙값 코사인 유사도 (400 vs 800),0.998946 (약 0.9989),A-2 topic_similarity.csv
+NMF_Convergence,14-Topic 전체 최소 코사인 유사도 (400 vs 800),0.784627 (Topic 2: 0.7846),A-2 topic_similarity.csv
+NMF_Convergence,Topic 2 제외 13개 토픽 평균 코사인 유사도,0.995269 (약 0.9953),A-2 topic_alignment.csv
+NMF_Convergence,Topic 2 제외 13개 토픽 최소 코사인 유사도,0.968629 (Topic 3: 0.9686),A-2 topic_alignment.csv
+Regime_Share_TimeSeries,aichip 월별 비중 상관계수 (Full 67m),"Pearson r = 0.9996 (MAE = 0.0005, 일치율 100%)",A-3 regime_share_metrics.csv
+Regime_Share_TimeSeries,market 월별 비중 상관계수 (Full 67m),"Pearson r = 0.9997 (MAE = 0.0002, 일치율 100%)",A-3 regime_share_metrics.csv
+Regime_Share_TimeSeries,earnings 월별 비중 상관계수 (Full 67m),"Pearson r = 0.9998 (MAE = 0.0013, 일치율 97.0%)",A-3 regime_share_metrics.csv
+Regime_Share_TimeSeries,macro 월별 비중 상관계수 (Full 67m),"Pearson r = 0.9952 (MAE = 0.0080, 일치율 100%)",A-3 regime_share_metrics.csv
+Regime_Share_TimeSeries,capital 월별 비중 상관계수 (Full 67m),"Pearson r = 0.9910 (MAE = 0.0029, 일치율 94.0%)",A-3 regime_share_metrics.csv
+Regime_Share_TimeSeries,realestate Legacy-6 합산 상관계수 (Full 67m),"Pearson r = 0.9648 (MAE = 0.0026, 일치율 89.6%)",A-3 regime_share_metrics.csv
+Regime_Share_TimeSeries,realestate Legacy-6 합산 상관계수 (OOS 19m),"Pearson r = 0.9693 (MAE = 0.0030, 일치율 100.0%)",A-3 regime_share_metrics.csv
+Regime_Share_TimeSeries,NMF-800 내부 T3(realestate) vs T2(hhdebt) 상관,Full r = 0.0467 (p=0.7077) / Train r = -0.3038 (p=0.0358),A-3 regime_share_metrics.csv
+Multi_Regime_Preservation,NMF-400 6국면 단일 국면 누락 신호 (Full 67m),"49 / 112건 (43.75%), 다중 국면 월 39/67 (58.21%)",A-3 multiregime_comparison.csv
+Multi_Regime_Preservation,NMF-800 7국면 단일 국면 누락 신호 (Full 67m),"63 / 125건 (50.40%), 다중 국면 월 41/67 (61.19%)",A-3 multiregime_comparison.csv
+Multi_Regime_Preservation,NMF-800 Legacy-6 단일 국면 누락 신호 (Full 67m),"48 / 111건 (43.24%), 다중 국면 월 36/67 (53.73%)",A-3 multiregime_comparison.csv
+Multi_Regime_Preservation,NMF-800 6국면 부분집합 단일 국면 누락 신호 (Full 67m),"48 / 110건 (43.64%), 다중 국면 월 37/67 (55.22%)",A-3 multiregime_comparison.csv
+Multi_Regime_Preservation,NMF-400 6국면 단일 국면 누락 신호 (Train 48m),"42 / 89건 (47.19%), 다중 국면 월 32/48 (66.67%)",A-3 multiregime_comparison.csv
+Multi_Regime_Preservation,NMF-400 6국면 단일 국면 누락 신호 (Eval OOS 19m),"7 / 23건 (30.43%), 다중 국면 월 7/19 (36.84%)",A-3 multiregime_comparison.csv
+HAC_Regression,NMF-400 6국면 R2 및 F 통계량,"R2 = 0.161879, Adj. R2 = 0.078067, HAC F = 4.683257 (p = 0.000573)",A-3 hac_regression_comparison.csv
+HAC_Regression,NMF-800 7국면 R2 및 F 통계량,"R2 = 0.169783, Adj. R2 = 0.071282, HAC F = 4.505157 (p = 0.000448)",A-3 hac_regression_comparison.csv
+HAC_Regression,NMF-800 Legacy-6 R2 및 F 통계량,"R2 = 0.169581, Adj. R2 = 0.086539, HAC F = 5.092116 (p = 0.000278)",A-3 hac_regression_comparison.csv
+HAC_Regression,NMF-400 z_macro 계수 및 유의성,"coef = -0.7418 (t = -3.54, p_raw = 0.0004, p_holm = 0.0024)",A-3 hac_regression_comparison.csv
+HAC_Regression,NMF-400 z_capital 계수 및 유의성,"coef = -0.5299 (t = -3.01, p_raw = 0.0026, p_holm = 0.0129)",A-3 hac_regression_comparison.csv
+HAC_Regression,NMF-800 7국면 z_macro 계수 및 유의성,"coef = -0.6749 (t = -2.97, p_raw = 0.0030, p_holm = 0.0208)",A-3 hac_regression_comparison.csv
+HAC_Regression,NMF-800 7국면 z_capital 계수 및 유의성,"coef = -0.5358 (t = -2.95, p_raw = 0.0031, p_holm = 0.0208)",A-3 hac_regression_comparison.csv
+Strict_OOS_Early_Warning,Strict OOS 17m 주가 하락 조기경보 혼동행렬,"TP=0, FP=1, FN=9, TN=7 (경보월: 2026-03 1건, 정밀도 0.0%)",A-3 strict_oos_comparison.csv
+Strict_OOS_Early_Warning,한은 기준금리 인상 포착 (본격 긴축기 2022-04~2023-01),"7 / 7건 (100.0%, 평균 선행 1.0개월) [표본 내 역사적 동조화]",A-3 strict_oos_comparison.csv
+Strict_OOS_Early_Warning,한은 기준금리 인상 포착 (전체 67개월 11회 인상 통산),"7 / 11건 (63.64%, 초기 3회 및 OOS 1회 미탐지)",A-3 strict_oos_comparison.csv
+Strict_OOS_Early_Warning,ARX H1 KOSPI 수익률 19m OOS RMSE (NMF-800),AR(2) 기준선 15.2825 -> AR(2)+hhdebt 13.8687 (-1.4138%p),A-3 strict_oos_comparison.csv
+Strict_OOS_Early_Warning,ARX H2 기준금리 변화폭 19m OOS RMSE (400 vs 800),AR(1)+macro: 400 0.1266 vs 800 0.1267 (기준선 0.1097 대비 소폭 증가),A-3 strict_oos_comparison.csv
+Naver_Search_Weekly,전체 기간(291주) 24개 검정 중 Holm 유의 관계,"7개 핵심 관계 (금리 h=0, -1, +1; 증시 h=0, -1; 통합 h=0; 실적 h=0) 100% 동일",A-3 naver_weekly_comparison.csv
+Naver_Search_Weekly,OOS(82주) 기업실적 동시점(h=0) 상관 및 Holm p값,400: r = 0.4718 (p_holm = 0.0011) / 800: r = 0.4687 (p_holm = 0.0014),A-3 naver_weekly_comparison.csv
+Naver_Search_Weekly,OOS(82주) 시황 동시점(h=0) 상관 및 Holm p값,"400: r = 0.4984 (p_holm = 0.0432) / 800: r = 0.4920 (lag4 p_holm = 0.0508, lag2 = 0.0409)",A-3 naver_weekly_comparison.csv
+Naver_Search_Weekly,OOS(82주) 금리 동시점(h=0) 상관 및 Holm p값,"400: r = 0.3397 (p_raw=0.0170, p_holm=0.3575) / 800: r = 0.2960 (p_raw=0.0261, p_holm=0.5480)",A-3 naver_weekly_comparison.csv
