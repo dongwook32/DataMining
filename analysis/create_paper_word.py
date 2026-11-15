@@ -14,9 +14,9 @@ from docx.enum.table import WD_TABLE_ALIGNMENT, WD_ALIGN_VERTICAL
 from docx.oxml import OxmlElement, parse_xml
 from docx.oxml.ns import nsdecls, qn
 
-ROOT = Path(r"c:\Users\CDW\1_Project\DataMining")
+ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = ROOT / "docs"
-OUT_PATH = DOCS_DIR / "PAPER_DRAFT_JKIICE.docx"
+OUT_PATH = DOCS_DIR / "PAPER_DRAFT_JKIICE_generated.docx"
 
 def set_cell_margins(cell, top=100, bottom=100, left=150, right=150):
     """표 셀의 상하좌우 패딩을 설정 (twips 단위: 20 twips = 1 pt)"""

@@ -86,7 +86,7 @@ ART_DIR = ROOT / "data" / "processed" / "phase5_6_artifacts" / "RUN_PHASE5_6_202
 
 PROTECTED_FILES = [
     "docs/PAPER_DRAFT_JKIICE.md",
-    "docs/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
+    "docs/drafts/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/core_meta.json",
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/models.joblib",
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/nmf_H.npy",

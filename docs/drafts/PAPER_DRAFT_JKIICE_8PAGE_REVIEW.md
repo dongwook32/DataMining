@@ -105,7 +105,7 @@ With a higher iteration cap and household debt combined with real estate, the si
 
 학습 구간에 비해 평가 구간에서 동시 활성 월의 비중은 낮았다(66.67%와 36.84%). 평가 구간에도 단일 방식에서 별도로 표시되지 않는 신호가 7개 있었다. 이 수치는 월과 국면의 조합을 집계한 것으로, 전체 기사 중 몇 퍼센트가 요약에서 빠졌는지를 나타내는 비율과 구분된다. 기준을 넘는 두 번째 이슈를 별도 항목으로 보여 주는 요약을 설계할 때, 어느 정도의 월별 차이가 발생하는지를 보여 준다.
 
-![Fig. 1. Active signals shown by a single label and additional signals](figures/review_8page_active_signals.png)
+![Fig. 1. Active signals shown by a single label and additional signals](../figures/review_8page_active_signals.png)
 
 2022년 10월에는 금리·물가가 대표 국면으로 선정되었고 부동산도 활성 기준을 넘었다. 단일 표시에서는 금리·물가만 드러나지만, 기사 자료에는 한국은행 기준금리 인상 보도와 주택 거래 위축 및 전세가격 하락 관련 보도가 함께 나타났다. 이 사례는 하나의 대표 레이블 아래에 묶이는 다른 이슈를 찾을 수 있음을 보여 준다. 사례는 다중 활성 점수를 기준으로 선정했으므로, 모든 월에서 부차 국면이 같은 해석 가치를 갖는지는 별도 평가가 필요하다.
 
@@ -176,7 +176,7 @@ With a higher iteration cap and household debt combined with real estate, the si
 
 <!-- column -->
 
-![Fig. 2. Search associations and 95% moving-block bootstrap intervals](figures/review_8page_search_associations.png)
+![Fig. 2. Search associations and 95% moving-block bootstrap intervals](../figures/review_8page_search_associations.png)
 
 그림 2는 평가 구간 82주에서 블록 길이 4주로 계산한 상관계수의 95% 구간이다. 그림의 구간은 부트스트랩 불확실성을 나타내며, 표 5의 유의확률은 HAC 표준오차와 24개 검정 Holm 보정에 근거한다.
 

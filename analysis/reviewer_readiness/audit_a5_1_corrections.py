@@ -31,12 +31,12 @@ RUN_DIR = PROJECT_ROOT / "data" / "processed" / "reviewer_readiness" / "RUN_2026
 A5_DIR = PROJECT_ROOT / "data" / "processed" / "reviewer_readiness" / "RUN_20261106_A5_REFERENCE_AUDIT_01"
 
 PROTECTED_PATHS = [
-    DOCS_DIR / "PAPER_DRAFT_JKIICE_A4_20261106.md",
+    DOCS_DIR / "drafts" / "PAPER_DRAFT_JKIICE_A4_20261106.md",
     DOCS_DIR / "A4_CHANGELOG_20261106.md",
     DOCS_DIR / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv",
     DOCS_DIR / "A4_FINAL_QC_20261106.md",
     DOCS_DIR / "PAPER_DRAFT_JKIICE.md",
-    DOCS_DIR / "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
+    DOCS_DIR / "drafts" / "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
     PROJECT_ROOT / "data" / "processed" / "supplemental_validation" / "news_search_weekly_panel.csv",
     PROJECT_ROOT / "data" / "processed" / "supplemental_validation" / "news_search_hac_results.csv",
     PROJECT_ROOT / "data" / "processed" / "supplemental_validation" / "news_search_train_test_comparison.csv",
@@ -488,7 +488,7 @@ def build_correction_report(now_iso: str) -> str:
     template = r"""# 연구 A-5.1: 참고문헌 검증 결과 정정 및 인용 적합성 심층 보완 보고서
 
 - **감사 일시**: `__NOW_ISO__`
-- **대상 논문**: `docs/PAPER_DRAFT_JKIICE_A4_20261106.md`
+- **대상 논문**: `docs/drafts/PAPER_DRAFT_JKIICE_A4_20261106.md`
 - **검증 대상**: 기존 A-5 검증 결과 중 서지정보 정정 항목 및 본문 인용 맥락의 학술적 엄밀성 재검토
 
 ---
@@ -592,7 +592,7 @@ def build_qc_report(now_iso: str, n_prot: int, n_mod: int, t_sec: float) -> str:
     template = r"""# 연구 A-5.1: 품질 검수 보고서 및 5대 질문 최종 답변 (QC Report)
 
 - **검수 일시**: `__NOW_ISO__` (소요 시간: `__T_SEC__s`)
-- **검수 대상**: `docs/PAPER_DRAFT_JKIICE_A4_20261106.md` 및 A-5 감사 결과 정정
+- **검수 대상**: `docs/drafts/PAPER_DRAFT_JKIICE_A4_20261106.md` 및 A-5 감사 결과 정정
 - **보호 대상 파일 무결성**: 총 `__N_PROT__`개 파일 SHA-256 대조 결과 **`protected_files_modified = __N_MOD__` (PASS)**
 
 ---

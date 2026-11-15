@@ -20,7 +20,6 @@ ROOT = Path(r"c:\Users\CDW\1_Project\DataMining")
 DOCS_DIR = ROOT / "docs"
 OUT_SUBMISSION_PATH = DOCS_DIR / "PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx"
 OUT_BLIND_PATH = DOCS_DIR / "PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx"
-OUT_LEGACY_PATH = DOCS_DIR / "PAPER_DRAFT_JKIICE.docx"
 
 FONT_GOTHIC = "맑은 고딕"
 FONT_MYEONGJO = "바탕"
@@ -1119,5 +1118,3 @@ def build_jkiice_2026_docx(out_path: Path, blind_mode: bool = False):
 if __name__ == "__main__":
     build_jkiice_2026_docx(OUT_SUBMISSION_PATH, blind_mode=False)
     build_jkiice_2026_docx(OUT_BLIND_PATH, blind_mode=True)
-    shutil.copy2(OUT_SUBMISSION_PATH, OUT_LEGACY_PATH)
-    print(f"Synchronized legacy path: {OUT_LEGACY_PATH}")

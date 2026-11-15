@@ -1,7 +1,7 @@
 """
 Study A-6.1: JKIICE Final Draft Correction and Statistical Expression Refinement
 ================================================================================
-Input  : docs/PAPER_DRAFT_JKIICE_DRAFT_REVISION_20261107.md (read-only)
+Input  : docs/drafts/PAPER_DRAFT_JKIICE_DRAFT_REVISION_20261107.md (read-only)
 Output : docs/PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.md
          docs/A6_1_FINAL_CORRECTION_LOG_20261107.md
          data/processed/reviewer_readiness/RUN_20261107_A6_1_FINAL_CORRECTION_01/
@@ -20,15 +20,15 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs"
 RR = ROOT / "data" / "processed" / "reviewer_readiness"
-SRC = DOCS / "PAPER_DRAFT_JKIICE_DRAFT_REVISION_20261107.md"
+SRC = DOCS / "drafts" / "PAPER_DRAFT_JKIICE_DRAFT_REVISION_20261107.md"
 OUT = DOCS / "PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.md"
 LOG_OUT = DOCS / "A6_1_FINAL_CORRECTION_LOG_20261107.md"
 RUN_DIR = RR / "RUN_20261107_A6_1_FINAL_CORRECTION_01"
 
 PROTECTED = [
     DOCS / "PAPER_DRAFT_JKIICE.md",
-    DOCS / "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
-    DOCS / "PAPER_DRAFT_JKIICE_A4_20261106.md",
+    DOCS / "drafts" / "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
+    DOCS / "drafts" / "PAPER_DRAFT_JKIICE_A4_20261106.md",
     DOCS / "A4_CHANGELOG_20261106.md",
     DOCS / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv",
     DOCS / "A4_FINAL_QC_20261106.md",

@@ -100,7 +100,7 @@ SEARCH_SUB_PATH = ROOT / "data" / "raw" / "datalab" / "datalab_sub_daily.csv"
 
 PROTECTED_FILES = [
     "docs/PAPER_DRAFT_JKIICE.md",
-    "docs/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
+    "docs/drafts/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
     "docs/REVIEWER_READINESS_MASTER_REPORT.md",
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/core_meta.json",
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/models.joblib",

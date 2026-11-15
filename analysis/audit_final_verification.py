@@ -2,9 +2,9 @@
 
 원본 파일(Phase 5.6 산출물, 기존 검증 CSV 3종, 기존 보고서 등)을 절대 수정하거나 덮어쓰지 않고,
 코드·데이터·CSV·보고서 대조 감사를 수행하여 다음 최종 산출물을 생성한다:
-1. data/processed/reactions/verification_final_audit_log.csv (및 루트 복사본)
-2. data/processed/reactions/verification_rate_hike_event_table.csv & .md (및 루트 복사본)
-3. data/processed/reactions/verification_reproduction_log.csv & .md (및 루트 복사본)
+1. data/processed/reactions/verification_final_audit_log.csv (및 docs/verification 복사본)
+2. data/processed/reactions/verification_rate_hike_event_table.csv & .md (및 docs/verification 복사본)
+3. data/processed/reactions/verification_reproduction_log.csv & .md (및 docs/verification 복사본)
 """
 
 from __future__ import annotations
@@ -21,6 +21,7 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 ROOT = Path(__file__).resolve().parent.parent
 REACT_DIR = ROOT / "data" / "processed" / "reactions"
+VERIFICATION_DIR = ROOT / "docs" / "verification"
 PANEL_PATH = ROOT / "data" / "processed" / "panel" / "monthly_panel.csv"
 LEGACY_REGIME_PATH = ROOT / "data" / "processed" / "regimes" / "regime_monthly.csv"
 P56_REGIME_PATH = REACT_DIR / "phase5_6_train_only_regime_monthly.csv"
@@ -353,6 +354,7 @@ def build_reproduction_log(hashes_before: dict[str, str], hashes_after: dict[str
 
 
 def main() -> None:
+    VERIFICATION_DIR.mkdir(parents=True, exist_ok=True)
     protected_files = [
         ORIG_REPORT_MD,
         OLS_CSV,
@@ -388,7 +390,7 @@ def main() -> None:
     # 1) 금리 인상 11건 사건별 포착 기록 생성
     hike_df = build_rate_hike_table(df_leg, df_p56)
     hike_csv_react = REACT_DIR / "verification_rate_hike_event_table.csv"
-    hike_csv_root = ROOT / "verification_rate_hike_event_table.csv"
+    hike_csv_root = VERIFICATION_DIR / "verification_rate_hike_event_table.csv"
     hike_df.to_csv(hike_csv_react, index=False, encoding="utf-8-sig")
     shutil.copy2(hike_csv_react, hike_csv_root)
 
@@ -428,14 +430,14 @@ def main() -> None:
         "| **정책 전환점 초기 인상 합계 (초기 3건 + 2026-07 1건)** | 4건 | 0건 | 4건 | **0.00%** | 직전 인상의 잔류 뉴스가 없는 순수 정책 변곡점에서는 사전 포착력 0% |",
     ])
     hike_md_react = REACT_DIR / "verification_rate_hike_event_table.md"
-    hike_md_root = ROOT / "verification_rate_hike_event_table.md"
+    hike_md_root = VERIFICATION_DIR / "verification_rate_hike_event_table.md"
     hike_md_react.write_text("\n".join(hike_md_lines) + "\n", encoding="utf-8")
     shutil.copy2(hike_md_react, hike_md_root)
 
     # 2) 감사 로그 CSV 생성
     audit_df = build_audit_log()
     audit_csv_react = REACT_DIR / "verification_final_audit_log.csv"
-    audit_csv_root = ROOT / "verification_final_audit_log.csv"
+    audit_csv_root = VERIFICATION_DIR / "verification_final_audit_log.csv"
     audit_df.to_csv(audit_csv_react, index=False, encoding="utf-8-sig")
     shutil.copy2(audit_csv_react, audit_csv_root)
 
@@ -445,7 +447,7 @@ def main() -> None:
 
     rep_df = build_reproduction_log(hashes_before, hashes_after)
     rep_csv_react = REACT_DIR / "verification_reproduction_log.csv"
-    rep_csv_root = ROOT / "verification_reproduction_log.csv"
+    rep_csv_root = VERIFICATION_DIR / "verification_reproduction_log.csv"
     rep_df.to_csv(rep_csv_react, index=False, encoding="utf-8-sig")
     shutil.copy2(rep_csv_react, rep_csv_root)
 
@@ -485,7 +487,7 @@ def main() -> None:
         )
 
     rep_md_react = REACT_DIR / "verification_reproduction_log.md"
-    rep_md_root = ROOT / "verification_reproduction_log.md"
+    rep_md_root = VERIFICATION_DIR / "verification_reproduction_log.md"
     rep_md_react.write_text("\n".join(rep_md_lines) + "\n", encoding="utf-8")
     shutil.copy2(rep_md_react, rep_md_root)
 

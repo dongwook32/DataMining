@@ -7,15 +7,14 @@ JKIICE 최종 논문 원고(docs/PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.md)를 
    - docs/PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.docx
    - docs/PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx (원문파일)
    - docs/PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx (심사용 블라인드본)
-   - docs/PAPER_DRAFT_JKIICE.docx (기본 파일명 동기화)
 3) JKIICE 학술지 스타일 PDF 파일 2종 (.pdf) 생성:
    - docs/PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.pdf
    - docs/PAPER_DRAFT_JKIICE.pdf (기본 파일명 동기화)
 
 주의: A-6.1의 protected_hashes_after.csv 검증 대상인
-      `docs/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md`,
-      `docs/PAPER_DRAFT_JKIICE_A4_20261106.md`,
-      `docs/PAPER_DRAFT_JKIICE_DRAFT_REVISION_20261107.md` 등은 절대 건드리지 않으며,
+      `docs/drafts/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md`,
+      `docs/drafts/PAPER_DRAFT_JKIICE_A4_20261106.md`,
+      `docs/drafts/PAPER_DRAFT_JKIICE_DRAFT_REVISION_20261107.md` 등은 절대 건드리지 않으며,
       `PAPER_DRAFT_JKIICE.md`는 사용자 요청에 따라 최신 최종본으로 업데이트한다.
 """
 
@@ -791,11 +790,9 @@ def main():
     out_docx_final = DOCS / "PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.docx"
     out_docx_sub = DOCS / "PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx"
     out_docx_blind = DOCS / "PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx"
-    out_docx_legacy = DOCS / "PAPER_DRAFT_JKIICE.docx"
 
     build_docx_from_final_md(blocks, out_docx_final, blind_mode=False)
     shutil.copy2(out_docx_final, out_docx_sub)
-    shutil.copy2(out_docx_final, out_docx_legacy)
     build_docx_from_final_md(blocks, out_docx_blind, blind_mode=True)
 
     # 3. PDF (.pdf) 최신화 빌드

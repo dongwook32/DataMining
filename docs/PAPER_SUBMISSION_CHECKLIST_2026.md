@@ -1,3 +1,5 @@
+> 학회 양식은 [원본 ZIP](../scratch/kiice_template_2026/template_2026.zip)에 보관되어 있습니다. 필요한 파일을 압축 해제해 사용하세요.
+
 # 한국정보통신학회논문지(JKIICE) 2026년 국문지 최종 투고 점검표 (Submission Checklist)
 
 - **문서 작성일**: 2026-11-02
@@ -20,7 +22,7 @@
 | **2026 학회 양식 반영** | 제1면 레이아웃, 서론 앞 쪽 나눔(Page Break), 장·절 번호(`Ⅰ~Ⅴ`), 영문 표 캡션(`Table 1~4`), 수식 번호 `(1)~(3)` | **완료** | 에이전트 | `.docx` 2종(원문/심사용) 생성 완료 |
 | **참고문헌 및 DOI 검증** | `REFERENCES` `[1]~[16]` 영문 서지사항 통일 및 해외 학술지 10편 Crossref DOI 실재성 검증 | **완료** | 에이전트 | 학회 최소 기준(7편 이상) 충족 (총 16편) |
 | **저자 실명·약력 기입** | 원문파일 내 ① 국문 저자명, ② 영문 저자명·직위·소속, ③ 교신저자 연락처, ⑤ 저자 사진·학력·약력 기입 | **사용자 입력 필요** | **사용자** | 심사용 블라인드 파일에는 기입하지 않음 |
-| **필수 부속 서류 서명** | 저작권이양동의서(`file_2.hwp`) 및 이해관계명시서(`file_1.hwp`) 작성·자필 서명(또는 날인) 스캔 | **사용자 수행 필요** | **사용자** | [`scratch/kiice_template_2026/`](file:///c:/Users/CDW/1_Project/DataMining/scratch/kiice_template_2026/)에 원본 보관됨 |
+| **필수 부속 서류 서명** | 저작권이양동의서(`Copyright Transfer Agreement(JKIICE).hwp`) 및 이해관계명시서(`Conflict of Interest Form(JKIICE).hwp`) 작성·자필 서명(또는 날인) 스캔 | **사용자 수행 필요** | **사용자** | [`scratch/kiice_template_2026/`](file:///c:/Users/CDW/1_Project/DataMining/scratch/kiice_template_2026/)에 원본 보관됨 |
 | **학회 회원가입 확인** | 투고 논문 모든 저자의 한국정보통신학회 회원가입 및 입회비·연회비 납부 상태 확인 | **사용자 확인 필요** | **사용자** | 학회 규정상 전 저자 회원 자격 필수 |
 | **온라인 투고 및 심사료** | DBpiaONE 투고시스템 별도 회원가입, 원문/심사용 파일 업로드, 심사료(일반 4만원/긴급 8만원) 납부 | **사용자 수행 필요** | **사용자** | 에이전트는 외부 시스템 제출·결제 미수행 |
 
@@ -28,7 +30,7 @@
 
 ## 2. 2026년 한국정보통신학회(JKIICE) 국문지 양식 적용 점검표
 
-공식 배포 파일 `[일반] 한국정보통신학회논문편집양식_2026.hwp`(`scratch/kiice_template_2026/file_4.hwp`) 및 `★★★심사용 파일 편집양식★★★ 반드시 확인.pdf`(`scratch/kiice_template_2026/file_5.pdf`)의 편집 규정을 기준으로 점검한 결과입니다.
+공식 배포 파일 `[일반] 한국정보통신학회논문편집양식_2026.hwp`(ZIP 안의 일반 논문편집양식) 및 `★★★심사용 파일 편집양식★★★ 반드시 확인.pdf`(ZIP 안의 심사용 파일 편집양식 PDF)의 편집 규정을 기준으로 점검한 결과입니다.
 
 | 점검 항목 | 학회 공식 양식 기준 (2026년) | 최종 제출본 적용 상태 | 판정 |
 | :--- | :--- | :--- | :---: |
@@ -59,9 +61,9 @@
 
 ## 3. 제출 파일 구성 및 블라인드(심사용) 파일 점검표
 
-학회 공지 문서 `★★★심사용 파일 편집양식★★★ 반드시 확인.pdf`(`scratch/kiice_template_2026/file_5.pdf`)에 따르면 온라인 투고 시 **원문파일**과 **심사용 파일** 2종을 각각 업로드해야 하며, 심사용 파일에서는 붉은색 네모 박스로 표시된 **① ~ ⑤ 항목을 반드시 삭제**해야 합니다.
+학회 공지 문서 `★★★심사용 파일 편집양식★★★ 반드시 확인.pdf`(ZIP 안의 심사용 파일 편집양식 PDF)에 따르면 온라인 투고 시 **원문파일**과 **심사용 파일** 2종을 각각 업로드해야 하며, 심사용 파일에서는 붉은색 네모 박스로 표시된 **① ~ ⑤ 항목을 반드시 삭제**해야 합니다.
 
-| 번호 | 삭제 대상 항목 (`file_5.pdf` 기준) | 원문파일 (`PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx`) | 심사용 파일 (`PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx`) | 점검 결과 |
+| 번호 | 삭제 대상 항목 (심사용 파일 편집양식 PDF 기준) | 원문파일 (`PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx`) | 심사용 파일 (`PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx`) | 점검 결과 |
 | :---: | :--- | :--- | :--- | :---: |
 | **①** | **국문 저자명** (제1면 국문 제목 아래) | 포함 (`홍길동¹ · 홍동순²*` 입력란) | **완전 삭제** | 완료 |
 | **②** | **영문 저자명 및 소속·직위** (제1면 영문 제목 아래) | 포함 (`Kil-Dong Hong¹...` 및 소속·직위 입력란) | **완전 삭제** | 완료 |
@@ -70,7 +72,7 @@
 | **⑤** | **저자 약력 및 사진** (참고문헌 뒤 증명사진·성명·학력·관심분야 표) | 포함 (제1저자·교신저자 2인 기준 표준 약력 표 수록) | **완전 삭제** | 완료 |
 
 > **참고 (HWP 파일 변환이 필요한 경우)**:
-> DBpiaONE 투고 시스템에서 아래아한글(`.hwp` 또는 `.hwpx`) 포맷 업로드를 선호할 경우, 한글(Hancom Office HWP) 프로그램에서 [`PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx`](file:///c:/Users/CDW/1_Project/DataMining/docs/PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx) 및 [`PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx`](file:///c:/Users/CDW/1_Project/DataMining/docs/PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx)를 열어 `[다른 이름으로 저장] -> 한글 문서 (*.hwp)`로 즉시 저장하거나, [`scratch/kiice_template_2026/file_4.hwp`](file:///c:/Users/CDW/1_Project/DataMining/scratch/kiice_template_2026/file_4.hwp) 원본에 텍스트와 표를 붙여넣어 사용할 수 있습니다.
+> DBpiaONE 투고 시스템에서 아래아한글(`.hwp` 또는 `.hwpx`) 포맷 업로드를 선호할 경우, 한글(Hancom Office HWP) 프로그램에서 [`PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx`](file:///c:/Users/CDW/1_Project/DataMining/docs/PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx) 및 [`PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx`](file:///c:/Users/CDW/1_Project/DataMining/docs/PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx)를 열어 `[다른 이름으로 저장] -> 한글 문서 (*.hwp)`로 즉시 저장하거나, [학회 양식 ZIP](../scratch/kiice_template_2026/template_2026.zip) 원본에 텍스트와 표를 붙여넣어 사용할 수 있습니다.
 
 ---
 
@@ -116,8 +118,8 @@
 
 ### 단계 2. 부속 제출 서류 2종 작성 및 서명
 [`scratch/kiice_template_2026/`](file:///c:/Users/CDW/1_Project/DataMining/scratch/kiice_template_2026/) 폴더에 다운로드된 학회 공식 양식 2종을 작성하여 서명 후 스캔(PDF/이미지)합니다:
-1. **저작권이양동의서**: [`scratch/kiice_template_2026/file_2.hwp`](file:///c:/Users/CDW/1_Project/DataMining/scratch/kiice_template_2026/file_2.hwp) (`Copyright Transfer Agreement(JKIICE).hwp`) — 논문 제목 기입 및 저자 서명
-2. **이해관계명시서**: [`scratch/kiice_template_2026/file_1.hwp`](file:///c:/Users/CDW/1_Project/DataMining/scratch/kiice_template_2026/file_1.hwp) (`Conflict of Interest Form(JKIICE).hwp`) — 이해상충 여부 체크 및 교신저자 서명
+1. **저작권이양동의서**: [학회 양식 ZIP](../scratch/kiice_template_2026/template_2026.zip) (`Copyright Transfer Agreement(JKIICE).hwp`) — 논문 제목 기입 및 저자 서명
+2. **이해관계명시서**: [학회 양식 ZIP](../scratch/kiice_template_2026/template_2026.zip) (`Conflict of Interest Form(JKIICE).hwp`) — 이해상충 여부 체크 및 교신저자 서명
 
 ### 단계 3. 학회 회원가입 및 DBpiaONE 투고시스템 등록
 1. **한국정보통신학회 회원 자격 확인**: 게재 논문의 **모든 저자**는 한국정보통신학회(`https://kiice.org`) 회원이어야 하며, 입회비 및 연회비가 납부되어 있어야 합니다.

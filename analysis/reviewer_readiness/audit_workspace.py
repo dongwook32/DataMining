@@ -41,15 +41,15 @@ def main() -> None:
     tracked_files = [
         # 논문 및 감사 보고서
         ("manuscript_baseline", "docs/PAPER_DRAFT_JKIICE.md"),
-        ("manuscript_pre_study_c_backup", "docs/PAPER_DRAFT_JKIICE_pre_study_c_removal_20261102.md"),
-        ("manuscript_pre_final_backup", "docs/PAPER_DRAFT_JKIICE_pre_final_correction_20261101.md"),
-        ("manuscript_pre_supp_backup", "docs/PAPER_DRAFT_JKIICE_pre_supplemental_20261101.md"),
+        ("manuscript_pre_study_c_backup", "docs/drafts/PAPER_DRAFT_JKIICE_pre_study_c_removal_20261102.md"),
+        ("manuscript_pre_final_backup", "docs/drafts/PAPER_DRAFT_JKIICE_pre_final_correction_20261101.md"),
+        ("manuscript_pre_supp_backup", "docs/drafts/PAPER_DRAFT_JKIICE_pre_supplemental_20261101.md"),
         ("audit_reconciliation", "docs/PAPER_RESULT_RECONCILIATION_20261101.md"),
         ("audit_final_correction", "docs/PAPER_FINAL_CORRECTION_AUDIT_20261101.md"),
         ("audit_human_removal", "docs/PAPER_HUMAN_VALIDATION_REMOVAL_AUDIT_20261102.md"),
         ("audit_statistical", "docs/PAPER_FINAL_STATISTICAL_AUDIT_20261101.md"),
         ("final_research_results", "docs/FINAL_RESEARCH_RESULTS.md"),
-        ("verification_three_final", "verification_three_analyses_final.md"),
+        ("verification_three_final", "docs/verification/verification_three_analyses_final.md"),
         # Phase 5.6 핵심 아티팩트
         ("phase5_6_core_meta", "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/core_meta.json"),
         ("phase5_6_vocab_idf", "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/vocab_idf.csv"),

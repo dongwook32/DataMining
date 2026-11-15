@@ -4,4 +4,4 @@
 - [심사 대응 종합 보고서](../REVIEWER_READINESS_MASTER_REPORT.md)
 - [표본 외 검증 범위 감사](../STRICT_OOS_SCOPE_AUDIT.md)
 
-검증 파일은 생성 코드와 감사 기록의 경로를 유지합니다.
+검증 보고서와 표를 이 폴더에 모았습니다. 과거 감사 기록의 경로는 당시 상태를 나타냅니다.
