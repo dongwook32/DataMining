@@ -3,7 +3,7 @@ Study A-6.1: JKIICE Final Draft Correction and Statistical Expression Refinement
 ================================================================================
 Input  : docs/drafts/PAPER_DRAFT_JKIICE_DRAFT_REVISION_20261107.md (read-only)
 Output : docs/PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.md
-         docs/A6_1_FINAL_CORRECTION_LOG_20261107.md
+         docs/verification/A6_1_FINAL_CORRECTION_LOG_20261107.md
          data/processed/reviewer_readiness/RUN_20261107_A6_1_FINAL_CORRECTION_01/
              protected_hashes_before.csv, protected_hashes_after.csv, a6_1_checks.json
 """
@@ -22,19 +22,19 @@ DOCS = ROOT / "docs"
 RR = ROOT / "data" / "processed" / "reviewer_readiness"
 SRC = DOCS / "drafts" / "PAPER_DRAFT_JKIICE_DRAFT_REVISION_20261107.md"
 OUT = DOCS / "PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.md"
-LOG_OUT = DOCS / "A6_1_FINAL_CORRECTION_LOG_20261107.md"
+LOG_OUT = DOCS / "verification" / "A6_1_FINAL_CORRECTION_LOG_20261107.md"
 RUN_DIR = RR / "RUN_20261107_A6_1_FINAL_CORRECTION_01"
 
 PROTECTED = [
     DOCS / "PAPER_DRAFT_JKIICE.md",
     DOCS / "drafts" / "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
     DOCS / "drafts" / "PAPER_DRAFT_JKIICE_A4_20261106.md",
-    DOCS / "A4_CHANGELOG_20261106.md",
-    DOCS / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv",
-    DOCS / "A4_FINAL_QC_20261106.md",
+    DOCS / "verification" / "A4_CHANGELOG_20261106.md",
+    DOCS / "verification" / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv",
+    DOCS / "verification" / "A4_FINAL_QC_20261106.md",
     SRC,
-    DOCS / "A6_DRAFT_CHANGELOG_20261107.md",
-    DOCS / "A6_DRAFT_QC_20261107.md",
+    DOCS / "verification" / "A6_DRAFT_CHANGELOG_20261107.md",
+    DOCS / "verification" / "A6_DRAFT_QC_20261107.md",
 ]
 for d in [
     "RUN_20261106_NMF_CONVERGENCE_01",

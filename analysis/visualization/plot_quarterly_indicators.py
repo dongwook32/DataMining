@@ -27,7 +27,7 @@ from config import project_root
 ROOT = project_root()
 PANEL_PATH = ROOT / "data" / "processed" / "panel" / "monthly_panel.csv"
 REGIME_PATH = ROOT / "data" / "processed" / "regimes" / "regime_monthly.csv"
-EXCEL_PATH = ROOT / "data" / "processed" / "ecos_regime_dual_axis_charts.xlsx"
+EXCEL_PATH = ROOT / "data" / "processed" / "exports" / "ecos_regime_dual_axis_charts.xlsx"
 FIG_DIR = ROOT / "docs" / "figures"
 
 REGIME_COLORS = [

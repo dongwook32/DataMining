@@ -3,9 +3,9 @@ Study A-4: Final Revision Generator and Verification Pipeline
 =============================================================
 This script builds:
   1. docs/drafts/PAPER_DRAFT_JKIICE_A4_20261106.md
-  2. docs/A4_CHANGELOG_20261106.md
-  3. docs/A4_CLAIM_EVIDENCE_MATRIX_20261106.csv
-  4. docs/A4_FINAL_QC_20261106.md
+  2. docs/verification/A4_CHANGELOG_20261106.md
+  3. docs/verification/A4_CLAIM_EVIDENCE_MATRIX_20261106.csv
+  4. docs/verification/A4_FINAL_QC_20261106.md
 and verifies SHA-256 integrity of all 26 protected files.
 """
 
@@ -485,9 +485,9 @@ def build_final_qc_report(n_prot: int, n_mod: int, t_sec: float) -> str:
 ## 1. 4대 최종 산출물 완비 확인
 
 1. **최종 개정 논문 본문**: `docs/drafts/PAPER_DRAFT_JKIICE_A4_20261106.md` (**생성 완료**)
-2. **상세 변경 내역서**: `docs/A4_CHANGELOG_20261106.md` (**생성 완료**)
-3. **주장-근거 매트릭스**: `docs/A4_CLAIM_EVIDENCE_MATRIX_20261106.csv` (**생성 완료, 20개 핵심 주장**)
-4. **최종 품질 검수 보고서**: `docs/A4_FINAL_QC_20261106.md` (**본 보고서, PASS**)
+2. **상세 변경 내역서**: `docs/verification/A4_CHANGELOG_20261106.md` (**생성 완료**)
+3. **주장-근거 매트릭스**: `docs/verification/A4_CLAIM_EVIDENCE_MATRIX_20261106.csv` (**생성 완료, 20개 핵심 주장**)
+4. **최종 품질 검수 보고서**: `docs/verification/A4_FINAL_QC_20261106.md` (**본 보고서, PASS**)
 
 ---
 
@@ -576,16 +576,16 @@ def main() -> None:
     print(f"  Generated {out_paper_path.name} ({len(full_paper_text):,} chars, {len(full_paper_text.splitlines())} lines)", flush=True)
 
     # 3. 변경 내역서 생성
-    print("\n[Step 2] Building Detailed Changelog (docs/A4_CHANGELOG_20261106.md)...", flush=True)
+    print("\n[Step 2] Building Detailed Changelog (docs/verification/A4_CHANGELOG_20261106.md)...", flush=True)
     changelog_text = build_changelog()
-    out_changelog_path = DOCS_DIR / "A4_CHANGELOG_20261106.md"
+    out_changelog_path = DOCS_DIR / "verification" / "A4_CHANGELOG_20261106.md"
     out_changelog_path.write_text(changelog_text, encoding="utf-8")
     print(f"  Generated {out_changelog_path.name} ({len(changelog_text):,} chars)", flush=True)
 
     # 4. 주장-근거 매트릭스 CSV 생성
-    print("\n[Step 3] Building Claim-Evidence Matrix (docs/A4_CLAIM_EVIDENCE_MATRIX_20261106.csv)...", flush=True)
+    print("\n[Step 3] Building Claim-Evidence Matrix (docs/verification/A4_CLAIM_EVIDENCE_MATRIX_20261106.csv)...", flush=True)
     df_claim = build_claim_evidence_matrix()
-    out_claim_path = DOCS_DIR / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv"
+    out_claim_path = DOCS_DIR / "verification" / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv"
     df_claim.to_csv(out_claim_path, index=False, encoding="utf-8-sig")
     print(f"  Generated {out_claim_path.name} ({len(df_claim)} claims)", flush=True)
 
@@ -596,10 +596,10 @@ def main() -> None:
     print(f"  Post-execution integrity check PASSED: protected_files_modified = {mod_after}", flush=True)
 
     # 6. 최종 QC 보고서 생성
-    print("\n[Step 5] Building Final QC Report (docs/A4_FINAL_QC_20261106.md)...", flush=True)
+    print("\n[Step 5] Building Final QC Report (docs/verification/A4_FINAL_QC_20261106.md)...", flush=True)
     t_sec = time.time() - t0
     qc_text = build_final_qc_report(n_prot, mod_after, t_sec)
-    out_qc_path = DOCS_DIR / "A4_FINAL_QC_20261106.md"
+    out_qc_path = DOCS_DIR / "verification" / "A4_FINAL_QC_20261106.md"
     out_qc_path.write_text(qc_text, encoding="utf-8")
     print(f"  Generated {out_qc_path.name} ({len(qc_text):,} chars)", flush=True)
 

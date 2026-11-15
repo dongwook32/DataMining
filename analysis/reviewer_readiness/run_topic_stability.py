@@ -562,7 +562,7 @@ def main() -> None:
 
     rep_text = "\n".join(rep_md)
     (OUT_DIR / "topic_stability_report.md").write_text(rep_text, encoding="utf-8")
-    (DOCS_DIR / "TOPIC_STABILITY_REPORT.md").write_text(rep_text, encoding="utf-8")
+    (DOCS_DIR / "reports" / "TOPIC_STABILITY_REPORT.md").write_text(rep_text, encoding="utf-8")
     print("[Study B] Completed NMF topic & regime mapping stability verification!", flush=True)
 
 

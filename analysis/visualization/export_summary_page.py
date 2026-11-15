@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 from config import project_root
 
 ROOT = project_root()
-EXCEL_PATH = ROOT / "data" / "processed" / "ecos_regime_dual_axis_charts.xlsx"
+EXCEL_PATH = ROOT / "data" / "processed" / "exports" / "ecos_regime_dual_axis_charts.xlsx"
 FIG_PATH = ROOT / "docs" / "figures" / "fig_lead_lag_evidence.png"
 
 

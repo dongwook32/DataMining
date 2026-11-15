@@ -30,7 +30,8 @@ ECOS·데이터랩은 차분·시차용 lead-in을 위해 2016-01부터 받아 �
 ## 폴더 구조
 
 ```text
-analysis/          # 본분석 스크립트
+analysis/          # 본분석 스크립트 (`analysis/README.md` 참조)
+  visualization/   # 그래프·엑셀 생성
 api/               # ECOS·네이버 API 클라이언트, 수집기
 preprocess/        # 빅카인즈 → 통합 코퍼스, 키워드 마이닝
 crawler/           # 수집 유틸 (빅카인즈는 수동 다운로드)
@@ -41,6 +42,7 @@ data/
     ecos/          # ECOS 지표
     datalab/       # 네이버 데이터랩
   processed/
+    exports/       # 엑셀 시각화 결과물
     corpus/        # 통합 뉴스 코퍼스 + 키워드 마이닝 + 문서-어휘 행렬
     panel/         # 지표·검색·뉴스량 월 패널 (분석 입력)
     regimes/       # 월별 국면 시계열 (NMF 본분석)
@@ -49,7 +51,7 @@ data/
     reactions_lda/ # 폴백 반응 재추정
     regimes_bertopic/   # BERTopic 비교 국면 (표본, NMF 유지)
     reactions_bertopic/ # BERTopic 비교 반응
-docs/              # 계획서 · 용어 · 함수 · 파이프라인 · 결과 색인 · 브리핑 PDF
+docs/              # 논문·보고서 (drafts/ 초안, reports/ 연구, verification/ 검증)
 ```
 
 ## 환경 설정

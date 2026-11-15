@@ -19,7 +19,7 @@ from config import project_root
 
 ROOT = project_root()
 PANEL_PATH = ROOT / "data" / "processed" / "panel" / "monthly_panel.csv"
-OUT_EXCEL_PATH = ROOT / "data" / "processed" / "ecos_5_indicators_charts.xlsx"
+OUT_EXCEL_PATH = ROOT / "data" / "processed" / "exports" / "ecos_5_indicators_charts.xlsx"
 
 
 def create_excel_with_charts():

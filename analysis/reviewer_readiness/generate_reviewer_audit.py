@@ -9,7 +9,7 @@
    - `data/processed/reviewer_readiness/RUN_20261106_161800/reviewer_response_evidence_matrix.csv`
    - `data/processed/reviewer_readiness/RUN_20261106_161800/reviewer_attack_test.md`
    - `data/processed/reviewer_readiness/RUN_20261106_161800/anticipated_reviewer_comments.md`
-   - `docs/REVIEWER_ATTACK_TEST.md`
+   - `docs/reports/REVIEWER_ATTACK_TEST.md`
 """
 
 from __future__ import annotations
@@ -224,7 +224,7 @@ def main() -> None:
     qa_df = pd.DataFrame(qa_rows)
     qa_df.to_csv(OUT_DIR / "reviewer_response_evidence_matrix.csv", index=False, encoding="utf-8-sig")
 
-    # `reviewer_attack_test.md` 및 `docs/REVIEWER_ATTACK_TEST.md` 생성
+    # `reviewer_attack_test.md` 및 `docs/reports/REVIEWER_ATTACK_TEST.md` 생성
     attack_md = [
         "# 연구 G: JKIICE 심사자 관점의 논문 공격 테스트 (Reviewer Attack Test Report)",
         "",
@@ -265,7 +265,7 @@ def main() -> None:
 
     attack_text = "\n".join(attack_md)
     (OUT_DIR / "reviewer_attack_test.md").write_text(attack_text, encoding="utf-8")
-    (DOCS_DIR / "REVIEWER_ATTACK_TEST.md").write_text(attack_text, encoding="utf-8")
+    (DOCS_DIR / "reports" / "REVIEWER_ATTACK_TEST.md").write_text(attack_text, encoding="utf-8")
 
     # 상세 문답서 (`anticipated_reviewer_comments.md`) 작성
     comments_md = [

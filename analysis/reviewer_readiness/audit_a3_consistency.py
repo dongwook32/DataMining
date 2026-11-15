@@ -49,7 +49,7 @@ PROTECTED_FILES = [
     # 문서
     "docs/PAPER_DRAFT_JKIICE.md",
     "docs/drafts/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
-    "docs/REVIEWER_READINESS_MASTER_REPORT.md",
+    "docs/reports/REVIEWER_READINESS_MASTER_REPORT.md",
     # Phase 5.6 아티팩트
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/core_meta.json",
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/models.joblib",

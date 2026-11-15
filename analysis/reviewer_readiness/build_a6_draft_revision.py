@@ -27,9 +27,9 @@ RUN_DIR = RR / "RUN_20261107_A6_DRAFT_REVISION_01"
 
 PROTECTED = [
     SRC,
-    DOCS / "A4_CHANGELOG_20261106.md",
-    DOCS / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv",
-    DOCS / "A4_FINAL_QC_20261106.md",
+    DOCS / "verification" / "A4_CHANGELOG_20261106.md",
+    DOCS / "verification" / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv",
+    DOCS / "verification" / "A4_FINAL_QC_20261106.md",
     DOCS / "PAPER_DRAFT_JKIICE.md",
     DOCS / "drafts" / "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
 ]

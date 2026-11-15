@@ -908,7 +908,7 @@ def main() -> None:
     full_report = "\n".join(md_lines + gap_section)
     (OUT_DIR / "literature_review_2019_2026.md").write_text(full_report, encoding="utf-8")
     (OUT_DIR / "research_gap_and_contribution.md").write_text("\n".join(gap_section), encoding="utf-8")
-    (DOCS_DIR / "LITERATURE_RESEARCH_GAP_REPORT.md").write_text(full_report, encoding="utf-8")
+    (DOCS_DIR / "reports" / "LITERATURE_RESEARCH_GAP_REPORT.md").write_text(full_report, encoding="utf-8")
     print("[Study F] Completed Literature Review and Gap Analysis!", flush=True)
 
 

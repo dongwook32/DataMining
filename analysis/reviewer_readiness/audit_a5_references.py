@@ -28,9 +28,9 @@ RUN_DIR = PROJECT_ROOT / "data" / "processed" / "reviewer_readiness" / "RUN_2026
 
 PROTECTED_PATHS = [
     DOCS_DIR / "drafts" / "PAPER_DRAFT_JKIICE_A4_20261106.md",
-    DOCS_DIR / "A4_CHANGELOG_20261106.md",
-    DOCS_DIR / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv",
-    DOCS_DIR / "A4_FINAL_QC_20261106.md",
+    DOCS_DIR / "verification" / "A4_CHANGELOG_20261106.md",
+    DOCS_DIR / "verification" / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv",
+    DOCS_DIR / "verification" / "A4_FINAL_QC_20261106.md",
     DOCS_DIR / "PAPER_DRAFT_JKIICE.md",
     DOCS_DIR / "drafts" / "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
     PROJECT_ROOT / "data" / "processed" / "supplemental_validation" / "news_search_weekly_panel.csv",

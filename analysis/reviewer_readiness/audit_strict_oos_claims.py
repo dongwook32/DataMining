@@ -8,7 +8,7 @@
 2. 시장·거시 지표 분석 및 뉴스-검색 교차 검증의 표본 범위 구분 감사:
    - 67개월 전체 표본 OLS/시차 상관 vs 학습(48m)/테스트(19m) 분리 평가 vs 조기경보(65m/17m) vs 주별 검색(208주/82주/291주)
 3. 논문 핵심 주장-근거 추적표(`strict_oos_claim_matrix.csv`) 및 데이터 누수 감사표(`strict_oos_data_leakage_audit.csv`) 생성
-4. `strict_oos_scope_report.md` 및 `docs/STRICT_OOS_SCOPE_AUDIT.md` 생성
+4. `strict_oos_scope_report.md` 및 `docs/verification/STRICT_OOS_SCOPE_AUDIT.md` 생성
 """
 
 from __future__ import annotations
@@ -271,7 +271,7 @@ def main() -> None:
     claim_df = pd.DataFrame(claim_rows)
     claim_df.to_csv(OUT_DIR / "strict_oos_claim_matrix.csv", index=False, encoding="utf-8-sig")
 
-    # 3. 보고서 생성 (`strict_oos_scope_report.md` 및 `docs/STRICT_OOS_SCOPE_AUDIT.md`)
+    # 3. 보고서 생성 (`strict_oos_scope_report.md` 및 `docs/verification/STRICT_OOS_SCOPE_AUDIT.md`)
     md = [
         "# 연구 E: Strict OOS 검증 범위 독립 감사 및 주장-근거 추적 보고서",
         "",
@@ -325,7 +325,7 @@ def main() -> None:
 
     report_text = "\n".join(md)
     (OUT_DIR / "strict_oos_scope_report.md").write_text(report_text, encoding="utf-8")
-    (DOCS_DIR / "STRICT_OOS_SCOPE_AUDIT.md").write_text(report_text, encoding="utf-8")
+    (DOCS_DIR / "verification" / "STRICT_OOS_SCOPE_AUDIT.md").write_text(report_text, encoding="utf-8")
     print("[Study E] Completed Strict OOS scope audit and claim matrix!", flush=True)
 
 
