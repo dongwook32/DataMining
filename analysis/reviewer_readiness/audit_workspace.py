@@ -49,7 +49,7 @@ def main() -> None:
         ("audit_human_removal", "docs/PAPER_HUMAN_VALIDATION_REMOVAL_AUDIT_20261102.md"),
         ("audit_statistical", "docs/PAPER_FINAL_STATISTICAL_AUDIT_20261101.md"),
         ("final_research_results", "docs/FINAL_RESEARCH_RESULTS.md"),
-        ("verification_three_final", "verification_three_analyses_final.md"),
+        ("verification_three_final", "docs/validation/verification_three_analyses_final.md"),
         # Phase 5.6 핵심 아티팩트
         ("phase5_6_core_meta", "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/core_meta.json"),
         ("phase5_6_vocab_idf", "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/vocab_idf.csv"),

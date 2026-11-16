@@ -17,6 +17,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from .paths import ROOT, SUMMARY
+
 import warnings
 warnings.filterwarnings("ignore")
 import logging
@@ -107,7 +109,7 @@ def fit_hac_ols_pure_numpy(y, X, q=3):
 
 def load_research_data():
     """폴더 내 데이터 자동 탐색"""
-    cwd = Path(".").resolve()
+    cwd = ROOT
     search_paths = [cwd, cwd / "data", cwd.parent / "data"]
     
     for base in search_paths:
@@ -117,7 +119,8 @@ def load_research_data():
                 print(f"[데이터 로드 완료] 통합 데이터셋 발견: {target.name}")
                 return pd.read_csv(target, dtype={"month": str}).sort_values("month").reset_index(drop=True)
 
-    csv_files = list(cwd.glob("*.csv")) + list(cwd.glob("*/*.csv"))
+    csv_files = [ROOT / "data/processed/panel/monthly_panel.csv", ROOT / "data/processed/regimes/regime_monthly.csv"]
+    csv_files = [p for p in csv_files if p.is_file()]
     panel_file = next((f for f in csv_files if "panel" in f.name.lower() and "sub" not in f.name.lower()), None)
     regime_file = next((f for f in csv_files if "regime" in f.name.lower() and "monthly" in f.name.lower()), None)
 
@@ -303,7 +306,8 @@ def export_summary_artifacts(df, hike_res, warn_res, lead_lag_res, reg_res):
         {"카테고리": "4. HAC OLS 회귀분석", "지표명": "코스피 수익률 모형 F-통계량 (p-value)", "값": f"F = {reg_res['res_ret']['f_stat']:.3f} (p = {reg_res['res_ret']['f_pval']:.6f})"},
     ]
     sum_df = pd.DataFrame(summary_rows)
-    sum_df.to_csv("research_summary_table.csv", index=False, encoding="utf-8-sig")
+    SUMMARY.mkdir(parents=True, exist_ok=True)
+    sum_df.to_csv(SUMMARY / "research_summary_table.csv", index=False, encoding="utf-8-sig")
     print("  -> [생성 완료] 요약 표 파일: research_summary_table.csv")
 
     # 2. 고해상도 시각화 차트 이미지 생성 (matplotlib 설치 시)
@@ -365,7 +369,7 @@ def export_summary_artifacts(df, hike_res, warn_res, lead_lag_res, reg_res):
             ax4.set_xlabel("Regression Coefficient (Beta)")
 
             plt.tight_layout()
-            plt.savefig("research_summary_charts.png", dpi=300)
+            plt.savefig(SUMMARY / "research_summary_charts.png", dpi=300)
             plt.close()
             print("  -> [생성 완료] 핵심 시각화 차트: research_summary_charts.png (고해상도 300DPI)")
         except Exception as e:
@@ -373,6 +377,8 @@ def export_summary_artifacts(df, hike_res, warn_res, lead_lag_res, reg_res):
 
 
 def main():
+    SUMMARY.mkdir(parents=True, exist_ok=True)
+    print(f"Output directory: {SUMMARY}")
     print("========================================================================================")
     print("  [학술 논문 검증 시스템] 경제 이슈 국면 탐지 및 실증 분석 원클릭 재현")
     print("========================================================================================")
@@ -385,7 +391,7 @@ def main():
     verify_robustness(df)
     export_summary_artifacts(df, hike_res, warn_res, lead_lag_res, reg_res)
     print("=" * 80)
-    print("[검증 성공] 모든 실증 분석 수치가 논문 기재 수치와 100% 일치함을 확인했습니다.")
+    print("[실행 완료] 기존 8국면 분석을 재계산했습니다. 논문 수치와의 일치 여부는 별도 대조가 필요합니다.")
     print("  1) 화면: 모든 핵심 실증 수치 및 전수 검증표 출력 완료")
     print("  2) 파일: 'research_summary_table.csv' (요약 테이블) 생성 완료")
     print("  3) 파일: 'research_summary_charts.png' (4대 핵심 시각화 차트) 생성 완료\n")

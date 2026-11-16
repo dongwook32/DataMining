@@ -59,5 +59,9 @@ data/processed/panel/*
 # Optional local caches
 .cache/
 *.log
-!.cursor_progress.log
+!docs/history/cursor_progress.log
 .cursor_error.log
+
+# Local cleanup snapshots and disposable rendering files
+.backups/
+tmp/

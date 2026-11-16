@@ -1,0 +1,10 @@
+편집일: 2026-11-16
+산출물: 8페이지 PDF 및 수정용 Markdown 원고
+구성: 첫 면 국영문 초록, 이후 2단 본문; 표 8개; 그림 2개; 참고문헌 13개
+영문 초록: 공백 기준 148단어
+원고 기준: docs/PAPER_DRAFT_JKIICE_8PAGE_REVIEW.md 및 기존 상세 원고와 검증 기록
+공식 양식 안내: https://kiice.org/board/newsletter/article/271327
+추가 확인 문헌: https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11743310
+본문 수치: 기존 검증 산출물 유지; 신규 실험 및 전체 분석 재실행은 수행하지 않음
+저자명, 소속, 교신저자, 사사는 미제공되어 제외함. 게재일, 권호, DOI는 생성하지 않음.
+확인: PDF 8쪽, 표 1-8, 참고문헌 1-13, 핵심 수치 문자열 및 페이지 렌더링 점검

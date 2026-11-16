@@ -331,3 +331,5 @@
   - `datalab_detail_daily.xlsx` (~96k rows)
   - `datalab_detail_keywords.md`
 - Note: score comparable only within each regime sheet
+
+2026-11-16 Repository cleanup: unified run.py CLI, datamining presentation modules, relocated validation reports/templates/logs, output/summary routing, verified local backup and conflict-safe restore. Research data and model calculations preserved.

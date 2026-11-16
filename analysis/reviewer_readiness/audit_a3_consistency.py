@@ -668,7 +668,7 @@ def main() -> None:
     # =========================================================================
     print("\n[Step 3] Writing Comprehensive Consistency Audit Report...", flush=True)
 
-    report_md = f"""# 연구 A-3.1: 후속 실증분석 결과 일관성 최종 감사 보고서 (`{RUN_ID}`)
+    report_md = fr"""# 연구 A-3.1: 후속 실증분석 결과 일관성 최종 감사 보고서 (`{RUN_ID}`)
 
 - **감사 일시**: `{dt.datetime.now(dt.timezone(dt.timedelta(hours=9))).isoformat()}`
 - **감사 대상**: 
@@ -677,7 +677,7 @@ def main() -> None:
   - 기존 Phase 5.6 Strict OOS 아티팩트 및 논문 초안
 - **보호 조건 점검**: 총 `{len(df_hash_before)}`개 보호 대상 파일 SHA-256 사전 대조 완료 (`protected_files_modified = 0` 엄격 보장)
 - **산출물 디렉터리**: `{OUT_DIR}`
-
+""" + r"""
 ---
 
 ## 1. 감사 배경 및 핵심 결론

@@ -1,23 +1,36 @@
-import http.server
-import socketserver
-import os
-import sys
+"""Serve the dashboard locally without exposing the rest of the repository."""
+import argparse
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+import webbrowser
 
-PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8090
-WEB_DIR = os.path.dirname(os.path.abspath(__file__))
+WEB_DIR = Path(__file__).resolve().parent
 
-class QuietHandler(http.server.SimpleHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=WEB_DIR, **kwargs)
 
+class QuietHandler(SimpleHTTPRequestHandler):
     def end_headers(self):
-        self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+        self.send_header('Cache-Control', 'no-store')
         super().end_headers()
 
-if __name__ == "__main__":
-    socketserver.TCPServer.allow_reuse_address = True
-    with socketserver.TCPServer(("127.0.0.1", PORT), QuietHandler) as httpd:
-        print(f"Research Web Dashboard serving at http://localhost:{PORT}")
-        sys.stdout.flush()
-        httpd.serve_forever()
 
+def serve(port=8090, *, open_browser=False):
+    for relative in ('index.html', 'data/research_data.js', 'data/research_data.json'):
+        if not (WEB_DIR / relative).is_file():
+            raise FileNotFoundError(f'Missing dashboard file: {relative}. Run python run.py rebuild-web.')
+    handler = partial(QuietHandler, directory=str(WEB_DIR))
+    with ThreadingHTTPServer(('127.0.0.1', port), handler) as server:
+        url = f'http://127.0.0.1:{server.server_port}'
+        print(f'Research dashboard: {url}\nStop: Ctrl+C', flush=True)
+        if open_browser:
+            webbrowser.open(url)
+        server.serve_forever()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('port', nargs='?', type=int, default=8090)
+    try:
+        serve(parser.parse_args().port)
+    except KeyboardInterrupt:
+        pass

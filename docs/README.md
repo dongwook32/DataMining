@@ -8,7 +8,7 @@
 | **수치 인용** | [`results.md`](results.md) |
 | **그림·표 묶음** | [`한국형_경제이슈국면_연구결과보고서.pdf`](한국형_경제이슈국면_연구결과보고서.pdf) |
 | **터미널 실행 순서** | [`../README.md`](../README.md) |
-| **결정 기록** | [`../RESEARCH_LOG.md`](../RESEARCH_LOG.md) |
+| **결정 기록** | [`RESEARCH_LOG.md`](RESEARCH_LOG.md) |
 
 ## 보관 (옛 기록)
 

@@ -69,7 +69,7 @@
 ## 3. 작업 3~4 점검: JKIICE 2026 국문지 양식 적용 및 제출 파일 생성 결과
 
 1. **공식 양식 확보 및 분석**:
-   - `https://kiice.org/board/proceedings/article/271327` 공지에서 배포된 `한국정보통신학회_국문지양식2026.zip` 및 `국문지 게재료 산출표(2026).png`를 다운로드하여 [`scratch/kiice_template_2026/`](file:///c:/Users/CDW/1_Project/DataMining/scratch/kiice_template_2026/)에 보존하고, `[일반] 한국정보통신학회논문편집양식_2026.hwp`와 `★★★심사용 파일 편집양식★★★ 반드시 확인.pdf`의 세부 타이포그래피·블라인드 삭제 규정을 추출하였습니다.
+   - `https://kiice.org/board/proceedings/article/271327` 공지에서 배포된 `한국정보통신학회_국문지양식2026.zip` 및 `국문지 게재료 산출표(2026).png`를 다운로드하여 [`docs/templates/kiice_template_2026/`](file:///c:/Users/CDW/1_Project/DataMining/docs/templates/kiice_template_2026/)에 보존하고, `[일반] 한국정보통신학회논문편집양식_2026.hwp`와 `★★★심사용 파일 편집양식★★★ 반드시 확인.pdf`의 세부 타이포그래피·블라인드 삭제 규정을 추출하였습니다.
 2. **생성된 최종 제출용 Word 파일 검증**:
    - [`docs/PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx`](file:///c:/Users/CDW/1_Project/DataMining/docs/PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx): 제1면 학회 배너(`JKIICE`), 국·영문 제목, ① 국문 저자명, ② 영문 저자명·직위·소속, 국·영문 요약, 국문 키워드 및 알파벳순 영문 `Keywords :`, ③ 교신저자 각주, Open Access(`pISSN: 2234-4772`), 제1면 직후 Page Break, 본문 `Ⅰ. 서 론` ~ `Ⅴ. 결 론`, `Table 1` ~ `Table 4` 삼선표, 수식 `(1)` ~ `(3)`, 영문 `REFERENCES` `[1]~[16]`, ⑤ 저자 약력 및 사진 입력란까지 완비.
    - [`docs/PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx`](file:///c:/Users/CDW/1_Project/DataMining/docs/PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx): 학회 필수 지침(`file_5.pdf`)에 따라 ① 국문 저자명, ② 영문 저자명·소속, ③ 교신저자 각주, ④ 사사, ⑤ 저자 약력 표를 완전히 삭제한 블라인드 심사용 파일.

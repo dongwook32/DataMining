@@ -6,7 +6,58 @@
 **최종 실증 보고서 (핵심):** [`docs/FINAL_RESEARCH_RESULTS.md`](docs/FINAL_RESEARCH_RESULTS.md)  
 **쉬운 설명 (비전공자·발표):** [`docs/연구_쉬운_요약.md`](docs/연구_쉬운_요약.md)  
 **재실행·코드·용어:** [`docs/기술_참고.md`](docs/기술_참고.md) · **문서 목록:** [`docs/README.md`](docs/README.md)  
-수치 색인: [`docs/results.md`](docs/results.md) · 진행 일지: [`RESEARCH_LOG.md`](RESEARCH_LOG.md)
+수치 색인: [`docs/results.md`](docs/results.md) · 진행 일지: [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.md)
+
+## 바로 실행
+
+프로젝트 폴더의 PowerShell 또는 CMD에서:
+
+```powershell
+python run.py
+```
+
+저장된 연구 결과 대시보드를 브라우저로 엽니다. 종료는 터미널에서 `Ctrl+C`.
+기본 포트는 8090이며, 사용 중이면 `python run.py web --port 8091`로 실행합니다.
+기본 실행과 터미널 출력에는 Python 표준 라이브러리만 필요합니다.
+차트(Plotly)와 웹 폰트는 기존 CDN을 사용하므로 인터넷 연결이 필요합니다.
+
+| 명령 | 동작 |
+|---|---|
+| `python run.py` | 저장된 결과 웹 화면 열기 |
+| `python run.py terminal` | 저장된 연구 결과를 터미널에 출력 |
+| `python run.py summary` | 기존 8국면 요약 분석 재계산 → `output/summary/` |
+| `python run.py pipeline` | 기존 로컬 데이터로 반응·강건성·RQ4 파이프라인 실행 |
+| `python run.py rebuild-web` | 웹 데이터 재생성 (로컬 원자료 및 `origin/main`의 연구 산출물 필요) |
+| `python run.py web --no-browser` | 브라우저 자동 실행 없이 서버만 시작 |
+
+`summary`와 `pipeline`은 분석용 의존성이 필요하며 기존 `.venv`가 있으면 자동 사용합니다.
+`summary`는 과거 8국면 분석이고 웹 화면의 최종 모형과 구분됩니다.
+기본 실행은 저장된 결과 조회이며 새 분석을 수행하지 않습니다.
+`run_results.bat` 더블클릭도 기본 웹 실행과 같습니다.
+
+## 정리된 파일과 복원
+
+- `datamining/`: 공통 경로, 명령 처리, 콘솔 표시, 요약 분석
+- `analysis/`, `api/`, `preprocess/`, `config/`: 기존 연구 모듈
+- `research_web/`: 대시보드 화면·데이터·서버
+- `docs/validation/`: 검증 보고서와 감사 CSV
+- `docs/templates/`: 학회 제출 양식 원본
+- `docs/RESEARCH_LOG.md`, `docs/history/`: 연구·작업 기록
+- `output/summary/`: 재생성 가능한 요약 CSV·차트
+- `output/paper_20261116/`: 기존 논문 결과물 보존
+- `tests/`: 실행 회귀 테스트 (`python -m unittest discover -s tests -v`)
+
+정리 직전 파일은 로컬 `.backups/cleanup-20261116/before.zip`에 보관했습니다.
+이 백업은 Git에 포함되지 않으므로 되돌리기가 필요하면 보관하세요.
+
+```powershell
+python .backups/cleanup-20261116/restore.py --check
+python .backups/cleanup-20261116/restore.py
+```
+
+첫 명령은 복원 가능 여부만 점검하고, 두 번째는 이번 정리로 바뀐 파일만 복원합니다.
+정리 이후 추가 수정된 파일이 있으면 충돌 목록을 출력하고 복원을 중단합니다.
+`.git`, `.venv`, 연구 데이터는 이번 작업의 변경·복원 대상이 아닙니다.
 
 ## 현재 단계
 

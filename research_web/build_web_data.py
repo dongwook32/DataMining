@@ -6,7 +6,9 @@ import math
 import pandas as pd
 import numpy as np
 
-repo = r"C:\Users\CDW\1_Project\DataMining"
+from pathlib import Path
+
+repo = str(Path(__file__).resolve().parents[1])
 web_dir = os.path.join(repo, "research_web")
 data_dir = os.path.join(web_dir, "data")
 fig_dir = os.path.join(web_dir, "assets", "figures")
