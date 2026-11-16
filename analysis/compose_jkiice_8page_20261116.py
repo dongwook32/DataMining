@@ -12,7 +12,7 @@ from reportlab.platypus import Paragraph, Table, TableStyle, Image
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'output'/'paper_20261116'
 OUT.mkdir(parents=True,exist_ok=True)
-src=(ROOT/'docs/PAPER_DRAFT_JKIICE_8PAGE_REVIEW.md').read_text(encoding='utf-8')
+src=(ROOT/'docs/이전_원고/8페이지_편집_이전_검토본.md').read_text(encoding='utf-8')
 old=[p.replace('<!-- column -->','').strip() for p in src.split('<!-- page -->')]
 
 abstract='''This study examines how single-label summaries omit concurrent issues in Korean economic news. We analyze 931,709 articles from three business newspapers over 67 months, from January 2021 to July 2026. Vocabulary, TF-IDF weights, and a 14-topic non-negative matrix factorization basis were fitted on 48 training months and fixed for 19 evaluation months. Topics were mapped to six regimes, with activation defined by training-standardized scores of at least 0.5. Single-label summaries omitted 49 of 112 active signals (43.75%). A converged sensitivity specification retained a similar omission rate of 43.24%. Rates-and-inflation and capital-transaction regimes were negatively associated with contemporaneous volatility-scaled KOSPI returns. In 82 evaluation weeks, earnings news and related search changes showed positive co-movement that persisted across factorization settings. Market-news significance was sensitive to covariance settings. These findings quantify representation differences and contemporaneous associations; independent article labels and broader evaluation are required to establish semantic validity and practical usefulness.'''

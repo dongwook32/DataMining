@@ -47,9 +47,9 @@ SUPP_DIR = ROOT / "data" / "processed" / "supplemental_validation"
 
 PROTECTED_FILES = [
     # 문서
-    "docs/PAPER_DRAFT_JKIICE.md",
-    "docs/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
-    "docs/REVIEWER_READINESS_MASTER_REPORT.md",
+    "docs/이전_원고/기준_원고.md",
+    "docs/이전_원고/2026-11-06_심사_대비_원고.md",
+    "docs/검증/심사_대비_종합_보고서.md",
     # Phase 5.6 아티팩트
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/core_meta.json",
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/models.joblib",
@@ -868,7 +868,7 @@ def main() -> None:
   - A-2와 A-3 간의 수치 충돌(토픽 유사도 0.9953 vs 0.9802) 원인이 명확히 규명되어 정정 기준이 확정되었습니다.
   - 5개 불변 국면의 동등성, 다중 국면 정보 보존성 수치, HAC 회귀 결과, Strict OOS 17개월 혼동행렬, 주별 교차검증 24개 검정 결과가 `final_approved_numbers.csv`로 동결되었습니다.
   - 보호 대상 파일 무결성 점검 결과 `protected_files_modified = 0`이 보장되었습니다.
-  - 따라서 확정된 승인 수치와 한계 서술 지침을 바탕으로 `docs/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md` 논문 개정 작업(연구 A-4)에 즉시 안전하게 진입할 수 있습니다.
+  - 따라서 확정된 승인 수치와 한계 서술 지침을 바탕으로 `docs/이전_원고/2026-11-06_심사_대비_원고.md` 논문 개정 작업(연구 A-4)에 즉시 안전하게 진입할 수 있습니다.
 """
 
     (OUT_DIR / "a3_internal_consistency_audit.md").write_text(report_md, encoding="utf-8")

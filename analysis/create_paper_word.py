@@ -16,7 +16,7 @@ from docx.oxml.ns import nsdecls, qn
 
 ROOT = Path(r"c:\Users\CDW\1_Project\DataMining")
 DOCS_DIR = ROOT / "docs"
-OUT_PATH = DOCS_DIR / "PAPER_DRAFT_JKIICE.docx"
+OUT_PATH = DOCS_DIR / "이전_원고/투고용_원고_실명.docx"
 
 def set_cell_margins(cell, top=100, bottom=100, left=150, right=150):
     """표 셀의 상하좌우 패딩을 설정 (twips 단위: 20 twips = 1 pt)"""

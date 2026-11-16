@@ -1,22 +1,11 @@
-# docs — 문서 안내
+# 연구 문서 안내
 
-| 읽는 사람 | 파일 |
-|-----------|------|
-| **최종 실증 보고서 (핵심)** | [`FINAL_RESEARCH_RESULTS.md`](FINAL_RESEARCH_RESULTS.md) |
-| **처음 / 비전공자 / 발표** | [`연구_쉬운_요약.md`](연구_쉬운_요약.md) |
-| **재실행·함수·용어** | [`기술_참고.md`](기술_참고.md) |
-| **수치 인용** | [`results.md`](results.md) |
-| **그림·표 묶음** | [`한국형_경제이슈국면_연구결과보고서.pdf`](한국형_경제이슈국면_연구결과보고서.pdf) |
-| **터미널 실행 순서** | [`../README.md`](../README.md) |
-| **결정 기록** | [`RESEARCH_LOG.md`](RESEARCH_LOG.md) |
+- [최신 논문 PDF · 경제이슈국면탐지 논문정리 v3](../output/paper_20261116/경제이슈국면탐지_논문정리_v3.pdf)
+- [연구 결과 검증 자료](검증/README.md)
+- [이전 원고 및 개정 기록](이전_원고/README.md)
+- [분석 재현 기술 안내](분석_재현_기술_안내.md)와 [실행 명령](../README.md)
+- [연구 결정 일지](연구_결정_일지.md)
+- [학회 투고 체크리스트](학회_투고_체크리스트_2026.md)와 [학회 양식](templates/kiice_template_2026/)
+- [연구 설계 요약](연구_설계_요약.md)과 [초기 설계 및 파일럿 기록](_archive/)
 
-## 보관 (옛 기록)
-
-| 파일 | 내용 |
-|------|------|
-| [`_archive/research_plan_초안.md`](_archive/research_plan_초안.md) | 2026년 초 긴 설계 초안 |
-| [`_archive/feasibility_report.md`](_archive/feasibility_report.md) | 2026-08 파일럿 실현가능성 판정 |
-
-[`research_plan.md`](research_plan.md)는 PDF 인용용 표만 남긴 짧은 파일이다.
-
-`report_figures/` — PDF용 그림 PNG.
+기존 8국면 분석은 [실증 보고서](이전_8국면_실증분석_보고서.md), [수치 색인](이전_8국면_결과_수치_색인.md), [브리핑 PDF](이전_8국면_연구_브리핑.pdf)에 있습니다. [쉬운 요약](연구_쉬운_요약.md)도 이 분석을 설명합니다.

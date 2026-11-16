@@ -1,0 +1,17 @@
+S1 PASS (61, 998020, 0, 931709, 390130, 41174)
+Order: workbooks, raw rows, raw rows without economy, matched final articles,
+       final articles with economy and non-economy, final articles with economy only in category 3.
+S2-S5 PASS: frozen input hashes, NMF basis dimensions, training sample metadata, dictionary hash.
+S7 PASS: all 7 regime and 28 subgroup definitions match the collected daily CSVs.
+S6 PASS: Table 8 (67 months, 39 multi-active, 112 signals, 49 omitted).
+S6 PASS: Table 10 all six coefficients and Holm p-values at paper precision, R2=0.1618787071.
+S7-S8 PASS: 72 HAC tests. Max absolute adjusted p-value differences:
+  Full 5.551115123125783e-17
+  Train 8.326672684688674e-17
+  Eval 8.326672684688674e-17
+Scope: raw category audit and stored-panel statistics; no new model fit or full raw-data pipeline run.
+Packaging PASS: S1-S8 present, all local Markdown links resolved, 61 manifest paths found.
+PDF PASS: eight pages; seven unchanged pages matched the source text and rendering.
+Page 4 Table 2 text and all pixels outside the edited paragraphs matched the source.
+Submission review PASS: Table 14 nine Holm p-values and all six 4-week bootstrap endpoints
+recomputed from the stored weekly panel and matched at paper precision.

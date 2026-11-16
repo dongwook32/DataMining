@@ -4,7 +4,7 @@
 검증 환경: `c:\Users\CDW\1_Project\DataMining` (Windows, Python 3.13.14)
 
 > **이 문서는 현재 파이프라인 설명이 아니다.** 2026-08-01 파일럿 판정 기록이다.
-> 지금 단계(Step 4~5 완료, 본분석 NMF)는 `README.md`, `docs/연구_쉬운_요약.md`, `docs/기술_참고.md`, `docs/results.md`를 본다.
+> 지금 단계(Step 4~5 완료, 본분석 NMF)는 `README.md`, `docs/연구_쉬운_요약.md`, `docs/분석_재현_기술_안내.md`, `docs/이전_8국면_결과_수치_색인.md`를 본다.
 >
 > **2026-09-03 정리**: Step 1 파일럿·합성 산출물(`data/**/_archive_pilot/`, `analysis/pilot/`)은
 > 본데이터 전환에 맞춰 삭제했다. 아래는 당시 판정 기록이다. 본연구 실데이터는

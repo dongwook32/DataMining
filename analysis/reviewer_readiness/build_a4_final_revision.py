@@ -2,10 +2,10 @@
 Study A-4: Final Revision Generator and Verification Pipeline
 =============================================================
 This script builds:
-  1. docs/PAPER_DRAFT_JKIICE_A4_20261106.md
-  2. docs/A4_CHANGELOG_20261106.md
-  3. docs/A4_CLAIM_EVIDENCE_MATRIX_20261106.csv
-  4. docs/A4_FINAL_QC_20261106.md
+  1. docs/이전_원고/2026-11-06_실증_검증_반영_원고.md
+  2. docs/이전_원고/2026-11-06_개정_변경_이력.md
+  3. docs/이전_원고/2026-11-06_주장별_근거표.csv
+  4. docs/이전_원고/2026-11-06_품질_점검.md
 and verifies SHA-256 integrity of all 26 protected files.
 """
 
@@ -26,8 +26,8 @@ DOCS_DIR = PROJECT_ROOT / "docs"
 
 # 26개 보호 대상 파일
 PROTECTED_PATHS = [
-    DOCS_DIR / "PAPER_DRAFT_JKIICE.md",
-    DOCS_DIR / "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
+    DOCS_DIR / "이전_원고/기준_원고.md",
+    DOCS_DIR / "이전_원고/2026-11-06_심사_대비_원고.md",
     PROJECT_ROOT / "data" / "processed" / "supplemental_validation" / "news_search_weekly_panel.csv",
     PROJECT_ROOT / "data" / "processed" / "supplemental_validation" / "news_search_hac_results.csv",
     PROJECT_ROOT / "data" / "processed" / "supplemental_validation" / "news_search_train_test_comparison.csv",
@@ -76,7 +76,7 @@ def verify_integrity(ref_hashes: dict[str, str]) -> int:
 
 def build_full_paper_text() -> str:
     """Builds the comprehensive, reviewer-ready manuscript for JKIICE."""
-    base_file = DOCS_DIR / "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md"
+    base_file = DOCS_DIR / "이전_원고/2026-11-06_심사_대비_원고.md"
     base_text = base_file.read_text(encoding="utf-8")
 
     # 1. Update Title Header
@@ -209,7 +209,7 @@ def build_changelog() -> str:
 
 - **문서 버전**: A-4 최종 개정본 (`PAPER_DRAFT_JKIICE_A4_20261106.md`)
 - **작성 일시**: `__NOW_ISO__`
-- **기준 원고**: `docs/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md`
+- **기준 원고**: `docs/이전_원고/2026-11-06_심사_대비_원고.md`
 - **반영된 선행 감사**:
   - 연구 A-2: NMF 수렴성 및 토픽 안정성 독립 검증 (`RUN_20261106_NMF_CONVERGENCE_01`)
   - 연구 A-3: 후속 실증분석 민감도 검증 (`RUN_20261106_NMF_DOWNSTREAM_SENSITIVITY_01`)
@@ -463,7 +463,7 @@ def build_claim_evidence_matrix() -> pd.DataFrame:
             "paper_section": "참고문헌",
             "claim_text": "기존 논문의 24개 참고문헌 서지정보는 원본 그대로 유지되며 임의 조작되지 않았다.",
             "approved_value": "24개 참고문헌 유지, [1]~[24] 인용번호 100% 일치",
-            "source_artifact": "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
+            "source_artifact": "이전_원고/2026-11-06_심사_대비_원고.md",
             "verification_status": "PASS",
             "limitation": "신규 문헌 추가나 임의 DOI 생성 없음 (A-5 검증 대기)",
             "final_wording": "기존 24개 참고문헌 서지정보를 원본 그대로 보존하고 본문 인용번호와 1:1 완벽 정합성을 검증함",
@@ -477,17 +477,17 @@ def build_final_qc_report(n_prot: int, n_mod: int, t_sec: float) -> str:
     template = r"""# 연구 A-4: JKIICE 논문 최종 개정 품질 검수 보고서 (Final QC)
 
 - **검수 일시**: `__NOW_ISO__` (소요 시간: `__T_SEC__s`)
-- **검수 대상 문서**: `docs/PAPER_DRAFT_JKIICE_A4_20261106.md`
+- **검수 대상 문서**: `docs/이전_원고/2026-11-06_실증_검증_반영_원고.md`
 - **보호 대상 파일 무결성 대조**: 총 `__N_PROT__`개 파일 SHA-256 대조 결과 **`protected_files_modified = __N_MOD__` (PASS)**
 
 ---
 
 ## 1. 4대 최종 산출물 완비 확인
 
-1. **최종 개정 논문 본문**: `docs/PAPER_DRAFT_JKIICE_A4_20261106.md` (**생성 완료**)
-2. **상세 변경 내역서**: `docs/A4_CHANGELOG_20261106.md` (**생성 완료**)
-3. **주장-근거 매트릭스**: `docs/A4_CLAIM_EVIDENCE_MATRIX_20261106.csv` (**생성 완료, 20개 핵심 주장**)
-4. **최종 품질 검수 보고서**: `docs/A4_FINAL_QC_20261106.md` (**본 보고서, PASS**)
+1. **최종 개정 논문 본문**: `docs/이전_원고/2026-11-06_실증_검증_반영_원고.md` (**생성 완료**)
+2. **상세 변경 내역서**: `docs/이전_원고/2026-11-06_개정_변경_이력.md` (**생성 완료**)
+3. **주장-근거 매트릭스**: `docs/이전_원고/2026-11-06_주장별_근거표.csv` (**생성 완료, 20개 핵심 주장**)
+4. **최종 품질 검수 보고서**: `docs/이전_원고/2026-11-06_품질_점검.md` (**본 보고서, PASS**)
 
 ---
 
@@ -544,7 +544,7 @@ def build_final_qc_report(n_prot: int, n_mod: int, t_sec: float) -> str:
 
 ## 5. 결론
 
-연구 A-4의 최종 개정 논문 `docs/PAPER_DRAFT_JKIICE_A4_20261106.md`와 3종 부속 문서는 **모든 수치, 통계량, 표본 정의, 학술적 방어 논리가 선행 독립 감사(A-2, A-3, A-3.1, A-3.2)와 100% 일치**하며, 한국정보통신학회논문지(JKIICE) 심사위원의 날카로운 질문에 완벽히 방어할 수 있는 학술적 엄밀성을 확보하였습니다.
+연구 A-4의 최종 개정 논문 `docs/이전_원고/2026-11-06_실증_검증_반영_원고.md`와 3종 부속 문서는 **모든 수치, 통계량, 표본 정의, 학술적 방어 논리가 선행 독립 감사(A-2, A-3, A-3.1, A-3.2)와 100% 일치**하며, 한국정보통신학회논문지(JKIICE) 심사위원의 날카로운 질문에 완벽히 방어할 수 있는 학술적 엄밀성을 확보하였습니다.
 """
     return (
         template.replace("__NOW_ISO__", now_iso)
@@ -569,23 +569,23 @@ def main() -> None:
     print(f"[Step 0] Pre-execution integrity check PASSED: {n_prot} files verified.", flush=True)
 
     # 2. 개정 논문 본문 생성
-    print("\n[Step 1] Building Full Revised Manuscript (docs/PAPER_DRAFT_JKIICE_A4_20261106.md)...", flush=True)
+    print("\n[Step 1] Building Full Revised Manuscript (docs/이전_원고/2026-11-06_실증_검증_반영_원고.md)...", flush=True)
     full_paper_text = build_full_paper_text()
-    out_paper_path = DOCS_DIR / "PAPER_DRAFT_JKIICE_A4_20261106.md"
+    out_paper_path = DOCS_DIR / "이전_원고/2026-11-06_실증_검증_반영_원고.md"
     out_paper_path.write_text(full_paper_text, encoding="utf-8")
     print(f"  Generated {out_paper_path.name} ({len(full_paper_text):,} chars, {len(full_paper_text.splitlines())} lines)", flush=True)
 
     # 3. 변경 내역서 생성
-    print("\n[Step 2] Building Detailed Changelog (docs/A4_CHANGELOG_20261106.md)...", flush=True)
+    print("\n[Step 2] Building Detailed Changelog (docs/이전_원고/2026-11-06_개정_변경_이력.md)...", flush=True)
     changelog_text = build_changelog()
-    out_changelog_path = DOCS_DIR / "A4_CHANGELOG_20261106.md"
+    out_changelog_path = DOCS_DIR / "이전_원고/2026-11-06_개정_변경_이력.md"
     out_changelog_path.write_text(changelog_text, encoding="utf-8")
     print(f"  Generated {out_changelog_path.name} ({len(changelog_text):,} chars)", flush=True)
 
     # 4. 주장-근거 매트릭스 CSV 생성
-    print("\n[Step 3] Building Claim-Evidence Matrix (docs/A4_CLAIM_EVIDENCE_MATRIX_20261106.csv)...", flush=True)
+    print("\n[Step 3] Building Claim-Evidence Matrix (docs/이전_원고/2026-11-06_주장별_근거표.csv)...", flush=True)
     df_claim = build_claim_evidence_matrix()
-    out_claim_path = DOCS_DIR / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv"
+    out_claim_path = DOCS_DIR / "이전_원고/2026-11-06_주장별_근거표.csv"
     df_claim.to_csv(out_claim_path, index=False, encoding="utf-8-sig")
     print(f"  Generated {out_claim_path.name} ({len(df_claim)} claims)", flush=True)
 
@@ -596,10 +596,10 @@ def main() -> None:
     print(f"  Post-execution integrity check PASSED: protected_files_modified = {mod_after}", flush=True)
 
     # 6. 최종 QC 보고서 생성
-    print("\n[Step 5] Building Final QC Report (docs/A4_FINAL_QC_20261106.md)...", flush=True)
+    print("\n[Step 5] Building Final QC Report (docs/이전_원고/2026-11-06_품질_점검.md)...", flush=True)
     t_sec = time.time() - t0
     qc_text = build_final_qc_report(n_prot, mod_after, t_sec)
-    out_qc_path = DOCS_DIR / "A4_FINAL_QC_20261106.md"
+    out_qc_path = DOCS_DIR / "이전_원고/2026-11-06_품질_점검.md"
     out_qc_path.write_text(qc_text, encoding="utf-8")
     print(f"  Generated {out_qc_path.name} ({len(qc_text):,} chars)", flush=True)
 

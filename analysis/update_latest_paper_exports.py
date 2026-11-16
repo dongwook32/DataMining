@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JKIICE 최종 논문 원고(docs/PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.md)를 파싱하여
+JKIICE 최종 논문 원고(docs/이전_원고/2026-11-07_최종수정_원고.md)를 파싱하여
 1) 최신 마크다운(PAPER_DRAFT_JKIICE.md) 동기화
 2) JKIICE 2026 공식 투고양식 Word 파일 3종 (.docx) 생성:
-   - docs/PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.docx
-   - docs/PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx (원문파일)
-   - docs/PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx (심사용 블라인드본)
-   - docs/PAPER_DRAFT_JKIICE.docx (기본 파일명 동기화)
+   - docs/이전_원고/2026-11-07_최종수정_원고.docx
+   - docs/이전_원고/투고용_원고_실명.docx (원문파일)
+   - docs/이전_원고/투고용_원고_익명.docx (심사용 블라인드본)
+   - docs/이전_원고/투고용_원고_실명.docx (기본 파일명 동기화)
 3) JKIICE 학술지 스타일 PDF 파일 2종 (.pdf) 생성:
-   - docs/PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.pdf
-   - docs/PAPER_DRAFT_JKIICE.pdf (기본 파일명 동기화)
+   - docs/이전_원고/2026-11-07_최종수정_원고.pdf
+   - docs/이전_원고/기준_원고.pdf (기본 파일명 동기화)
 
 주의: A-6.1의 protected_hashes_after.csv 검증 대상인
-      `docs/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md`,
-      `docs/PAPER_DRAFT_JKIICE_A4_20261106.md`,
-      `docs/PAPER_DRAFT_JKIICE_DRAFT_REVISION_20261107.md` 등은 절대 건드리지 않으며,
+      `docs/이전_원고/2026-11-06_심사_대비_원고.md`,
+      `docs/이전_원고/2026-11-06_실증_검증_반영_원고.md`,
+      `docs/이전_원고/2026-11-07_개정_원고.md` 등은 절대 건드리지 않으며,
       `PAPER_DRAFT_JKIICE.md`는 사용자 요청에 따라 최신 최종본으로 업데이트한다.
 """
 
@@ -52,7 +52,7 @@ from xml.sax.saxutils import escape as xml_escape
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
-SRC_MD = DOCS / "PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.md"
+SRC_MD = DOCS / "이전_원고/2026-11-07_최종수정_원고.md"
 
 FONT_GOTHIC = "맑은 고딕"
 FONT_MYEONGJO = "바탕"
@@ -783,24 +783,22 @@ def main():
     print(f"파싱 완료: 총 {len(blocks)}개 문서 블록 (표 {sum(1 for k, _ in blocks if k == 'table')}개, 참고문헌 {sum(1 for k, _ in blocks if k == 'reference')}개)")
 
     # 1. 기본 마크다운 파일(PAPER_DRAFT_JKIICE.md)을 최신 최종본(PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.md)으로 동기화
-    legacy_md = DOCS / "PAPER_DRAFT_JKIICE.md"
+    legacy_md = DOCS / "이전_원고/기준_원고.md"
     shutil.copy2(SRC_MD, legacy_md)
     print(f"[MD 동기화 완료] {legacy_md} <- {SRC_MD.name}")
 
     # 2. Word (.docx) 최신화 빌드
-    out_docx_final = DOCS / "PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.docx"
-    out_docx_sub = DOCS / "PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx"
-    out_docx_blind = DOCS / "PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx"
-    out_docx_legacy = DOCS / "PAPER_DRAFT_JKIICE.docx"
+    out_docx_final = DOCS / "이전_원고/2026-11-07_최종수정_원고.docx"
+    out_docx_sub = DOCS / "이전_원고/투고용_원고_실명.docx"
+    out_docx_blind = DOCS / "이전_원고/투고용_원고_익명.docx"
 
     build_docx_from_final_md(blocks, out_docx_final, blind_mode=False)
     shutil.copy2(out_docx_final, out_docx_sub)
-    shutil.copy2(out_docx_final, out_docx_legacy)
     build_docx_from_final_md(blocks, out_docx_blind, blind_mode=True)
 
     # 3. PDF (.pdf) 최신화 빌드
-    out_pdf_final = DOCS / "PAPER_DRAFT_JKIICE_DRAFT_FINAL_20261107.pdf"
-    out_pdf_legacy = DOCS / "PAPER_DRAFT_JKIICE.pdf"
+    out_pdf_final = DOCS / "이전_원고/2026-11-07_최종수정_원고.pdf"
+    out_pdf_legacy = DOCS / "이전_원고/기준_원고.pdf"
 
     build_pdf_from_final_md(blocks, out_pdf_final)
     shutil.copy2(out_pdf_final, out_pdf_legacy)

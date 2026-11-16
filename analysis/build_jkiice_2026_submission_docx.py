@@ -1,9 +1,9 @@
 """JKIICE (한국정보통신학회논문지) 2026년 국문지 공식 투고양식 기반 최종 제출용 Word (.docx) 생성 스크립트.
 
 공식 양식 기준 (https://kiice.org/board/proceedings/article/271327, 한국정보통신학회_국문지양식2026.zip):
-- 원문파일 (`docs/PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx`):
+- 원문파일 (`docs/이전_원고/투고용_원고_실명.docx`):
   공식 양식의 ① 국문저자, ② 영문저자·직위·소속, ③ 교신저자 각주, ⑤ 저자 약력(사진·성명·학력·관심분야) 입력란을 모두 포함한 제출 원본 양식
-- 심사용 파일 (`docs/PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx`):
+- 심사용 파일 (`docs/이전_원고/투고용_원고_익명.docx`):
   '★★★심사용 파일 편집양식★★★ 반드시 확인.pdf' 지침에 따라 ① 국문저자, ② 영문저자·소속, ③ 교신저자 각주, ④ 사사(Acknowledgements), ⑤ 저자 약력을 완전히 삭제한 블라인드 심사용 양식
 """
 
@@ -18,9 +18,8 @@ from docx.oxml.ns import nsdecls, qn
 
 ROOT = Path(r"c:\Users\CDW\1_Project\DataMining")
 DOCS_DIR = ROOT / "docs"
-OUT_SUBMISSION_PATH = DOCS_DIR / "PAPER_DRAFT_JKIICE_SUBMISSION_2026.docx"
-OUT_BLIND_PATH = DOCS_DIR / "PAPER_DRAFT_JKIICE_BLIND_REVIEW_2026.docx"
-OUT_LEGACY_PATH = DOCS_DIR / "PAPER_DRAFT_JKIICE.docx"
+OUT_SUBMISSION_PATH = DOCS_DIR / "이전_원고/투고용_원고_실명.docx"
+OUT_BLIND_PATH = DOCS_DIR / "이전_원고/투고용_원고_익명.docx"
 
 FONT_GOTHIC = "맑은 고딕"
 FONT_MYEONGJO = "바탕"
@@ -1119,5 +1118,3 @@ def build_jkiice_2026_docx(out_path: Path, blind_mode: bool = False):
 if __name__ == "__main__":
     build_jkiice_2026_docx(OUT_SUBMISSION_PATH, blind_mode=False)
     build_jkiice_2026_docx(OUT_BLIND_PATH, blind_mode=True)
-    shutil.copy2(OUT_SUBMISSION_PATH, OUT_LEGACY_PATH)
-    print(f"Synchronized legacy path: {OUT_LEGACY_PATH}")

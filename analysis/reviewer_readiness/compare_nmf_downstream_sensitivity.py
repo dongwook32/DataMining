@@ -99,9 +99,9 @@ SEARCH_REGIME_PATH = ROOT / "data" / "raw" / "datalab" / "datalab_regime_daily.c
 SEARCH_SUB_PATH = ROOT / "data" / "raw" / "datalab" / "datalab_sub_daily.csv"
 
 PROTECTED_FILES = [
-    "docs/PAPER_DRAFT_JKIICE.md",
-    "docs/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
-    "docs/REVIEWER_READINESS_MASTER_REPORT.md",
+    "docs/이전_원고/기준_원고.md",
+    "docs/이전_원고/2026-11-06_심사_대비_원고.md",
+    "docs/검증/심사_대비_종합_보고서.md",
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/core_meta.json",
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/models.joblib",
     "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/nmf_H.npy",

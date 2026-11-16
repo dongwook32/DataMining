@@ -796,4 +796,4 @@ def create_pdf(out_path: Path):
     print(f"PDF Generated successfully at: {out_path}")
 
 if __name__ == "__main__":
-    create_pdf(DOCS_DIR / "PAPER_DRAFT_JKIICE.pdf")
+    create_pdf(DOCS_DIR / "이전_원고/기준_원고.pdf")

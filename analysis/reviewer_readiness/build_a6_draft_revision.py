@@ -1,8 +1,8 @@
 """
 Study A-6: JKIICE Draft Revision Builder (draft-stage only; no submission work)
 ===============================================================================
-Input  : docs/PAPER_DRAFT_JKIICE_A4_20261106.md (read-only)
-Output : docs/PAPER_DRAFT_JKIICE_DRAFT_REVISION_20261107.md
+Input  : docs/이전_원고/2026-11-06_실증_검증_반영_원고.md (read-only)
+Output : docs/이전_원고/2026-11-07_개정_원고.md
          data/processed/reviewer_readiness/RUN_20261107_A6_DRAFT_REVISION_01/
              protected_hashes_before.csv, protected_hashes_after.csv, a6_checks.json
 Every textual edit is an exact, count-asserted replacement so that unmatched
@@ -21,17 +21,17 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs"
 RR = ROOT / "data" / "processed" / "reviewer_readiness"
-SRC = DOCS / "PAPER_DRAFT_JKIICE_A4_20261106.md"
-OUT = DOCS / "PAPER_DRAFT_JKIICE_DRAFT_REVISION_20261107.md"
+SRC = DOCS / "이전_원고/2026-11-06_실증_검증_반영_원고.md"
+OUT = DOCS / "이전_원고/2026-11-07_개정_원고.md"
 RUN_DIR = RR / "RUN_20261107_A6_DRAFT_REVISION_01"
 
 PROTECTED = [
     SRC,
-    DOCS / "A4_CHANGELOG_20261106.md",
-    DOCS / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv",
-    DOCS / "A4_FINAL_QC_20261106.md",
-    DOCS / "PAPER_DRAFT_JKIICE.md",
-    DOCS / "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
+    DOCS / "이전_원고/2026-11-06_개정_변경_이력.md",
+    DOCS / "이전_원고/2026-11-06_주장별_근거표.csv",
+    DOCS / "이전_원고/2026-11-06_품질_점검.md",
+    DOCS / "이전_원고/기준_원고.md",
+    DOCS / "이전_원고/2026-11-06_심사_대비_원고.md",
 ]
 for d in [
     "RUN_20261106_NMF_CONVERGENCE_01",

@@ -15,7 +15,7 @@
    - Training Time (초), Transform Time (내부 검증 48,000건 변환 시간), Peak Memory Usage (MB)
    - LDA 내부 지표로만 Train/Val Perplexity 별도 기록 (NMF와 직접 우열 비교 금지)
 5. 토픽별 상위 20개 키워드(`nmf_topic_terms.csv`, `lda_topic_terms.csv`) 및 Hungarian Matching 정렬(`topic_alignment.csv`),
-   시각화(`topic_model_comparison_figures/`), QC 및 종합 보고서(`topic_model_comparison_report.md`, `docs/NMF_LDA_COMPARISON_REPORT.md`)를 생성한다.
+   시각화(`topic_model_comparison_figures/`), QC 및 종합 보고서(`topic_model_comparison_report.md`, `docs/검증/NMF와_LDA_비교.md`)를 생성한다.
 """
 
 from __future__ import annotations
@@ -583,7 +583,7 @@ def main() -> None:
 
     rep_text = "\n".join(rep_md)
     (OUT_DIR / "topic_model_comparison_report.md").write_text(rep_text, encoding="utf-8")
-    (DOCS_DIR / "NMF_LDA_COMPARISON_REPORT.md").write_text(rep_text, encoding="utf-8")
+    (DOCS_DIR / "검증/NMF와_LDA_비교.md").write_text(rep_text, encoding="utf-8")
     print("[Study A] Completed NMF vs LDA comparison!", flush=True)
 
 

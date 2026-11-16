@@ -40,16 +40,16 @@ def main() -> None:
     # 1. 핵심 파일 목록 및 SHA-256 해시 계산
     tracked_files = [
         # 논문 및 감사 보고서
-        ("manuscript_baseline", "docs/PAPER_DRAFT_JKIICE.md"),
-        ("manuscript_pre_study_c_backup", "docs/PAPER_DRAFT_JKIICE_pre_study_c_removal_20261102.md"),
-        ("manuscript_pre_final_backup", "docs/PAPER_DRAFT_JKIICE_pre_final_correction_20261101.md"),
-        ("manuscript_pre_supp_backup", "docs/PAPER_DRAFT_JKIICE_pre_supplemental_20261101.md"),
-        ("audit_reconciliation", "docs/PAPER_RESULT_RECONCILIATION_20261101.md"),
-        ("audit_final_correction", "docs/PAPER_FINAL_CORRECTION_AUDIT_20261101.md"),
-        ("audit_human_removal", "docs/PAPER_HUMAN_VALIDATION_REMOVAL_AUDIT_20261102.md"),
-        ("audit_statistical", "docs/PAPER_FINAL_STATISTICAL_AUDIT_20261101.md"),
-        ("final_research_results", "docs/FINAL_RESEARCH_RESULTS.md"),
-        ("verification_three_final", "docs/validation/verification_three_analyses_final.md"),
+        ("manuscript_baseline", "docs/이전_원고/기준_원고.md"),
+        ("manuscript_pre_study_c_backup", "docs/이전_원고/2026-11-02_인적검증_제거_이전_원고.md"),
+        ("manuscript_pre_final_backup", "docs/이전_원고/2026-11-01_최종정정_이전_원고.md"),
+        ("manuscript_pre_supp_backup", "docs/이전_원고/2026-11-01_추가분석_이전_원고.md"),
+        ("audit_reconciliation", "docs/이전_원고/2026-11-01_원고와_결과_대조.md"),
+        ("audit_final_correction", "docs/이전_원고/2026-11-01_최종정정_점검.md"),
+        ("audit_human_removal", "docs/이전_원고/2026-11-02_인적검증_삭제_점검.md"),
+        ("audit_statistical", "docs/이전_원고/2026-11-01_통계_점검.md"),
+        ("final_research_results", "docs/이전_8국면_실증분석_보고서.md"),
+        ("verification_three_final", "docs/검증/핵심_분석_3종_최종_검증.md"),
         # Phase 5.6 핵심 아티팩트
         ("phase5_6_core_meta", "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/core_meta.json"),
         ("phase5_6_vocab_idf", "data/processed/phase5_6_artifacts/RUN_PHASE5_6_20261027_184959/vocab_idf.csv"),
@@ -221,7 +221,7 @@ def main() -> None:
         "## 3. 불변성 및 격리 실행 원칙 확인",
         "",
         "1. `analysis/detect_regimes.py` 및 `data/regime_monthly.csv` (과거 8개 국면 Legacy 산출물)는 최종 6개 국면 분석 및 신규 실험의 입력으로 사용하지 않음.",
-        "2. 기존 `data/processed/phase5_6_artifacts/`, `data/processed/reactions/`, `data/processed/supplemental_validation/`, `docs/PAPER_DRAFT_JKIICE.md`는 수정하거나 덮어쓰지 않음.",
+        "2. 기존 `data/processed/phase5_6_artifacts/`, `data/processed/reactions/`, `data/processed/supplemental_validation/`, `docs/이전_원고/기준_원고.md`는 수정하거나 덮어쓰지 않음.",
         f"3. 모든 신규 실험 코드는 `analysis/reviewer_readiness/`에, 모든 신규 실험 데이터는 `data/processed/reviewer_readiness/{RUN_ID}/`에 격리 저장함.",
     ])
 

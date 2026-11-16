@@ -538,7 +538,7 @@ def main() -> None:
 
     rep_text = "\n".join(rep_md)
     (OUT_DIR / "multi_regime_case_report.md").write_text(rep_text, encoding="utf-8")
-    (DOCS_DIR / "MULTI_REGIME_CASE_STUDY_REPORT.md").write_text(rep_text, encoding="utf-8")
+    (DOCS_DIR / "검증/동시_활성_국면_사례.md").write_text(rep_text, encoding="utf-8")
     print("[Study C] Completed multi-regime case study outputs!", flush=True)
 
 

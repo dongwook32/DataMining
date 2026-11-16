@@ -13,7 +13,7 @@
 - `news_search_anchor_sensitivity_audit.md`
 - `news_search_robustness_qc.md`
 - `news_search_robustness_report.md`
-- `docs/NEWS_SEARCH_ROBUSTNESS_REPORT.md`
+- `docs/검증/뉴스와_검색_강건성.md`
 """
 
 from __future__ import annotations
@@ -262,7 +262,7 @@ def main() -> None:
     ])
     (OUT_DIR / "news_search_anchor_sensitivity_audit.md").write_text("\n".join(anc_md), encoding="utf-8")
 
-    # 4. QC 및 종합 보고서 작성 (`news_search_robustness_qc.md`, `news_search_robustness_report.md`, `docs/NEWS_SEARCH_ROBUSTNESS_REPORT.md`)
+    # 4. QC 및 종합 보고서 작성 (`news_search_robustness_qc.md`, `news_search_robustness_report.md`, `docs/검증/뉴스와_검색_강건성.md`)
     h0_lags = lag_sens_df[lag_sens_df["lag_h"] == 0].pivot_table(
         index=["split", "pair_label", "sample_n", "pearson_r"],
         columns="maxlags",
@@ -378,7 +378,7 @@ def main() -> None:
 
     report_text = "\n".join(rep_lines)
     (OUT_DIR / "news_search_robustness_report.md").write_text(report_text, encoding="utf-8")
-    (DOCS_DIR / "NEWS_SEARCH_ROBUSTNESS_REPORT.md").write_text(report_text, encoding="utf-8")
+    (DOCS_DIR / "검증/뉴스와_검색_강건성.md").write_text(report_text, encoding="utf-8")
 
     # 5. 시각화 생성
     import matplotlib

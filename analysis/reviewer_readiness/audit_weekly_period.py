@@ -38,7 +38,7 @@ PROTECTED_PATHS = [
     PROJECT_ROOT / "data" / "processed" / "reviewer_readiness" / "RUN_20261106_NMF_DOWNSTREAM_SENSITIVITY_01" / "naver_weekly_comparison.csv",
     PROJECT_ROOT / "data" / "processed" / "reviewer_readiness" / "RUN_20261106_A3_CONSISTENCY_AUDIT_01" / "final_approved_numbers.csv",
     PROJECT_ROOT / "data" / "processed" / "reviewer_readiness" / "RUN_20261106_A3_CONSISTENCY_AUDIT_01" / "period_definition_audit.csv",
-    PROJECT_ROOT / "docs" / "PAPER_DRAFT_JKIICE.md",
+    PROJECT_ROOT / "docs" / "이전_원고/기준_원고.md",
 ]
 
 

@@ -3,10 +3,12 @@
 뉴스·검색 데이터로 경제 이슈 국면(물가·금리·부동산·대외 등)을 탐지하고,
 국면별 코스피·환율·CCSI 반응 패턴을 분석하는 연구 저장소입니다.
 
-**최종 실증 보고서 (핵심):** [`docs/FINAL_RESEARCH_RESULTS.md`](docs/FINAL_RESEARCH_RESULTS.md)  
-**쉬운 설명 (비전공자·발표):** [`docs/연구_쉬운_요약.md`](docs/연구_쉬운_요약.md)  
-**재실행·코드·용어:** [`docs/기술_참고.md`](docs/기술_참고.md) · **문서 목록:** [`docs/README.md`](docs/README.md)  
-수치 색인: [`docs/results.md`](docs/results.md) · 진행 일지: [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.md)
+**이전 8국면 분석 보고서:** [`docs/이전_8국면_실증분석_보고서.md`](docs/이전_8국면_실증분석_보고서.md)
+**이전 분석의 쉬운 설명:** [`docs/연구_쉬운_요약.md`](docs/연구_쉬운_요약.md)
+**재실행·코드·용어:** [`docs/분석_재현_기술_안내.md`](docs/분석_재현_기술_안내.md) · **문서 목록:** [`docs/README.md`](docs/README.md)
+수치 색인: [`docs/이전_8국면_결과_수치_색인.md`](docs/이전_8국면_결과_수치_색인.md) · 진행 일지: [`docs/연구_결정_일지.md`](docs/연구_결정_일지.md)
+
+**최신 연구 결과:** [경제이슈국면탐지 v4 (PDF)](output/paper_20261116/경제이슈국면탐지_v4_JKIICE2026_양식적용.pdf)
 
 ## 바로 실행
 
@@ -40,9 +42,9 @@ python run.py
 - `datamining/`: 공통 경로, 명령 처리, 콘솔 표시, 요약 분석
 - `analysis/`, `api/`, `preprocess/`, `config/`: 기존 연구 모듈
 - `research_web/`: 대시보드 화면·데이터·서버
-- `docs/validation/`: 검증 보고서와 감사 CSV
+- `docs/검증/`: 검증 보고서와 감사 CSV
 - `docs/templates/`: 학회 제출 양식 원본
-- `docs/RESEARCH_LOG.md`, `docs/history/`: 연구·작업 기록
+- `docs/연구_결정_일지.md`, `docs/history/`: 연구·작업 기록
 - `output/summary/`: 재생성 가능한 요약 CSV·차트
 - `output/paper_20261116/`: 기존 논문 결과물 보존
 - `tests/`: 실행 회귀 테스트 (`python -m unittest discover -s tests -v`)
@@ -58,6 +60,8 @@ python .backups/cleanup-20261116/restore.py
 첫 명령은 복원 가능 여부만 점검하고, 두 번째는 이번 정리로 바뀐 파일만 복원합니다.
 정리 이후 추가 수정된 파일이 있으면 충돌 목록을 출력하고 복원을 중단합니다.
 `.git`, `.venv`, 연구 데이터는 이번 작업의 변경·복원 대상이 아닙니다.
+
+후속 문서 이름 정리는 먼저 `python .backups/docs-20261116/restore.py`로 되돌릴 수 있습니다.
 
 ## 현재 단계
 

@@ -1,7 +1,7 @@
 """연구 F: 국내외 선행연구(2019~2026 중심) 비교 매트릭스, 서지 감사 및 학술적 차별성 보고서 생성 스크립트.
 
 Crossref API 및 KCI/BOK 검증을 통과한 실제 학술 논문만을 수록하며,
-기존 초안(`docs/PAPER_DRAFT_JKIICE.md`)의 참고문헌 16건에 대한 전수 서지 감사(`literature_source_audit.csv`)와
+기존 초안(`docs/이전_원고/기준_원고.md`)의 참고문헌 16건에 대한 전수 서지 감사(`literature_source_audit.csv`)와
 선행연구 비교 매트릭스(`literature_comparison_matrix.csv`), BibTeX(`verified_references.bib`),
 그리고 학술적 공백(Research Gap) 분석 보고서를 생성한다.
 """
@@ -852,8 +852,8 @@ def main() -> None:
         "",
         "> [!IMPORTANT]",
         "> **서지 검증 핵심 발견 사항**:",
-        "> 1. 기존 `docs/PAPER_DRAFT_JKIICE.md`의 참고문헌 16건 중 **13건은 Crossref/KCI/BOK에서 실존이 확인**되었으나, `[2]` Bybee et al. (2024)의 페이지 번호(`2947-2993` → Crossref 정식 페이지 **`3105-3147`**), `[6]` 김수현 외 (2020)의 서지사항(`한국경제의 분석` 제26권 제1호, pp. 1-65), `[10]` Truong et al. (2020)의 2저자 성명(`Runge` → **`Oudre`**)에 서지 보정이 필요함을 확인하였다.",
-        "> 2. 반면 기존 초안의 `[7]`(`박성호·정용운 2020, 한국데이터정보과학회지`)과 `[16]`(`송원호·강규호 2019, 경제학연구`) 2건은 Crossref DOI 접두사(`10.7465/jkdi`) 및 KCI/DBpia 검색에서 실존이 확인되지 않았다(`UNVERIFIED_NOT_FOUND`). 따라서 새 후보 원고(`docs/PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md`)에서는 미확인 문헌 2건을 완전히 제거하고, Crossref DOI로 100% 검증된 최신 국내외 연구(Seo 2025; Kim & Lee 2026; Shapiro et al. 2022; Glasserman & Mamaysky 2019; O'Callaghan et al. 2015; Egger & Yu 2022; Da et al. 2015; Youk et al. 2026; Cho 2026; Jung et al. 2025; Kim & Hwangbo 2024)로 교체하였다.",
+        "> 1. 기존 `docs/이전_원고/기준_원고.md`의 참고문헌 16건 중 **13건은 Crossref/KCI/BOK에서 실존이 확인**되었으나, `[2]` Bybee et al. (2024)의 페이지 번호(`2947-2993` → Crossref 정식 페이지 **`3105-3147`**), `[6]` 김수현 외 (2020)의 서지사항(`한국경제의 분석` 제26권 제1호, pp. 1-65), `[10]` Truong et al. (2020)의 2저자 성명(`Runge` → **`Oudre`**)에 서지 보정이 필요함을 확인하였다.",
+        "> 2. 반면 기존 초안의 `[7]`(`박성호·정용운 2020, 한국데이터정보과학회지`)과 `[16]`(`송원호·강규호 2019, 경제학연구`) 2건은 Crossref DOI 접두사(`10.7465/jkdi`) 및 KCI/DBpia 검색에서 실존이 확인되지 않았다(`UNVERIFIED_NOT_FOUND`). 따라서 새 후보 원고(`docs/이전_원고/2026-11-06_심사_대비_원고.md`)에서는 미확인 문헌 2건을 완전히 제거하고, Crossref DOI로 100% 검증된 최신 국내외 연구(Seo 2025; Kim & Lee 2026; Shapiro et al. 2022; Glasserman & Mamaysky 2019; O'Callaghan et al. 2015; Egger & Yu 2022; Da et al. 2015; Youk et al. 2026; Cho 2026; Jung et al. 2025; Kim & Hwangbo 2024)로 교체하였다.",
         "",
         "| ID | 서지 요약 | 검증 상태 | 검증 출처 / DOI | 개정 후보본 조치 |",
         "| :---: | :--- | :---: | :--- | :--- |",
@@ -908,7 +908,7 @@ def main() -> None:
     full_report = "\n".join(md_lines + gap_section)
     (OUT_DIR / "literature_review_2019_2026.md").write_text(full_report, encoding="utf-8")
     (OUT_DIR / "research_gap_and_contribution.md").write_text("\n".join(gap_section), encoding="utf-8")
-    (DOCS_DIR / "LITERATURE_RESEARCH_GAP_REPORT.md").write_text(full_report, encoding="utf-8")
+    (DOCS_DIR / "검증/선행연구와_연구_차별점.md").write_text(full_report, encoding="utf-8")
     print("[Study F] Completed Literature Review and Gap Analysis!", flush=True)
 
 

@@ -41,7 +41,7 @@ from config import project_root
 ROOT = project_root()
 PROC = ROOT / "data" / "processed"
 FIG_DIR = ROOT / "docs" / "report_figures"
-PDF_PATH = ROOT / "docs" / "한국형_경제이슈국면_연구결과보고서.pdf"
+PDF_PATH = ROOT / "docs" / "이전_8국면_연구_브리핑.pdf"
 
 FONT_REG = Path(r"C:\Windows\Fonts\malgun.ttf")
 FONT_BD = Path(r"C:\Windows\Fonts\malgunbd.ttf")
@@ -838,7 +838,7 @@ def build_story(d: dict, figs: dict[str, Path], S: dict) -> list:
         cells("목표", "심리 요약", "국면 탐지와 국면별 반응 차이 검증"),
     ]
     story.append(styled_table(diff, [28 * mm, 62 * mm, 80 * mm]))
-    story.append(P("표 1. 기존 감성지수 연구와의 차이. 출처: docs/research_plan.md.", S["caption"]))
+    story.append(P("표 1. 기존 감성지수 연구와의 차이. 출처: docs/연구_설계_요약.md.", S["caption"]))
 
     story.append(P("2.2 연구 질문", S["h2"]))
     story.append(P(
@@ -880,7 +880,7 @@ def build_story(d: dict, figs: dict[str, Path], S: dict) -> list:
         cells("폴백", "본분석 KW가 약할 때만 같은 행렬에 LDA를 적합해 비교한다. NMF 라벨을 바꾸지 않는다."),
     ]
     story.append(styled_table(gloss, [32 * mm, 138 * mm]))
-    story.append(P("표 2. 용어. 출처: docs/기술_참고.md §4 및 각 QC.", S["caption"]))
+    story.append(P("표 2. 용어. 출처: docs/분석_재현_기술_안내.md §4 및 각 QC.", S["caption"]))
 
     story.append(P("4. 데이터와 분석 기간", S["h1"]))
     story.append(P(
@@ -1346,7 +1346,7 @@ def build_story(d: dict, figs: dict[str, Path], S: dict) -> list:
         cells("강건성", "robustness_compare.csv, robustness_qc.md"),
         cells("RQ4", "rq4_corr.csv, rq4_concordance.csv, rq4_qc.md"),
         cells("폴백", "regimes_lda/, reactions_lda/, regimes_bertopic/"),
-        cells("설계", "docs/연구_쉬운_요약.md, docs/기술_참고.md, docs/research_plan.md, docs/results.md"),
+        cells("설계", "docs/연구_쉬운_요약.md, docs/분석_재현_기술_안내.md, docs/연구_설계_요약.md, docs/이전_8국면_결과_수치_색인.md"),
     ]
     story.append(styled_table(src, [32 * mm, 138 * mm]))
     story.append(P("표 14. 수치의 출처. 본 보고서의 모든 검정 통계량은 위 파일을 다시 읽었다.", S["caption"]))

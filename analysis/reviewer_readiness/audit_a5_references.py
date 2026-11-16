@@ -2,7 +2,7 @@
 Study A-5: Comprehensive Reference and Citation Audit Script
 ===========================================================
 This script performs a rigorous, independent audit of all 24 references
-in docs/PAPER_DRAFT_JKIICE_A4_20261106.md:
+in docs/이전_원고/2026-11-06_실증_검증_반영_원고.md:
   1. Pre-execution SHA-256 hash snapshot of 30 protected files.
   2. 24 References existence and official metadata verification.
   3. DOI and URL access verification.
@@ -27,12 +27,12 @@ DOCS_DIR = PROJECT_ROOT / "docs"
 RUN_DIR = PROJECT_ROOT / "data" / "processed" / "reviewer_readiness" / "RUN_20261106_A5_REFERENCE_AUDIT_01"
 
 PROTECTED_PATHS = [
-    DOCS_DIR / "PAPER_DRAFT_JKIICE_A4_20261106.md",
-    DOCS_DIR / "A4_CHANGELOG_20261106.md",
-    DOCS_DIR / "A4_CLAIM_EVIDENCE_MATRIX_20261106.csv",
-    DOCS_DIR / "A4_FINAL_QC_20261106.md",
-    DOCS_DIR / "PAPER_DRAFT_JKIICE.md",
-    DOCS_DIR / "PAPER_DRAFT_JKIICE_reviewer_ready_20261106.md",
+    DOCS_DIR / "이전_원고/2026-11-06_실증_검증_반영_원고.md",
+    DOCS_DIR / "이전_원고/2026-11-06_개정_변경_이력.md",
+    DOCS_DIR / "이전_원고/2026-11-06_주장별_근거표.csv",
+    DOCS_DIR / "이전_원고/2026-11-06_품질_점검.md",
+    DOCS_DIR / "이전_원고/기준_원고.md",
+    DOCS_DIR / "이전_원고/2026-11-06_심사_대비_원고.md",
     PROJECT_ROOT / "data" / "processed" / "supplemental_validation" / "news_search_weekly_panel.csv",
     PROJECT_ROOT / "data" / "processed" / "supplemental_validation" / "news_search_hac_results.csv",
     PROJECT_ROOT / "data" / "processed" / "supplemental_validation" / "news_search_train_test_comparison.csv",
@@ -838,7 +838,7 @@ def build_bibliography_report(now_iso: str) -> str:
     template = r"""# 연구 A-5: 참고문헌 서지정보 일관성 및 정합성 상세 보고서 (Bibliography Consistency Report)
 
 - **검증 일시**: `__NOW_ISO__`
-- **대상 논문**: `docs/PAPER_DRAFT_JKIICE_A4_20261106.md`
+- **대상 논문**: `docs/이전_원고/2026-11-06_실증_검증_반영_원고.md`
 - **검증 대상**: REFERENCES 기재 총 24개 문헌 (`[1]` ~ `[24]`)
 - **검증 도구**: Crossref REST API, Official Publisher Metadata, KCI(한국학술지인용색인), DBpia, SSRN
 
@@ -907,7 +907,7 @@ def build_unverified_report(now_iso: str) -> str:
     template = r"""# 연구 A-5: 미검증 및 주의 참고문헌 검토 보고서 (Unverified & Attention References)
 
 - **검토 일시**: `__NOW_ISO__`
-- **대상 논문**: `docs/PAPER_DRAFT_JKIICE_A4_20261106.md`
+- **대상 논문**: `docs/이전_원고/2026-11-06_실증_검증_반영_원고.md`
 
 ---
 
@@ -954,7 +954,7 @@ def build_qc_report(now_iso: str, n_prot: int, n_mod: int, t_sec: float) -> str:
     template = r"""# 연구 A-5: 참고문헌 및 인용 전수 검증 품질 검수 보고서 (Final QC)
 
 - **검수 일시**: `__NOW_ISO__` (소요 시간: `__T_SEC__s`)
-- **검수 대상**: `docs/PAPER_DRAFT_JKIICE_A4_20261106.md` (REFERENCES 24개 및 본문 인용)
+- **검수 대상**: `docs/이전_원고/2026-11-06_실증_검증_반영_원고.md` (REFERENCES 24개 및 본문 인용)
 - **보호 대상 파일 무결성**: 총 `__N_PROT__`개 파일 SHA-256 대조 결과 **`protected_files_modified = __N_MOD__` (PASS)**
 
 ---
