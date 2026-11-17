@@ -1,44 +1,11 @@
-# pandas / 수치
-pandas>=2.0
-numpy>=1.24
-scipy>=1.11
-
-# 설정
-PyYAML>=6.0
-python-dotenv>=1.0
-
-# HTTP
-requests>=2.31
-
-# 토픽모델링·전처리
-scikit-learn>=1.3
-
-# 변화점 탐지 (국면 전환)
-ruptures>=1.1
-
-# 정상성 검정·통제 회귀 (Step 4 반응 분석)
-statsmodels>=0.14
-
-# 시각화
-matplotlib>=3.8
-seaborn>=0.13
-
-# 빅카인즈 엑셀 투입 시
-openpyxl>=3.1
-
-# 통합 코퍼스 저장 (parquet)
-pyarrow>=15.0
-
-# 선택: 한국어 형태소 (Java 필요) — 필요 시 주석 해제
-# konlpy>=0.6
-
-# 선택: 폴백 BERTopic (본분석 NMF에는 필요 없음)
-# bertopic>=0.16
-# sentence-transformers>=3.0
-
-# 실행 예시
-#   python -m api.collect_ecos
-#   python -m api.collect_datalab
-#   python -m preprocess.build_corpus
-#   python -m preprocess.build_doc_matrix
-#   python -m preprocess.build_panel
+numpy==2.5.1
+scipy==1.18.0
+pandas==3.0.5
+scikit-learn==1.9.0
+statsmodels==0.15.0
+joblib==1.5.3
+pyarrow==25.0.1
+openpyxl==3.1.5
+PyYAML==6.0.3
+matplotlib==3.11.1
+python-dotenv==1.2.2

@@ -65,3 +65,8 @@ data/processed/panel/*
 # Local cleanup snapshots and disposable rendering files
 .backups/
 tmp/
+
+# Local reproduction inputs and runs
+/data/
+/results/
+/output/
