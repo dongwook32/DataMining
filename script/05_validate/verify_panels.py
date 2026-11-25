@@ -19,10 +19,10 @@ from core.robustness.verify_search_robustness import moving_block_bootstrap_corr
 from collector.datalab.datalab_keyword_sets import ANCHOR_GROUP, regime_groups, sub_groups
 
 DATA = ROOT / "data/processed"
-BASE = DATA / "phase5_6_artifacts/RUN_PHASE5_6_20261027_184959"
-REGIME = DATA / "reactions/phase5_6_train_only_regime_monthly.csv"
+BASE = DATA / "models/base"
+REGIME = DATA / "reactions/regime_monthly.csv"
 MONTH = DATA / "panel/monthly_panel.csv"
-SUPP = DATA / "supplemental_validation"
+SUPP = DATA / "checks"
 PAIRS = [
     ("macro", "macro_combined"), ("macro", "macro_interest"), ("macro", "macro_inflation"),
     ("realestate", "realestate"), ("aichip", "aichip"), ("market", "market"),
@@ -48,7 +48,7 @@ def check_model():
     assert np.load(BASE / "nmf_H.npy").shape == (14, 22193)
     domain = pd.DataFrame(build_domain_pairs(), columns=["keyword", "domain", "group"])
     assert len(domain) == 139
-    domain.to_csv(HERE / "S5_domain_dictionary.csv", index=False, encoding="utf-8-sig")
+    domain.to_csv(HERE / "regime_terms.csv", index=False, encoding="utf-8-sig")
     requests = {
         "period": ["2016-01-01", "2026-07-31"],
         "time_unit_for_table_13": "date",
@@ -66,7 +66,7 @@ def check_model():
             for group in requests[f"{level}_groups"]
         }
         assert actual == configured, f"Stored DataLab requests differ for {level}"
-    (HERE / "S7_search_groups.json").write_text(
+    (HERE / "search_terms.json").write_text(
         json.dumps(requests, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     print("S2-S5 PASS: input hashes, basis dimensions, sample counts, dictionary hash")
@@ -93,8 +93,8 @@ def check_monthly():
 
 
 def check_weekly():
-    week = pd.read_csv(SUPP / "news_search_weekly_panel.csv")
-    expected = pd.read_csv(SUPP / "news_search_hac_results.csv")
+    week = pd.read_csv(SUPP / "search_weekly.csv")
+    expected = pd.read_csv(SUPP / "search_hac.csv")
     assert len(week) == 292
     results = []
     for split, panel in (("Full", week), ("Train", week[week.period == "train"]),
@@ -126,7 +126,7 @@ def check_weekly():
 
 
 def check_table_14():
-    week = pd.read_csv(SUPP / "news_search_weekly_panel.csv")
+    week = pd.read_csv(SUPP / "search_weekly.csv")
     diff = week[week["period"].eq("eval")].select_dtypes("number").diff()
     expected = {
         "search_market": ([0.0339, 0.0432, 0.0616], (0.2079, 0.6367)),

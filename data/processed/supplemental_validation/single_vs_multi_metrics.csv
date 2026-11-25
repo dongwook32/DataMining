@@ -1,4 +1,0 @@
-﻿split,n_months,mean_active_regimes,pct_0_active,pct_1_active,pct_2plus_active,pct_hurdle_none,total_active_events,total_omitted_by_argmax,omitted_information_ratio_pct
-Full (67m),67,1.672,5.97,35.82,58.21,5.97,112,49,43.75
-Train (48m),48,1.854,2.08,31.25,66.67,2.08,89,42,47.19
-Eval OOS (19m),19,1.211,15.79,47.37,36.84,15.79,23,7,30.43

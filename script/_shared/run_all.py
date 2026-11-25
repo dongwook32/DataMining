@@ -37,14 +37,14 @@ def run(stages, *, dry_run=False, output_dir=None):
     for stage in stages:
         print(f'\n[{stage}]', flush=True)
         if stage == 'verify':
-            commands = [[sys.executable, '-B', str(ROOT / 'output/paper_20261116/replication/verify_panels.py')]]
+            commands = [[sys.executable, '-B', str(ROOT / 'output/paper/replication/verify_panels.py')]]
         else:
             commands = [[sys.executable, '-B', '-m', module] for module in STAGES[stage]]
             if stage == 'train':
                 run_dir = destination / 'runs' / stamp
                 commands[0] += ['--artifact-root', str(run_dir / 'models'), '--deliver-dir', str(run_dir / 'tables'),
                                 '--excel-dir', str(run_dir / 'excel'),
-                                '--rerun-dir', str(ROOT / 'data/processed/phase5_6_artifacts' / BASELINE)]
+                                '--rerun-dir', str(ROOT / 'data/processed/models/base')]
             elif stage == 'export':
                 commands[0] += ['--output-dir', str(destination / 'paper')]
         run_commands(commands, dry_run=dry_run)

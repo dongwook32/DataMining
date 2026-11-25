@@ -5,9 +5,9 @@
 3. 주가 하락 경고, 금리 인상 포착률 및 강건성 분석 (자연발생률 대비 정밀도, 폭락 재현율, 임계값 민감도, 60개월, Strict OOS 분할)
 
 저장 산출물:
-- data/processed/reactions/verification_ols_results.csv
-- data/processed/reactions/verification_correlation_lag_results.csv
-- data/processed/reactions/verification_warning_performance_results.csv
+- data/processed/reactions/ols.csv
+- data/processed/reactions/lag_corr.csv
+- data/processed/reactions/warnings.csv
 """
 
 import sys
@@ -26,14 +26,14 @@ warnings.filterwarnings("ignore")
 from util.paths import ROOT
 PANEL_PATH = ROOT / "data" / "processed" / "panel" / "monthly_panel.csv"
 LEGACY_REGIME_PATH = ROOT / "data" / "processed" / "regimes" / "regime_monthly.csv"
-PHASE56_REGIME_PATH = ROOT / "data" / "processed" / "reactions" / "phase5_6_train_only_regime_monthly.csv"
+PHASE56_REGIME_PATH = ROOT / "data" / "processed" / "reactions" / "regime_monthly.csv"
 OUT_DIR = ROOT / "data" / "processed" / "reactions"
 
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-OLS_OUT_CSV = OUT_DIR / "verification_ols_results.csv"
-CORR_OUT_CSV = OUT_DIR / "verification_correlation_lag_results.csv"
-WARN_OUT_CSV = OUT_DIR / "verification_warning_performance_results.csv"
+OLS_OUT_CSV = OUT_DIR / "ols.csv"
+CORR_OUT_CSV = OUT_DIR / "lag_corr.csv"
+WARN_OUT_CSV = OUT_DIR / "warnings.csv"
 
 
 def load_datasets():

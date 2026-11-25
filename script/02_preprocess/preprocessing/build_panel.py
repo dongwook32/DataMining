@@ -17,7 +17,7 @@
 
 산출:
   data/processed/panel/monthly_panel.csv            월 × (지표·검색 대분류·뉴스량)
-  data/processed/panel/monthly_panel_search_sub.csv 월 × 검색 세부 28그룹
+  data/processed/panel/search_panel.csv 월 × 검색 세부 28그룹
   data/processed/panel/panel_qc.md                  결측·이상치·정합성 점검 리포트
 """
 
@@ -31,11 +31,11 @@ from config import load_config, project_root
 ROOT = project_root()
 ECOS_PATH = ROOT / "data" / "raw" / "ecos" / "ecos_monthly.csv"
 DATALAB_DIR = ROOT / "data" / "raw" / "datalab"
-CORPUS_COUNTS = ROOT / "data" / "processed" / "corpus" / "corpus_monthly_counts.csv"
+CORPUS_COUNTS = ROOT / "data" / "processed" / "corpus" / "news_counts.csv"
 OUT_DIR = ROOT / "data" / "processed" / "panel"
 
 PANEL_PATH = OUT_DIR / "monthly_panel.csv"
-SUB_PATH = OUT_DIR / "monthly_panel_search_sub.csv"
+SUB_PATH = OUT_DIR / "search_panel.csv"
 QC_PATH = OUT_DIR / "panel_qc.md"
 
 # 로그차분할 가격 변수와 단순차분할 지수·금리 변수.

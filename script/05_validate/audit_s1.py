@@ -98,7 +98,7 @@ def main():
         "경제" not in row for row in matched.values()
     ):
         raise ValueError(f"S1 reference totals differ: {actual}")
-    with (HERE / "S1_bigkinds_manifest.csv").open("w", encoding="utf-8-sig", newline="") as file:
+    with (HERE / "news_files.csv").open("w", encoding="utf-8-sig", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=list(manifest[0]))
         writer.writeheader()
         writer.writerows(manifest)

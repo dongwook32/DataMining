@@ -22,12 +22,12 @@ import time
 
 from util.paths import ROOT
 CORPUS_PATH = ROOT / "data" / "processed" / "corpus" / "news_corpus.parquet"
-P56_DIR = ROOT / "data" / "processed" / "phase5_6_artifacts" / "RUN_PHASE5_6_20261027_184959"
-MAPPING_PATH = ROOT / "data" / "processed" / "reactions" / "phase5_6_topic_regime_mapping.csv"
+P56_DIR = ROOT / "data" / "processed" / "models" / "base"
+MAPPING_PATH = ROOT / "data" / "processed" / "reactions" / "topic_map.csv"
 SEARCH_REGIME_PATH = ROOT / "data" / "raw" / "datalab" / "datalab_regime_daily.csv"
 SEARCH_SUB_PATH = ROOT / "data" / "raw" / "datalab" / "datalab_sub_daily.csv"
 
-OUT_DIR = ROOT / "data" / "processed" / "supplemental_validation"
+OUT_DIR = ROOT / "data" / "processed" / "checks"
 FIG_DIR = OUT_DIR / "news_search_figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 FIG_DIR.mkdir(parents=True, exist_ok=True)
@@ -167,7 +167,7 @@ def run_study_b():
     panel = pd.merge(df_news_weekly, search_comb, on="iso_yw", how="inner").sort_values("iso_yw").reset_index(drop=True)
     # 기간 플래그 부여 (Train: ~2024-W52, Eval: 2025-W01~)
     panel["period"] = np.where(panel["iso_yw"] < "2025-W01", "train", "eval")
-    panel.to_csv(OUT_DIR / "news_search_weekly_panel.csv", index=False, encoding="utf-8-sig")
+    panel.to_csv(OUT_DIR / "search_weekly.csv", index=False, encoding="utf-8-sig")
     print(f"  결합 패널 생성 완료: {len(panel)}주차 (Train={sum(panel['period']=='train')}주, Eval={sum(panel['period']=='eval')}주)")
     
     print("5. 1차 차분(First Difference) 및 시차 상관관계 검정...")
@@ -277,13 +277,13 @@ def run_study_b():
         adjusted_chunks.append(sub_c)
         
     df_res = pd.concat(adjusted_chunks, ignore_index=True)
-    df_res.to_csv(OUT_DIR / "news_search_lag_results.csv", index=False, encoding="utf-8-sig")
+    df_res.to_csv(OUT_DIR / "search_lags.csv", index=False, encoding="utf-8-sig")
     
     # 6. Train vs Test 비교 테이블 생성 (h=0 동시점 중심)
     h0_df = df_res[df_res["lag_h"] == 0].pivot(index=["pair_label", "regime"], columns="split", values=["pearson_r", "pearson_p_raw", "pearson_p_holm"]).reset_index()
     # 멀티인덱스 컬럼 정리
     h0_df.columns = [f"{col[0]}_{col[1]}".strip("_") for col in h0_df.columns]
-    h0_df.to_csv(OUT_DIR / "news_search_train_test_comparison.csv", index=False, encoding="utf-8-sig")
+    h0_df.to_csv(OUT_DIR / "search_splits.csv", index=False, encoding="utf-8-sig")
     
     # 7. QC 보고서 마크다운 생성
     table_headers = ["split", "pair_label", "lag_h", "sample_n", "pearson_r", "pearson_p_raw", "pearson_p_holm"]

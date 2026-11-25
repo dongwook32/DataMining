@@ -24,29 +24,34 @@ from config import project_root
 
 ROOT = project_root()
 PROCESSED = ROOT / "data" / "processed"
-PAPER = ROOT / "output" / "paper_20261116"
+PAPER = ROOT / "output" / "paper"
 BASELINE = "RUN_PHASE5_6_20261027_184959"
-LEARNING = "01_전처리_학습.xlsx"
-ANALYSIS = "02_중간_분석_검증.xlsx"
-FINAL = "03_최종_결과.xlsx"
+LEARNING = "01_train.xlsx"
+ANALYSIS = "02_analysis.xlsx"
+FINAL = "03_results.xlsx"
 
 # The supplemental scripts do not all emit run IDs. Only use these paths
 # with the documented paper run, never with a newly fitted model.
 SUPPLEMENTS = (
     ("panel", "monthly_panel", "경제지표와 연구 변수를 월별로 결합한 자료"),
-    ("reactions", "verification_ols_results", "코스피 회귀계수와 검정 결과"),
-    ("reactions", "verification_correlation_lag_results", "기준금리 변화와 뉴스 국면의 시차별 상관"),
-    ("reactions", "verification_warning_performance_results", "조기경보의 적중·오경보·누락 집계"),
-    ("supplemental_validation", "single_vs_multi_*", "단일 대표 국면과 다중 활성 국면 비교"),
-    ("supplemental_validation", "news_search_*", "주별 뉴스·검색 패널과 상관·HAC 검정"),
-    ("reviewer_readiness/RUN_20261106_161800", "literature_comparison_matrix", "선행연구 자료·방법 비교"),
-    ("reviewer_readiness/RUN_20261106_161800", "*topic*", "토픽 모델 품질·대표 단어·반복 학습 안정성"),
-    ("reviewer_readiness/RUN_20261106_161800", "regime_mapping_stability", "반복 학습에서 동일 국면이 재현된 횟수"),
-    ("reviewer_readiness/RUN_20261106_161800", "multi_regime_case_*", "다중 활성 사례의 선정 기준과 근거"),
-    ("reviewer_readiness/RUN_20261106_161800", "single_multi_case_comparison", "사례별 단일·다중 국면 비교"),
-    ("reviewer_readiness/RUN_20261106_161800", "news_search_*", "검색 결과의 시차 민감도와 신뢰구간"),
-    ("reviewer_readiness/RUN_20261106_NMF_CONVERGENCE_01", "*", "NMF 학습 반복 상한에 따른 수렴 비교"),
-    ("reviewer_readiness/RUN_20261106_NMF_DOWNSTREAM_SENSITIVITY_01", "*", "수렴 모델로 바꿨을 때 후속 분석의 변화"),
+    ("reactions", "ols", "코스피 회귀계수와 검정 결과"),
+    ("reactions", "lag_corr", "기준금리 변화와 뉴스 국면의 시차별 상관"),
+    ("reactions", "warnings", "조기경보의 적중·오경보·누락 집계"),
+    ("checks", "multi_*", "단일 대표 국면과 다중 활성 국면 비교"),
+    ("checks", "search_*", "주별 뉴스·검색 패널과 상관·HAC 검정"),
+    ("review/topics", "literature", "선행연구 자료·방법 비교"),
+    ("review/topics", "*topic_terms", "토픽별 대표 단어"),
+    ("review/topics", "topic_alignment", "토픽 매칭"),
+    ("review/topics", "topic_pairs", "토픽 쌍별 안정성"),
+    ("review/topics", "regime_stability", "반복 학습에서 동일 국면이 재현된 횟수"),
+    ("review/topics", "case_*", "다중 활성 사례의 선정 기준과 근거"),
+    ("review/topics", "model_metrics", "토픽 모델 비교"),
+    ("review/topics", "stability_*", "반복 학습 안정성"),
+    ("checks", "active_groups", "동시에 활성화한 국면 조합"),
+    ("review/topics", "search_ci", "검색 상관의 신뢰구간"),
+    ("review/topics", "hac_lags", "검색 분석의 HAC 시차 민감도"),
+    ("review/convergence", "*", "NMF 학습 반복 상한에 따른 수렴 비교"),
+    ("review/sensitivity", "*", "수렴 모델로 바꿨을 때 후속 분석의 변화"),
 )
 FIELD_HELP = {
     "run_id": "이 표를 만든 실행의 식별자",
@@ -245,10 +250,10 @@ def checked_path(path, digest, *, allow_text_eol=False):
 
 def baseline_sources():
     start = [
-        (PAPER / "replication/S1_bigkinds_manifest.csv", "입력 파일별 기사 행 수와 수집 기간"),
-        (PROCESSED / "corpus/corpus_monthly_counts.csv", "전처리를 거친 기사 수의 월별 집계"),
+        (PAPER / "replication/news_files.csv", "입력 파일별 기사 행 수와 수집 기간"),
+        (PROCESSED / "corpus/news_counts.csv", "전처리를 거친 기사 수의 월별 집계"),
     ]
-    analysis = [(PAPER / "replication/S5_domain_dictionary.csv", "토픽을 경제 이슈로 분류한 사전")]
+    analysis = [(PAPER / "replication/regime_terms.csv", "토픽을 경제 이슈로 분류한 사전")]
     for folder, stem, description in SUPPLEMENTS:
         files = sorted((PROCESSED / folder).glob(stem + ".csv"))
         if not files:
@@ -301,7 +306,7 @@ def export_results(artifact_dir, audit_path, destination, *, paper_run=False, st
         write_workbook(staging / LEARNING, run_id, learning)
         write_workbook(staging / ANALYSIS, run_id, analysis, extra)
         if paper_run:
-            shutil.copyfile(PAPER / "results/논문_v4_최종_결과.xlsx", staging / FINAL)
+            shutil.copyfile(PAPER / "results/tables_notes.xlsx", staging / FINAL)
         else:
             summary = [
                 ("예측 평가", ["항목", "값"], json_rows(metrics or {}), "이번 실행의 모형별 예측 평가"),
@@ -318,8 +323,8 @@ def main():
     parser.add_argument("--output-dir", type=Path, default=PAPER / "results" / "excel_export" / BASELINE)
     args = parser.parse_args()
     outputs = export_results(
-        PROCESSED / "phase5_6_artifacts" / BASELINE,
-        PROCESSED / "reactions" / "phase5_6_pipeline_audit.json",
+        PROCESSED / "models" / "base",
+        PROCESSED / "reactions" / "audit.json",
         args.output_dir,
         paper_run=True,
     )

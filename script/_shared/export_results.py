@@ -50,19 +50,19 @@ def run(output_dir=None):
         seen.add(source)
         relative = source.relative_to(PROCESSED) if source.is_relative_to(PROCESSED) else Path('replication') / source.name
         sources.append((source, Path('tables') / relative))
-    for name in ('phase5_6_topic_regime_mapping.csv', 'phase5_6_train_only_regime_monthly.csv',
-                 'phase5_6_strict_oos_forecast.csv'):
+    for name in ('topic_map.csv', 'regime_monthly.csv',
+                 'forecast.csv'):
         sources.append((PROCESSED / 'reactions' / name, Path('tables/regimes') / name))
     sources += [(p, Path('figures') / p.name) for p in sorted((PAPER / 'figures').glob('*.png'))]
     sources += [(p, Path('validation') / p.name) for p in sorted((PAPER / 'replication').glob('S*.md'))]
-    audit = PROCESSED / 'reactions/phase5_6_pipeline_audit.json'
+    audit = PROCESSED / 'reactions/audit.json'
     sources.append((audit, Path('validation') / audit.name))
 
     # Validate source presence before generating any output.
     for source, _ in sources:
         if not source.is_file():
             raise FileNotFoundError(source)
-    workbooks = export_results(PROCESSED / 'phase5_6_artifacts' / BASELINE, audit,
+    workbooks = export_results(PROCESSED / 'models' / 'base', audit,
                                destination / 'excel', paper_run=True)
     records = copy_sources(sources, destination)
     for path in workbooks:

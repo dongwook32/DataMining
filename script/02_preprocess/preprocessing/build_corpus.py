@@ -5,7 +5,7 @@
 
 산출:
   data/processed/corpus/news_corpus.parquet       기사 단위 (분석 창 안, 중복 제거 후)
-  data/processed/corpus/corpus_monthly_counts.csv 월별 건수 점검용
+  data/processed/corpus/news_counts.csv 월별 건수 점검용
 
 중복 제거는 URL을 1순위 키로 쓰고, URL이 비었으면 `일자|언론사|제목`으로 대체한다.
 `뉴스 식별자`는 쓰지 않는다 — 엑셀에서 float으로 읽히면 정밀도가 날아가 같은 기사가
@@ -180,9 +180,9 @@ def build() -> None:
         .agg(n=("date", "size"), sources=("source", "nunique"))
         .reset_index()
     )
-    counts.to_csv(OUT_DIR / "corpus_monthly_counts.csv", index=False, encoding="utf-8-sig")
+    counts.to_csv(OUT_DIR / "news_counts.csv", index=False, encoding="utf-8-sig")
     print(f"\nparquet → {out_path}")
-    print(f"월별 건수 → {OUT_DIR / 'corpus_monthly_counts.csv'}")
+    print(f"월별 건수 → {OUT_DIR / 'news_counts.csv'}")
     print(f"월 {len(counts)}개, 건수 min/median/max "
           f"{counts['n'].min():,} / {int(counts['n'].median()):,} / {counts['n'].max():,}")
 
